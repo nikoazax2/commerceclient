@@ -1,6 +1,7 @@
 // ---------  Variables gloables ---------
 export const gVariables = {
-  config: {
-    domain: "http://localhost:3000",
-  },
+    config: {
+        domain: "http://localhost:3000",
+        token: null
+    },
 };

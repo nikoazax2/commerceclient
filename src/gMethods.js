@@ -36,5 +36,34 @@ export const gMethods = {
                     console.error("Error fetching products data:", error);
                 });
         },
+        getProfile() {
+            const headers = {
+                Authorization: `Bearer ${gVariables.config.token}`,
+            };
+            axios
+                .get(`${gVariables.config.domain}/auth/profile`, { headers })
+                .then((response) => {
+                    console.log(response);
+                })
+                .catch((error) => {
+                    console.error("Error fetching products data:", error);
+                });
+        },
+        login(name, password) {
+            let body = {
+                username: name,
+                password: password,
+            }
+
+            axios
+                .post(`${gVariables.config.domain}/auth/login`, body)
+                .then((response) => {
+                    console.log(response.data)
+                    gVariables.config.token = response.data.access_token
+                })
+                .catch((error) => {
+                    console.error("Error fetching products data:", error);
+                });
+        },
     }
 };
