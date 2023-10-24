@@ -3,15 +3,15 @@ import App from './App.vue'
 import router from './router'
 import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
-import { gMethods } from './gMethods.js';
-import { gVariables } from './gVariables';
+import { gMethods } from './gMethods.js'; 
+import { contenu } from './contenu'
 
 loadFonts()
 
 const app = createApp(App);
-
-app.config.globalProperties.$r = gVariables;
-app.config.globalProperties.$m = gMethods;
+ 
+app.config.globalProperties.$r = gMethods;
+app.config.globalProperties.$c = contenu;
 
 
 app.use(router)

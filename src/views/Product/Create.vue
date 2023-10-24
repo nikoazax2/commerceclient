@@ -1,9 +1,9 @@
 <template>
-    <div class="login ma-4">
-        <h2>Se connecter</h2>
+    <div class="product ma-4">
+        <h2>Créer produit</h2> 
         <div class="formulaire mt-2 w-50">
             <v-text-field
-                v-model="user.name"
+                v-model="product.name"
                 class="mb-2"
                 variant="outlined"
                 density="compact"
@@ -11,32 +11,26 @@
                 label="Nom" />
 
             <v-text-field
-                v-model="user.password"
+                v-model="product.prix"
                 class="mb-2"
                 variant="outlined"
                 density="compact"
                 hide-details="true"
-                type="password"
-                label="Mot de passe" />
+                label="Prix" />
 
-            <v-btn class="mb-2" color="primary"  elevation="0" @click="$r.users.login(user.name, user.password)">
-                Se connecter
-            </v-btn>
-            <v-btn color="primary" variant="tonal" @click="$r.goto('/user/register')">
-                S'inscrire
-            </v-btn>
+            <v-btn color="primary" variant="tonal" @click="$r.products.createProduct(product)"> Se connecter </v-btn>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'login',
+    name: 'product',
     data() {
         return {
-            user: {
+            product: {
                 name: '',
-                password: ''
+                prix: ''
             }
         }
     }

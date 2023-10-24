@@ -1,15 +1,15 @@
 <template>
-    <div class="register ma-4">
-        <h2>S'inscrire</h2>
+    <div class="account ma-4">
+        <h2>Mes informations</h2>
 
-        <div class="formulaire mt-2 w-50">
+        <div v-if="user" class="formulaire mt-2 w-50">
             <v-text-field
                 v-model="user.username"
                 class="mb-2"
                 variant="outlined"
                 density="compact"
                 hide-details="true"
-                label="Nom" /> 
+                label="Nom" />
 
             <v-text-field
                 v-model="user.adress"
@@ -27,19 +27,11 @@
                 hide-details="true"
                 label="Mail" />
 
-            <v-text-field
-                v-model="user.password"
-                class="mb-2"
-                variant="outlined"
-                density="compact"
-                hide-details="true"
-                label="Mot de passe" />
-
             <v-btn
-                color="primary"
+                color="blue"
                 variant="tonal"
                 @click="$r.users.createUser(user)">
-                S'inscrire
+                Modifier
             </v-btn>
         </div>
     </div>
@@ -47,16 +39,15 @@
 
 <script>
 export default {
-    name: 'register',
+    name: 'account',
     data() {
         return {
-            user: {
-                username: '', 
-                email: '',
-                password: '',
-                adress: ''
-            }
+            user: null
         }
+    },
+    created() {
+        this.user = this.$r.users.getProfileConnected()
+        if (!this.user) this.$r.goto('/user/login')
     }
 }
 </script>
