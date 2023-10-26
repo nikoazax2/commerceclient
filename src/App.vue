@@ -1,27 +1,30 @@
 <template>
-    <v-app>
-        <v-main>
+    <v-app :class="{ isphone: $r.isPhone, isPC: !$r.isPhone }">
+        <v-main style="padding-bottom: 660px">
             <HeaderSite />
 
             <router-view />
+
+            <FooterSite />
         </v-main>
     </v-app>
 </template>
 
 <script>
-import HeaderSite from '@/components/HeaderSite.vue'
+import HeaderSite from '@/components/Header/HeaderSite.vue'
+import FooterSite from '@/components/Footer/FooterSite.vue'
+FooterSite
 export default {
     name: 'App',
     components: {
-        HeaderSite
+        HeaderSite,
+        FooterSite
     },
     created() {
         //test if is on phone or computer with offset
         window.innerWidth > 600 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
     },
-    data: () => ({
-        //
-    })
+    data: () => ({})
 }
 </script>
 
@@ -42,17 +45,44 @@ export default {
     display: flex;
     align-items: center;
 }
-:deep(.pabs){
+:deep(.pabs) {
     position: absolute;
 }
-:deep(.r0){
+:deep(.r0) {
     right: 0;
 }
-:deep(.w100){
+:deep(.w100) {
     width: 100%;
 }
-:deep(.tac){
+:deep(.tac) {
     text-align: center;
 }
-
+:deep(.jcse) {
+    justify-content: space-evenly;
+}
+:deep(.jcsb) {
+    justify-content: space-between;
+}
+</style>
+<style lang="scss">
+::-webkit-scrollbar {
+    width: 14px;
+    height: 18px;
+}
+::-webkit-scrollbar-thumb {
+    height: 6px;
+    border: 4px solid rgba(0, 0, 0, 0);
+    background-clip: padding-box;
+    -webkit-border-radius: 7px;
+    background-color: rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
+}
+::-webkit-scrollbar-button {
+    width: 0;
+    height: 0;
+    display: none;
+}
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
 </style>

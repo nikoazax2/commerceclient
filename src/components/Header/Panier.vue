@@ -4,11 +4,10 @@
             v-model="trueModel"
             v-if="panier"
             fullscreen
-            :scrim="false"
-            persistent
+            :scrim="false" 
             transition="dialog-bottom-transition">
             <v-card>
-                <v-icon class="pabs r0" @click="panier = false">mdi-close</v-icon>
+                <v-icon class="pabs r0 ma-4" @click="panier = false">mdi-close</v-icon>
             </v-card>
         </v-dialog>
     </div>

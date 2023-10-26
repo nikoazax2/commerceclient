@@ -1,80 +1,88 @@
 <template>
     <div class="accueil">
+        <!-- IMAGE ACCUEIL -->
         <img
             @click="$r.goto('/')"
             :src="require('@/assets/imgachanger/photo-accueil-1.png')"
             class="logo-website"
             style="width: 100vw"
             alt="logo" />
-        <!-- ENCART 1 -->
-        <div class="encart1 encart pt-6 pb-6">
-            <h3 class="w100 jcc pb-4">{{ $c.accueil.encart1.titre }}</h3>
-            <p class="tac text-caption ma-4" v-html="$c.accueil.encart1.texte" />
 
-            <div class="jcc">
-                <v-btn elevation="0" color="primary">{{ $c.accueil.encart1.bouton }}</v-btn>
-            </div>
-        </div>
+        <!-- ENCART 1 -->
+        <encartTitreTexte
+            :bouton="$c.accueil.encart1.bouton"
+            :texte="$c.accueil.encart1.texte"
+            :titre="$c.accueil.encart1.titre" />
 
         <!-- IMAGES TITRES -->
-        <div v-for="bloc in $c.accueil.imagesTitre" class="container-img-text pb-4">
-            <img
-                @click="$r.goto('/')"
-                :src="require(`@/assets/imgachanger/${bloc.image}`)"
-                class="logo-website"
-                style="width: 100vw"
-                alt="logo" />
-            <h2 class="titre-img-encart">{{ bloc.titre }}</h2>
-        </div>
+        <imgTitre :blocs="$c.accueil.imagesTitre1" />
 
         <!-- ENCART 2 -->
-        <div class="encart1 encart pt-6 pb-6">
-            <h3 class="w100 jcc pb-4">{{ $c.accueil.encart2.titre }}</h3>
-            <p class="tac text-caption ma-4" v-html="$c.accueil.encart2.texte" />
+        <encartTitreTexte :texte="$c.accueil.encart2.texte" :titre="$c.accueil.encart2.titre" />
+
+        <!-- IMAGES TITRES -->
+        <imgTitre :blocs="$c.accueil.imagesTitre2" />
+
+        <!-- GRILLE ARTICLES -->
+        <grilleArticles :style="!$r.isPhone ? 'margin:0 10%;' : ''" :products="products" />
+
+        <!-- ENCART 3 -->
+        <encartTitreTexte :texte="$c.accueil.encart3.texte" :titre="$c.accueil.encart3.titre" />
+
+        <div class="img-text">
+            <!-- PHOTO PRODUIT 1 -->
+            <img
+                v-if="products"
+                style="width: 100%"
+                :src="`data:image/png;base64, ${products[0].image}`"
+                alt="Red dot" />
+
+            <!-- ENCART 4 -->
+            <encartTitreTexte :texte="$c.accueil.encart4.texte" :titre="$c.accueil.encart4.titre" />
         </div>
 
         <!-- IMAGES TITRES -->
-        <div v-for="bloc in $c.accueil.imagesTitreBtn" class="container-img-text pb-4">
-            <img
-                @click="$r.goto('/')"
-                :src="require(`@/assets/imgachanger/${bloc.image}`)"
-                class="logo-website"
-                style="width: 100vw"
-                alt="logo" />
-            <div class="titre-img-encart">
-                <h2>{{ bloc.titre }}</h2>
-                <v-btn elevation="0" color="white"><v-icon>mdi-chevron-right</v-icon>{{ bloc.bouton }}</v-btn>
-            </div>
-        </div>
-
-        <grilleArticles />
+        <imgTitre :blocs="$c.accueil.imagesTitre3" />
     </div>
 </template>
 
 <script>
-import grilleArticles from '@/components/grilleArticles.vue'
+import grilleArticles from '@/components/ElementsContenu/grilleArticles.vue'
+import encartTitreTexte from '@/components/ElementsContenu/encartTitreTexte.vue'
+import imgTitre from '@/components/ElementsContenu/imgTitre.vue'
+
 export default {
     name: 'Accueil',
     components: {
-        grilleArticles
+        grilleArticles,
+        encartTitreTexte,
+        imgTitre
     },
     data() {
-        return {}
+        return { products: null }
     },
-    created() {}
+    async created() {
+        this.products = await this.$r.products.getProducts()
+    }
 }
 </script>
 
 <style lang="scss" scoped>
-.container-img-text {
-    position: relative;
-    text-align: center;
-    color: white;
-    .titre-img-encart {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+.isPC {
+    .img-text {
+        display: flex;
+        padding: 0 10%;
+        img {
+            width: 50vw !important;
+            height: fit-content !important;
+        }
+        .encart1,
+        p,
+        :deep(.tac) {
+            width: 50vw !important;
+            text-align: start !important;
+            margin-right: 100px;
+        }
     }
 }
 </style>
