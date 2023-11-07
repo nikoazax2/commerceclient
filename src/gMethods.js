@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { contenu } from "./contenu";
 // --------- Methodes gloables ---------
 export const gMethods = {
     config: {
@@ -11,6 +11,8 @@ export const gMethods = {
     isPhone: false,
 
     products: {
+        categories: [],
+        products: [],
         createProduct(product) {
             axios
                 .post(`${gMethods.config.domain}/product`, product)
@@ -21,22 +23,128 @@ export const gMethods = {
                     console.error("Error fetching products data:", error);
                 })
         },
-        async getProducts() {
-            gMethods.loading = true 
-            let products = await axios
-                .get(`${gMethods.config.domain}/product`)
+        async getCategories() {
+            gMethods.loading = true
+            let categories = await axios
+                .get(`${gMethods.config.domain}/categorie`)
                 .then((response) => {
+                    gMethods.loading = false
                     return response.data
                 })
                 .catch((error) => {
                     console.error("Error fetching products data:", error);
-                }) 
+                })
+            return categories
+        },
+        async getProducts() {
+            gMethods.loading = true
+            let products = await axios
+                .get(`${gMethods.config.domain}/product`)
+                .then((response) => {
+                    gMethods.loading = false
+                    return response.data
+                })
+                .catch((error) => {
+                    console.error("Error fetching products data:", error);
+                })
             return products
+        },
+        async deleteProduct(uuid) {
+            gMethods.loading = true
+            await axios
+                .delete(`${gMethods.config.domain}/product/${uuid}`)
+                .then((response) => {
+                    gMethods.loading = false
+                    document.location.reload()
+                    return response.data
+                })
+                .catch((error) => {
+                    console.error("Error fetching products data:", error);
+                })
+        },
+        async editProduct(product) {
+            gMethods.loading = true
+            await axios
+                .patch(`${gMethods.config.domain}/product/${product.uuid}`, product)
+                .then(async (response) => {
+                    document.location.reload()
+                    gMethods.loading = false
+                    return response.data
+                })
+                .catch((error) => {
+                    console.error("Error fetching products data:", error);
+                })
+
+        },
+        formatPrix(prix) {
+            return prix.toFixed(2).toString().replace('.', ',')
         }
     },
     goto(url) {
         document.location.href = url
 
+    }, 
+    cart: {
+        menuCart:false,
+        cart: null,
+        addInCart(product, user, quantity = 1) {
+            gMethods.loading = true
+            if (user) {
+                let cart = {
+                    user: gMethods.userConnected.uuid,
+                    product: product,
+                    quantity: quantity
+                }
+                axios
+                    .post(`${gMethods.config.domain}/cart`, cart)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching products data:", error);
+                    })
+            } else {
+                let cart = JSON.parse(localStorage.getItem(this.nameInCookie()))
+                if (cart) {
+                    let index = cart.findIndex((item) => item.product === product.uuid)
+                    if (index !== -1) {
+                        cart[index].quantity += parseInt(quantity)
+                    } else {
+                        cart.push({
+                            product: product.uuid,
+                            quantity: quantity
+                        })
+                    }
+                } else {
+                    cart = [{
+                        product: product.uuid,
+                        quantity: quantity
+                    }]
+                }
+                gMethods.cart.cart = cart
+                localStorage.setItem(this.nameInCookie(), JSON.stringify(cart))
+                gMethods.loading = false
+            }
+        },
+        nameInCookie() {
+            return `${contenu.general.nom.replaceAll(' ', '-').toLocaleLowerCase()}-cart`
+        },
+        getCart(connected = false) {
+            if (connected) {
+                axios
+                    .get(`${gMethods.config.domain}/cart`)
+                    .then((response) => {
+                        this.cart = response.data
+                        localStorage.setItem(this.nameInCookie(), JSON.stringify(cart))
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching products data:", error);
+                    })
+            } else {
+                this.cart = JSON.parse(localStorage.getItem(this.nameInCookie()))
+            }
+
+        }
     },
     users: {
         disconnect() {
@@ -44,17 +152,18 @@ export const gMethods = {
         },
         getProfileConnected() {
             if (localStorage.getItem('jwtToken')) {
+                let jwtToken = localStorage.getItem('jwtToken')
                 let token
                 try {
-                    token = JSON.parse(localStorage.getItem('jwtToken'));
+                    token = JSON.parse(atob(jwtToken.split('.')[1]));
                 } catch (error) {
                     localStorage.removeItem('jwtToken');
                     return null
                 }
+                token.access_token = JSON.parse(jwtToken).access_token
                 if (!this.isTokenExpired(token.access_token)) {
                     return token
                 } else {
-
                     localStorage.removeItem('jwtToken');
                     return null
                 }

@@ -4,6 +4,9 @@ import Register from "../views/User/Register.vue";
 import Login from "../views/User/Login.vue";
 import CreateProduct from "../views/Product/Create.vue";
 import Account from "../views/User/Account.vue";
+import Produits from "../views/Product/Produits.vue";
+import Produit from "../views/Product/Produit.vue";
+import Gestion from "../views/Product/Administration.vue";
 
 const routes = [
     {
@@ -25,11 +28,26 @@ const routes = [
         path: "/product/create",
         name: "Créer produit",
         component: CreateProduct,
-    }, 
+    },
     {
         path: "/user/account",
         name: "Profil",
         component: Account,
+    },
+    {
+        path: "/product/list",
+        name: "Produits",
+        component: Produits,
+    },
+    {
+        path: "/product/detail",
+        name: "Produit",
+        component: Produit,
+    }, 
+    {
+        path: "/product/administration",
+        name: "Gestion Produits",
+        component: Gestion,
     },
 ];
 

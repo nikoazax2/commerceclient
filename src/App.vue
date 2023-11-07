@@ -1,5 +1,5 @@
 <template>
-    <v-app :class="{ isphone: $r.isPhone, isPC: !$r.isPhone }">
+    <v-app v-if="!load" :class="{ isphone: $r.isPhone, isPC: !$r.isPhone }">
         <v-main style="padding-bottom: 660px">
             <HeaderSite />
 
@@ -20,11 +20,17 @@ export default {
         HeaderSite,
         FooterSite
     },
-    created() {
+
+    async created() {
         //test if is on phone or computer with offset
         window.innerWidth > 600 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
+
+        this.$r.products.categories = await this.$r.products.getCategories()
+        this.$r.products.products = await this.$r.products.getProducts()
+        this.$r.cart.getCart(this.$r.userConnected ? true : false)
+        this.load = false
     },
-    data: () => ({})
+    data: () => ({ load: true })
 }
 </script>
 
@@ -36,6 +42,8 @@ export default {
         // To pin point specific classes of some components
         font-family: $title-font, sans-serif !important;
     }
+}
+* {
 }
 :deep(.jcc) {
     display: flex;

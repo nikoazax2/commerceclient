@@ -31,11 +31,12 @@
 
         <div class="img-text">
             <!-- PHOTO PRODUIT 1 -->
-            <img
+            <carroussel
                 v-if="products"
                 style="width: 100%"
                 :src="`data:image/png;base64, ${products[0].image}`"
-                alt="Red dot" />
+                alt="Red dot"
+                :images="products[0].image" /> 
 
             <!-- ENCART 4 -->
             <encartTitreTexte :texte="$c.accueil.encart4.texte" :titre="$c.accueil.encart4.titre" />
@@ -50,16 +51,18 @@
 import grilleArticles from '@/components/ElementsContenu/grilleArticles.vue'
 import encartTitreTexte from '@/components/ElementsContenu/encartTitreTexte.vue'
 import imgTitre from '@/components/ElementsContenu/imgTitre.vue'
+import carroussel from '@/components/imageCarroussel.vue'
 
 export default {
     name: 'Accueil',
     components: {
         grilleArticles,
         encartTitreTexte,
-        imgTitre
+        imgTitre,
+        carroussel
     },
     data() {
-        return { products: null }
+        return { products: null, categories: null }
     },
     async created() {
         this.products = await this.$r.products.getProducts()

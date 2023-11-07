@@ -16,9 +16,12 @@
                     <v-list-item @click="$r.goto('/user/account')">
                         <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title>
                     </v-list-item>
+                    <v-list-item v-if="user.role == 1" @click="$r.goto('/product/administration')">
+                        <v-list-item-title class="text-subtitle-2">Administration</v-list-item-title>
+                    </v-list-item>
                     <v-list-item @click="$r.users.disconnect(), (user = null)">
                         <v-list-item-title class="text-subtitle-2">Déconnexion</v-list-item-title>
-                    </v-list-item>
+                    </v-list-item> 
                 </span>
                 <!-- MENU SI DECONNECTE -->
                 <span v-else>
@@ -27,13 +30,20 @@
                     </v-list-item>
                     <v-list-item @click="$r.goto('/user/register')">
                         <v-list-item-title class="text-subtitle-2">Inscription</v-list-item-title>
-                    </v-list-item></span
-                >
+                    </v-list-item>
+                </span>
 
-                <div
-                    v-if="$r.isPhone"
-                    class=" "
-                    style="border-top: 1px solid rgba(121, 121, 121, 0.3)">
+                <div v-if="$r.isPhone" class=" " style="border-top: 1px solid rgba(121, 121, 121, 0.3)">
+                    <div @click="$r.goto('')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">
+                        Meilleures Ventes
+                    </div>
+                    <div
+                        v-for="lien in $r.products.categories"
+                        @click="$r.goto(`/product/list?categorie=${lien.uuid}`)"
+                        class="ma-4 text-subtitle-2"
+                        :class="{ 'font-weight-bold text-primary': lien.important }">
+                        {{ lien.name }}
+                    </div>
                     <div
                         v-for="lien in $c.header.liens"
                         @click="$r.goto('')"
@@ -69,15 +79,22 @@
                         <v-icon @click="" class="bg-primary"> mdi-magnify </v-icon>
                     </template>
                 </v-text-field>
-            </div>
-
-            <div class="mr-6 aic" @click="panier = true">
-                <v-icon >mdi-cart-heart</v-icon>
-                <div class="ml-4 font-weight-bold">Panier</div>
-            </div>
+            </div> 
+            <v-btn text elevation="0" class="mr-6 aic" @click="$r.cart.menuCart=true">
+                <v-icon style="font-size: 30px">mdi-cart-heart</v-icon>
+                <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
+            </v-btn>
         </div>
 
         <div v-if="!$r.isPhone" class="liens-ordi aic" style="border-bottom: 1px solid rgba(121, 121, 121, 0.3)">
+            <div @click="$r.goto('')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">Meilleures Ventes</div>
+            <div
+                v-for="lien in $r.products.categories"
+                @click="$r.goto(`/product/list?categorie=${lien.uuid}`)"
+                class="ma-4 text-subtitle-2"
+                :class="{ 'font-weight-bold text-primary': lien.important }">
+                {{ lien.name }}
+            </div>
             <div
                 v-for="lien in $c.header.liens"
                 @click="$r.goto('')"
@@ -87,7 +104,7 @@
             </div>
         </div>
 
-        <Panier :panier="panier" />
+        <Panier  />
     </div>
 </template>
 
@@ -124,6 +141,7 @@ export default {
 }
 .header-principal {
     justify-content: space-between;
+    border-bottom: 1px solid rgba(121, 121, 121, 0.15);
 }
 .liens-ordi {
     div {

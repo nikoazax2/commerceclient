@@ -1,13 +1,13 @@
 //changer le contenu ici + les images dans src/assets/imgachanger
 export const contenu = {
+    general: {
+        nom: 'Vestes Chauffantes'
+    },
     header: {
         bandeau: 'NOUVELLE GÉNÉRATION DE VESTES CHAUFFANTES 2023 | JUSQU\'À 21 ZONES DE CHAUFFE',
         logo: 'logo-website.png',
         logoBlack: 'logo-website-black.png',
         liens: [
-            { important: true, titre: 'Meilleures Ventes', url: '' },
-            { important: false, titre: 'Veste Chauffante', url: '' },
-            { important: false, titre: 'Gilet Chauffant', url: '' },
             { important: false, titre: 'Blog', url: '' },
             { important: false, titre: 'Guide des Tailles', url: '' }
         ],
