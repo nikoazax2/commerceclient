@@ -1,7 +1,10 @@
 <template>
     <v-app v-if="!load" :class="{ isphone: $r.isPhone, isPC: !$r.isPhone }">
         <v-main style="padding-bottom: 660px">
+            <Loading />
             <HeaderSite />
+
+            <Iframe />
 
             <router-view />
 
@@ -13,21 +16,25 @@
 <script>
 import HeaderSite from '@/components/Header/HeaderSite.vue'
 import FooterSite from '@/components/Footer/FooterSite.vue'
-FooterSite
+import Iframe from '@/components/Iframe.vue'
+import Loading from '@/components/Loading.vue'
+
 export default {
     name: 'App',
     components: {
         HeaderSite,
-        FooterSite
+        FooterSite,
+        Iframe,
+        Loading
     },
 
     async created() {
         //test if is on phone or computer with offset
-        window.innerWidth > 600 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
+        window.innerWidth > 640 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
 
-        this.$r.products.categories = await this.$r.products.getCategories()
-        this.$r.products.products = await this.$r.products.getProducts()
-        this.$r.cart.getCart(this.$r.userConnected ? true : false)
+        this.$r.categories = await this.$r.getCategories()
+        this.$r.products = await this.$r.getProducts()
+        this.$r.getCart(this.$r.userConnected ? true : false)
         this.load = false
     },
     data: () => ({ load: true })
@@ -70,6 +77,9 @@ export default {
 }
 :deep(.jcsb) {
     justify-content: space-between;
+}
+:deep(.v-overlay__content) {
+    width: auto !important;
 }
 </style>
 <style lang="scss">

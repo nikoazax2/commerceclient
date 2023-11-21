@@ -65,7 +65,7 @@ export default {
         return { products: null, categories: null }
     },
     async created() {
-        this.products = await this.$r.products.getProducts()
+        this.products = await this.$r.getProducts()
     }
 }
 </script>

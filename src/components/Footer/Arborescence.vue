@@ -15,17 +15,18 @@
                     {{ lien.titre }}
                 </div>
             </div>
-            
+
             <div class="pa-4 bg-black rejoins">
                 <h4 class="mb-4" v-if="!$r.isPhone">S'INSCRIRE</h4>
                 <v-text-field
                     hide-details="true"
                     class="mb-2"
+                    density="compact"
                     style="width: 200px"
                     variant="outlined"
                     bg-color="white"
                     label="Votre mail" />
-                <v-btn flat size="large" color="primary">S'INSCRIRE</v-btn>
+                <v-btn flat color="primary">S'INSCRIRE</v-btn>
             </div>
         </div>
     </div>

@@ -1,7 +1,7 @@
 <template>
     <div class="login ma-4">
         <h2>Se connecter</h2>
-        <div class="formulaire mt-2 w-50">
+        <div class="formulaire mt-6 w-50">
             <v-text-field
                 v-model="user.name"
                 class="mb-2"
@@ -19,7 +19,7 @@
                 type="password"
                 label="Mot de passe" />
 
-            <v-btn class="mb-2" color="primary"  elevation="0" @click="$r.users.login(user.name, user.password)">
+            <v-btn class="mr-2" color="primary"  elevation="0" @click="$r.login(user.name, user.password)">
                 Se connecter
             </v-btn>
             <v-btn color="primary" variant="tonal" @click="$r.goto('/user/register')">

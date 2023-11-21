@@ -19,9 +19,9 @@
                     <v-list-item v-if="user.role == 1" @click="$r.goto('/product/administration')">
                         <v-list-item-title class="text-subtitle-2">Administration</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="$r.users.disconnect(), (user = null)">
+                    <v-list-item @click="$r.disconnect(), (user = null)">
                         <v-list-item-title class="text-subtitle-2">Déconnexion</v-list-item-title>
-                    </v-list-item> 
+                    </v-list-item>
                 </span>
                 <!-- MENU SI DECONNECTE -->
                 <span v-else>
@@ -33,12 +33,12 @@
                     </v-list-item>
                 </span>
 
-                <div v-if="$r.isPhone" class=" " style="border-top: 1px solid rgba(121, 121, 121, 0.3)">
+                <div style="border-top: 1px solid rgba(121, 121, 121, 0.3)">
                     <div @click="$r.goto('')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">
                         Meilleures Ventes
                     </div>
                     <div
-                        v-for="lien in $r.products.categories"
+                        v-for="lien in $r.categories"
                         @click="$r.goto(`/product/list?categorie=${lien.uuid}`)"
                         class="ma-4 text-subtitle-2"
                         :class="{ 'font-weight-bold text-primary': lien.important }">
@@ -57,8 +57,8 @@
 
         <div class="header-principal d-flex aic pt-2 pb-2">
             <div class="gauche aic">
-                <v-icon @click="navDrawer = !navDrawer" v-if="user" class="ml-4 text-h5 aic"> mdi-account </v-icon>
-                <v-icon @click="navDrawer = !navDrawer" v-else class="ml-4 text-h5 aic"> mdi-account-circle </v-icon>
+                <v-icon @click="navDrawer = !navDrawer" v-if="user" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
+                <v-icon @click="navDrawer = !navDrawer" v-else class="ml-4 text-h5 aic"> mdi-menu </v-icon>
 
                 <img
                     @click="$r.goto('/')"
@@ -79,17 +79,22 @@
                         <v-icon @click="" class="bg-primary"> mdi-magnify </v-icon>
                     </template>
                 </v-text-field>
-            </div> 
-            <v-btn text elevation="0" class="mr-6 aic" @click="$r.cart.menuCart=true">
+            </div>
+            <v-btn v-if="!$r.menuCart" text elevation="0" class="mr-6 aic" @click="$r.menuCart = true">
                 <v-icon style="font-size: 30px">mdi-cart-heart</v-icon>
                 <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
             </v-btn>
+            <div v-else class="mr-8 ml-14 pl-10 aic">
+                <v-icon class="close-cart" style="font-size: 30px" @click="$r.menuCart = false">
+                    mdi-close
+                </v-icon>
+            </div>
         </div>
 
         <div v-if="!$r.isPhone" class="liens-ordi aic" style="border-bottom: 1px solid rgba(121, 121, 121, 0.3)">
             <div @click="$r.goto('')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">Meilleures Ventes</div>
             <div
-                v-for="lien in $r.products.categories"
+                v-for="lien in $r.categories"
                 @click="$r.goto(`/product/list?categorie=${lien.uuid}`)"
                 class="ma-4 text-subtitle-2"
                 :class="{ 'font-weight-bold text-primary': lien.important }">
@@ -103,13 +108,12 @@
                 {{ lien.titre }}
             </div>
         </div>
-
-        <Panier  />
+        <Panier />
     </div>
 </template>
 
 <script>
-import Panier from '@/components/Header/Panier.vue'
+import Panier from '@/components/Header/dialogPanier.vue'
 export default {
     name: 'Accueil',
     components: {
@@ -123,7 +127,7 @@ export default {
         }
     },
     created() {
-        this.user = this.$r.users.getProfileConnected()
+        this.user = this.$r.getProfileConnected()
     }
 }
 </script>

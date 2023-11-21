@@ -1,35 +1,43 @@
 <template>
-    <div class="panier mr-4">
-        <v-dialog
-            v-model="trueModel"
-            v-if="$r.cart.menuCart"
-            fullscreen
-            :scrim="false"
-            transition="dialog-bottom-transition">
-            <v-card>
-                <v-icon class="pabs r0 ma-4" @click="$r.cart.menuCart = false">mdi-close</v-icon>
-                <div
-                    class="pa-4 products-cart"
-                    v-for="productCart in productsOfCart($r.cart.cart, $r.products.products)">
-                    {{ productCart }}
-                    <carroussel
-                        v-if="productCart"
-                        style="width: 100%"
-                        :src="`data:image/png;base64, ${productCart[0].image}`"
-                        alt="Red dot"
-                        :images="productCart[0].image" />
+    <v-card elevation="0" class="products-cart">
+        <div class="pa-4 product-cart d-flex" v-for="productCart in $r.productsOfCart($r.cart, $r.products)">
+            <img
+                v-if="productCart"
+                style="width: 100px"
+                :src="`data:image/png;base64, ${JSON.parse(productCart.image)[0]}`"
+                alt="" />
+            <div class="infos-droite">
+                <div class="name">
+                    {{ productCart.name }}
                 </div>
-            </v-card>
-        </v-dialog>
-    </div>
+                <div class="prix">{{ $r.formatPrix(productCart.prix) }} €</div>
+                <div class="quantite d-flex aic">
+                    <plusmoins :number="productCart.quantity" :product="productCart" />
+                    <v-btn variant="text" class="ma-2" @click="$r.deleteInCart(productCart, $r.userConnected)">
+                        Supprimer
+                    </v-btn>
+                </div>
+            </div>
+        </div>
+        <div class="total">
+            <div class="g">Total</div>
+            <div class="d">€{{ $r.formatPrix(getTot()) }} EUR</div>
+        </div>
+        <div class="boutons d-flex jcsb">
+            <v-btn class="rounded-sm pl-16 pr-16 ma-2" elevation="0" size="large" color="black">PANIER</v-btn>
+            <v-btn class="rounded-sm pl-16 pr-16 ma-2" elevation="0" size="large" color="primary" @click="$r.goto('/paiement')">PAYER</v-btn>
+        </div>
+    </v-card>
 </template>
 
 <script>
 import carroussel from '@/components/imageCarroussel.vue'
+import plusmoins from '@/components/plusmoins.vue'
 export default {
     name: 'panier',
-    components:{
-        carroussel
+    components: {
+        carroussel,
+        plusmoins
     },
     data() {
         return {
@@ -37,19 +45,43 @@ export default {
         }
     },
     methods: {
-        productsOfCart(cart, products) {
-            let cartDetails = []
-            cart.forEach((productCart) => {
-                products.forEach((product) => {
-                    if (productCart.product == product.uuid) {
-                        cartDetails.push({ ...product, ...productCart })
-                    }
-                })
-            })
-            return cartDetails
-        }
+        getTot() {
+            return this.$r.productsOfCart(this.$r.cart, this.$r.products).reduce((acc, curr) => {
+                return acc + curr.prix * curr.quantity
+            }, 0)
+        }, 
     }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.dialog-cart {
+    position: absolute;
+    top: 110px;
+    .product-cart {
+        border: none;
+        border-bottom: 1px solid #e0e0e0;
+        width: 100%;
+        .infos-droite {
+            display: flex;
+            flex-direction: column;
+        }
+    }
+    .boutons {
+        margin: 0 0px;
+        width: 100%;
+        justify-content: space-evenly;
+        button {
+            max-width: 300px;
+            width: calc(50% - 20px);
+        }
+    }
+    .total {
+        padding: 5px 20px;
+        font-weight: bold;
+        width: 100%;
+        display: inline-flex;
+        justify-content: space-between;
+    }
+}
+</style>

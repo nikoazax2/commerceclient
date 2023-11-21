@@ -38,7 +38,7 @@
             <v-btn
                 color="primary"
                 variant="tonal"
-                @click="$r.users.createUser(user)">
+                @click="$r.createUser(user)">
                 S'inscrire
             </v-btn>
         </div>

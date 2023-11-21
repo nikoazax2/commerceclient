@@ -43,5 +43,8 @@ export const contenu = {
         imagesTitre3: [
             { image: 'photo-accueil-5.png', titre: 'COLLECTION DE GILET CHAUFFANT', bouton: 'VOIR TOUTE LA COLLECTION' },
         ],
+    },
+    detail: {
+        livraison: 'Livraison estimée : 2 à 4 semaines',
     }
 }

@@ -13,7 +13,7 @@
                     <div class="name">
                         {{ product.name }}
                     </div>
-                    <div class="prix text-primary">{{ $r.products.formatPrix(product.prix) }} €</div>
+                    <div class="prix text-primary">{{ $r.formatPrix(product.prix) }} €</div>
                 </div>
             </div>
         </div>
@@ -35,9 +35,9 @@ export default {
     },
     async created() {
         this.load = true
-        this.products = this.$r.products.products
+        this.products = this.$r.products
         this.products = this.products.filter((p) => p.categorie.uuid === this.$route.query.categorie)
-        this.categorie = this.$r.products.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
+        this.categorie = this.$r.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
         this.load = false
     }
 }

@@ -1,47 +1,118 @@
 <template>
     <div class="administration" v-if="!$r.loading">
         <input type="file" id="file-input" ref="fileInput" multiple style="display: none" @change="handleFileChange" />
-        <v-dialog v-model="sure.display">
+
+        <v-dialog v-model="sureProduct.display">
             <div class="bg-white pa-6">
                 Etes vous sur de vouloir supprimer ce produit ?
                 <div class="d-flex mt-4 jcc w100">
-                    <v-btn elevation="0" @click="sure = false">Annuler</v-btn>
-                    <v-btn elevation="0" color="primary" @click="$r.products.deleteProduct(sure.uuid)">Supprimer</v-btn>
+                    <v-btn elevation="0" @click="sureProduct = false">Annuler</v-btn>
+                    <v-btn elevation="0" color="primary" @click="$r.deleteProduct(sureProduct.uuid)">Supprimer</v-btn>
                 </div>
             </div>
         </v-dialog>
-        <h3 class="mt-4 mb-4">Product Administration</h3>
-        <div
-            class="products mb-6"
-            v-for="(product, index) in $r.products.products.sort((a, b) =>
-                a.categorie.name > b.categorie.name ? 1 : -1
-            )">
-            <div
-                class="name-cat"
-                v-if="
-                    !$r.products.products[index - 1] ||
-                    $r.products.products.sort((a, b) => (a.categorie.name > b.categorie.name ? 1 : -1))[index - 1]
-                        .categorie.name != product.categorie.name
-                ">
-                <b> {{ product.categorie.name }}</b>
+
+        <v-dialog v-model="sureCategorie.display">
+            <div class="bg-white pa-6">
+                Etes vous sur de vouloir supprimer cette catégorie ?
+                <div class="d-flex mt-4 jcc w100">
+                    <v-btn elevation="0" @click="sureCategorie = false">Annuler</v-btn>
+                    <v-btn elevation="0" color="primary" @click="$r.deleteCategorie(sureCategorie.uuid)">
+                        Supprimer
+                    </v-btn>
+                </div>
             </div>
-            <div class="product">
-                <div class="images aic">
-                    <div class="image d-flex" v-for="(image, index) in JSON.parse(product.image)">
-                        <img :src="`data:image/png;base64, ${image}`" alt="Red dot" />
-                        <v-icon @click="deleteImage(product, image)">mdi-close</v-icon>
+        </v-dialog>
+
+        <h3 class="mt-4 mb-4">Administration Produits</h3>
+
+        <div class="d-flex">
+            <h3 class="mb-4">Catégories</h3>
+            <v-btn size="small" class="ml-4" color="primary" elevation="0" @click="createCategorie()">
+                <v-icon>mdi-plus</v-icon> Nouvelle catégorie
+            </v-btn>
+        </div>
+        <div class="categories">
+            <div class="categorie" v-for="(categorie, index) in $r.categories">
+                <div class="name-cat mb-4 d-flex aic">
+                    <v-text-field
+                        hide-details="true"
+                        style="max-width: 300px"
+                        density="compact"
+                        class="ml-2 mr-4"
+                        v-model="categorie.name" />
+                    <div class="mr-4">
+                        ({{
+                            $r.products.filter((product) => product.categorieuuid === categorie.uuid).length > 1
+                                ? ''
+                                : '&nbsp;'
+                        }}{{
+                            $r.products.filter((product) => product.categorieuuid === categorie.uuid).length
+                        }}
+                        produit{{
+                            $r.products.filter((product) => product.categorieuuid === categorie.uuid).length > 1
+                                ? 's'
+                                : '&nbsp;'
+                        }})
                     </div>
                     <v-btn
+                        variant="tonal"
+                        elevation="0"
+                        @click=";(sureCategorie.uuid = categorie.uuid), (sureCategorie.display = true)">
+                        Supprimer
+                    </v-btn>
+                    <v-btn
+                        color="blue"
+                        class="ml-4"
+                        variant="tonal"
+                        elevation="0"
+                        @click="categorie.nouveau ? $r.createCategorie(categorie) : $r.editCategorie(categorie)">
+                        Sauvegarder
+                    </v-btn>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-4 d-flex">
+            <h3>Produits</h3>
+            <v-btn size="small" class="ml-4" color="primary" elevation="0" @click="addNewProduct()">
+                <v-icon>mdi-plus</v-icon> Nouveau produit
+            </v-btn>
+        </div>
+
+        <div class="products mb-6" v-for="(product, index) in $r.products">
+            <div class="name-cat mb-4" v-if="product.categorie.name">
+                <b class="d-flex">
+                    <div>{{ product.categorie.name }} - {{ product.name }}</div>
+                    <v-icon @click="$r.goto(`/product/detail?id=${product.uuid}`, true)" class="ml-2">
+                        mdi-open-in-new
+                    </v-icon>
+                </b>
+            </div>
+            <div class="product">
+                <div class="images mb-4 aic">
+                    <div class="image d-flex" v-for="(image, index) in JSON.parse(product.image)">
+                        <img class="mr-4" :src="`data:image/png;base64, ${image}`" alt="Red dot" />
+                        <div class="btns-actions">
+                            <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
+                                Agrandir
+                            </v-btn>
+                            <v-btn elevation="0" color="#C62828" @click="deleteImage(product, image)">Supprimer</v-btn>
+                        </div>
+                    </div>
+
+                    <v-btn
                         size="small"
-                        icon
                         color="primary"
                         elevation="0"
+                        variant="tonal"
+                        class="mb-4"
                         @click=";(productAddImg = product), openFilePicker()">
-                        <v-icon>mdi-plus</v-icon>
+                        <v-icon>mdi-plus</v-icon> Ajouter une image
                     </v-btn>
                 </div>
                 <div class="product-info">
-                    <div class="product-name d-flex aic">
+                    <div class="product-name">
                         <b>Nom : </b>
                         <v-text-field
                             hide-details="true"
@@ -50,7 +121,7 @@
                             class="ml-2"
                             v-model="product.name" />
                     </div>
-                    <div class="product-name d-flex mt-2">
+                    <div class="product-name mt-2">
                         <b>Description : </b>
                         <v-textarea
                             hide-details="true"
@@ -59,7 +130,7 @@
                             class="ml-2"
                             v-model="product.description" />
                     </div>
-                    <div class="product-price mt-2 aic">
+                    <div class="product-price mt-2">
                         <b>Prix : </b>
                         <v-text-field
                             hide-details="true"
@@ -68,14 +139,72 @@
                             class="ml-2"
                             v-model="product.prix" />
                     </div>
-                    <div class="product-category mt-2"><b>Categorie : </b>{{ product.categorie.name }}</div>
-                    <div class="product-actions mt-4">
-                        <v-btn class="mr-4" variant="tonal" @click=";(sure.uuid = product.uuid), (sure.display = true)">
-                            Supprimer
-                        </v-btn>
-                        <v-btn color="blue" elevation="0" @click="$r.products.editProduct(product)">Modifier</v-btn>
+                    <div class="product-category mt-4">
+                        <b>Categorie : </b>
+                        <br />
+                        <v-autocomplete
+                            item-value="uuid"
+                            item-title="name"
+                            style="max-width: 300px"
+                            hide-details="true"
+                            density="compact"
+                            class="ml-2"
+                            :items="$r.categories"
+                            v-model="product.categorieuuid" />
                     </div>
-                    <hr class="mt-4" />
+                </div>
+                <div class="variations mt-6">
+                    <h3>Variations</h3>
+                    <div v-for="(variation, index) in product.variations" class="d-flex aic">
+                        <div class="chevrons">
+                            <v-icon v-if="index > 0" @click="changeOrderVariation(product, index, true)">
+                                mdi-chevron-up
+                            </v-icon>
+                            <v-icon
+                                v-if="index < product.variations.length - 1"
+                                @click="changeOrderVariation(product, index, false)">
+                                mdi-chevron-down
+                            </v-icon>
+                        </div>
+                        <v-text-field
+                            hide-details="true"
+                            style="max-width: 300px"
+                            label="Variation"
+                            density="compact"
+                            class="ma-2"
+                            v-model="variation.name" />
+                        <v-text-field
+                            hide-details="true"
+                            style="max-width: 300px"
+                            label="Stock"
+                            density="compact"
+                            class="ma-2"
+                            v-model="variation.stock" />
+                    </div>
+                    <v-btn
+                        size="small"
+                        color="primary"
+                        elevation="0"
+                        variant="tonal"
+                        class="mt-2 mb-4"
+                        @click="createVariation(product)">
+                        <v-icon>mdi-plus</v-icon> Ajouter une variation
+                    </v-btn>
+                </div>
+                <div class="product-actions mt-4">
+                    <v-btn class="mr-4" variant="tonal" @click="dupliquer(product)"> Dupliquer </v-btn>
+                    <v-btn
+                        class="mr-4"
+                        variant="tonal"
+                        @click=";(sureProduct.uuid = product.uuid), (sureProduct.display = true)">
+                        Supprimer
+                    </v-btn>
+                    <v-btn
+                        color="blue"
+                        elevation="0"
+                        @click="product.nouveau ? $r.createProduct(product) : $r.editProduct(product)">
+                        Sauvegarder
+                    </v-btn>
                 </div>
             </div>
         </div>
@@ -86,21 +215,74 @@
 export default {
     data() {
         return {
-            sure: {
+            sureProduct: {
                 uuid: null,
                 display: false,
                 productAddImg: null
-            }
+            },
+            sureCategorie: {
+                uuid: null,
+                display: false
+            },
+            user: null
         }
     },
-    mounted() {},
+    async created() {
+        this.$r.products.forEach((product) => {
+            product.categorieuuid = product.categorie.uuid
+        })
+        let user = await this.$r.getProfileConnected()
+
+        if (!user || user.role != 1) {
+            this.$router.push('/')
+        }
+    },
     methods: {
+        changeOrderVariation(product, index, up) {
+            let variation = product.variations[index]
+            product.variations.splice(index, 1)
+            product.variations.splice(up ? index - 1 : index + 1, 0, variation)
+            product.variations.forEach((variation, index) => {
+                variation.order = index
+            })
+        },
+        createCategorie() {
+            this.$r.categories.push({ name: '', nouveau: true })
+        },
+        dupliquer(product) {
+            let newProduct = JSON.parse(JSON.stringify(product))
+            newProduct.uuid = null
+            newProduct.nouveau = true
+            this.$r.products.push(newProduct)
+            this.$r.createProduct(newProduct)
+        },
+        addNewProduct() {
+            this.$r.products.push({
+                name: '',
+                description: '',
+                prix: '',
+                nouveau: true,
+                image: '[]',
+                categorie: {
+                    name: ''
+                },
+                variations: []
+            })
+        },
+        createVariation(product) {
+            //order is max of key order of product + 1
+            let order = product.variations ? Math.max(...product.variations.map((v) => v.order), 0) + 1 : 0
+
+            product.variations
+                ? product.variations.push({ name: '', stock: '', productuuid: product.uuid, order: order })
+                : (product.variations = [{ name: '', stock: '', productuuid: product.uuid, order: order }])
+        },
         openFilePicker() {
             document.getElementById('file-input').click()
         },
         async handleFileChange(event) {
-            await Array.from(event.target.files).forEach((filefr, index) => {
-                const file = filefr
+            await Array.from(event.target.files).forEach(async (filefr, index) => {
+                const file = await this.compressImage(filefr)
                 const reader = new FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = () => {
@@ -109,17 +291,32 @@ export default {
                     images.push(base64)
                     this.productAddImg.image = JSON.stringify(images)
                     if (index === event.target.files.length - 1) {
-                        debugger
-                        this.$r.products.editProduct(this.productAddImg)
+                        this.$r.editProduct(this.productAddImg)
                     }
                 }
+            })
+        },
+        compressImage(file) {
+            return new Promise((resolve, reject) => {
+                const img = new Image()
+                img.src = URL.createObjectURL(file)
+                img.onload = () => {
+                    const canvas = document.createElement('canvas')
+                    const ctx = canvas.getContext('2d')
+                    canvas.width = img.width
+                    canvas.height = img.height
+                    ctx.drawImage(img, 0, 0, img.width, img.height)
+
+                    canvas.toBlob(resolve, 'image/jpeg', 75000 / file.size)
+                }
+                img.onerror = reject
             })
         },
         deleteImage(product, image) {
             let images = JSON.parse(product.image)
             images.splice(images.indexOf(image), 1)
             product.image = JSON.stringify(images)
-            this.$r.products.editProduct(product)
+            this.$r.editProduct(product)
         }
     }
 }
@@ -127,8 +324,52 @@ export default {
 <style lang="scss" scoped>
 .administration {
     margin-left: 20px;
-    img {
-        width: 300px;
+    .categories {
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+        border-radius: 5px;
+        min-width: 50vw;
+        padding: 10px;
+        width: fit-content;
+        margin-bottom: 20px;
+    }
+    .products {
+        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+        border-radius: 5px;
+        min-width: 50vw;
+        width: fit-content;
+        padding: 10px;
+    }
+    .chevrons{
+        width: 30px;
+    }
+    .images {
+        max-height: 200px;
+        .image {
+            position: relative;
+            max-height: 200px;
+            img {
+                max-height: inherit;
+            }
+            .btns-actions {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                cursor: pointer;
+                opacity: 0;
+                display: flex;
+                flex-direction: column;
+                .v-btn {
+                    margin-bottom: 10px;
+                }
+            }
+            &:hover {
+                .btns-actions {
+                    opacity: 1;
+                }
+            }
+        }
     }
 }
 </style>

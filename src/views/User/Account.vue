@@ -30,7 +30,7 @@
             <v-btn
                 color="blue"
                 variant="tonal"
-                @click="$r.users.createUser(user)">
+                @click="$r.createUser(user)">
                 Modifier
             </v-btn>
         </div>
@@ -46,7 +46,7 @@ export default {
         }
     },
     created() {
-        this.user = this.$r.users.getProfileConnected()
+        this.user = this.$r.getProfileConnected()
         if (!this.user) this.$r.goto('/user/login')
     }
 }
