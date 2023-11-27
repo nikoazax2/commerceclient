@@ -5,7 +5,9 @@
         <p class="tac text-caption ma-4" v-html="texte" />
 
         <div class="jcc" v-if="bouton">
-            <v-btn elevation="0" color="primary" class="text-subtitle-2 mt-4">{{ bouton }}</v-btn>
+            <v-btn elevation="0" color="primary" class="text-subtitle-2 mt-4" @click="$r.goto(bouton.url)">{{
+                bouton.titre
+            }}</v-btn>
         </div>
     </div>
 </template>

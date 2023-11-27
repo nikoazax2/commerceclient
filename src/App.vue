@@ -1,14 +1,17 @@
 <template>
     <v-app v-if="!load" :class="{ isphone: $r.isPhone, isPC: !$r.isPhone }">
-        <v-main style="padding-bottom: 660px">
+        <v-main>
             <Loading />
+
             <HeaderSite />
 
             <Iframe />
 
-            <router-view />
+            <div>
+                <router-view />
 
-            <FooterSite />
+                <FooterSite />
+            </div>
         </v-main>
     </v-app>
 </template>

@@ -8,7 +8,7 @@
             <carroussel :images="product.image" />
             <h4>{{ product.name }}</h4>
             <div>
-                <h4 class="text-primary">{{ product.prix }} €</h4>
+                <h4 class="text-primary">{{ $r.formatPrix(product.prix) }} €</h4>
             </div>
         </div>
     </div>

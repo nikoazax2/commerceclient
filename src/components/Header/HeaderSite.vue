@@ -73,10 +73,13 @@
                     hide-details="true"
                     dense
                     density="compact"
+                    v-model="$r.recherche"
                     class="barre-de-recherche"
                     variant="outlined">
                     <template v-slot:append-inner class="test">
-                        <v-icon @click="" class="bg-primary"> mdi-magnify </v-icon>
+                        <v-icon @click="$r.goto(`/product/list?recherche=${$r.recherche}`)" class="bg-primary">
+                            mdi-magnify
+                        </v-icon>
                     </template>
                 </v-text-field>
             </div>
@@ -85,9 +88,7 @@
                 <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
             </v-btn>
             <div v-else class="mr-8 ml-14 pl-10 aic">
-                <v-icon class="close-cart" style="font-size: 30px" @click="$r.menuCart = false">
-                    mdi-close
-                </v-icon>
+                <v-icon class="close-cart" style="font-size: 30px" @click="$r.menuCart = false"> mdi-close </v-icon>
             </div>
         </div>
 
@@ -127,6 +128,7 @@ export default {
         }
     },
     created() {
+        this.$r.recherche = this.$route.query.recherche || ''
         this.user = this.$r.getProfileConnected()
     }
 }
@@ -139,29 +141,34 @@ export default {
         padding: 0 15% 0 15%;
     }
 }
-.logo-website {
-    width: 170px;
-    cursor: pointer;
-}
-.header-principal {
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(121, 121, 121, 0.15);
-}
-.liens-ordi {
-    div {
+.header {
+    background-color: white;
+    position: sticky;
+    z-index: 1000;
+    top: 0; 
+    .logo-website {
+        width: 170px;
         cursor: pointer;
     }
-}
-.barre-de-recherche::v-deep .v-field {
-    padding: 0;
-    i {
-        height: 100%;
-        width: 40px;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
+    .header-principal {
+        justify-content: space-between;
     }
-}
-:deep(.v-navigation-drawer__scrim) {
-    background-color: rgba(255, 255, 255, 0) !important;
+    .liens-ordi {
+        div {
+            cursor: pointer;
+        }
+    }
+    .barre-de-recherche::v-deep .v-field {
+        padding: 0;
+        i {
+            height: 100%;
+            width: 40px;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+    }
+    :deep(.v-navigation-drawer__scrim) {
+        background-color: rgba(255, 255, 255, 0) !important;
+    }
 }
 </style>

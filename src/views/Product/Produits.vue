@@ -2,7 +2,7 @@
     <div v-if="!load">
         <div class="produits-container">
             <div class="titre">
-                <h3 class="ma-6">
+                <h3 class="pa-6" v-if="categorie">
                     {{ categorie.name.toUpperCase() }}
                 </h3>
                 <div class="ligne2">{{ products.length }} Produit{{ products.length > 1 ? 's' : '' }}</div>
@@ -10,10 +10,12 @@
             <div class="produits">
                 <div class="produit" v-for="product in products" @click="$r.goto(`detail?id=${product.uuid}`)">
                     <carroussel :images="product.image" />
-                    <div class="name">
-                        {{ product.name }}
+                    <div class="w100">
+                        <div class="name">
+                            {{ product.name }}
+                        </div>
+                        <div class="prix text-primary">{{ $r.formatPrix(product.prix) }} €</div>
                     </div>
-                    <div class="prix text-primary">{{ $r.formatPrix(product.prix) }} €</div>
                 </div>
             </div>
         </div>
@@ -34,10 +36,14 @@ export default {
         }
     },
     async created() {
-        this.load = true
+        this.load = true 
         this.products = this.$r.products
-        this.products = this.products.filter((p) => p.categorie.uuid === this.$route.query.categorie)
-        this.categorie = this.$r.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
+        if (this.$route.query.categorie) {
+            this.products = this.products.filter((p) => p.categorie.uuid === this.$route.query.categorie)
+            this.categorie = this.$r.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
+        }else if(this.$route.query.recherche){
+            this.products = this.products.filter((p) => p.name.toLowerCase().includes(this.$route.query.recherche.toLowerCase()))
+        }
         this.load = false
     }
 }
@@ -51,10 +57,13 @@ h2 {
     margin: 20px 10% 20px 10%;
     .titre {
         border-bottom: 1px solid #e0e0e0;
+        h3{
+            border-bottom: 1px solid #e0e0e0;
+        }
     }
     .ligne2 {
         padding: 20px;
-        border-top: 1px solid #e0e0e0;
+    
     }
     .produits {
         display: flex;
@@ -68,6 +77,7 @@ h2 {
             flex-direction: column;
             align-items: center;
             grid-gap: 1px;
+            justify-content: space-between;
             .prix {
                 font-weight: bold;
                 width: 100%;

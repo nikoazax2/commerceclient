@@ -14,6 +14,7 @@ export const gMethods = {
         show: false,
         url: null
     },
+    recherche: '',
     goto(url, newTab = false) {
         if (newTab) {
             window.open(url, '_blank');
@@ -81,7 +82,7 @@ export const gMethods = {
                 console.error("Error fetching products data:", error);
             })
     },
-    async editProduct(product) {
+    async editProduct(product) { 
         this.loading = true
         await axios
             .patch(`${this.config.domain}/product/${product.uuid}`, product)
@@ -123,8 +124,8 @@ export const gMethods = {
 
 
     },
-    formatPrix(prix) {
-        return prix.toFixed(2).toString().replace('.', ',')
+    formatPrix(prix, devise = false) {
+        return prix.toFixed(2).toString().replace('.', ',') + (devise ? ' €' : '')
     },
 
     // --------- Methodes pour les commandes ---------

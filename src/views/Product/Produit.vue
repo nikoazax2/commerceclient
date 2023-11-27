@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!load && product" class="ma-4">
+    <div v-if="!load && product" class="ma-4 container-produit">
         <v-breadcrumbs
             divider=">"
             class="breadcrumbs"
@@ -19,12 +19,15 @@
                 <div class="g-bloc bloc-image">
                     <carrousel :visuels="true" :images="product.image" />
                 </div>
-                <div class="g-bloc paiement ">
-                    PAIEMENTS 100% SÉCURISÉS
-                    <img
-                        style="width: 100%;"
-                        :src="require('@/assets/imgachanger/paiements.png')"
-                        alt="paiement" />
+                <div class="g-bloc paiement">
+                    <div class="jcsb aic mb-4">
+                        <h4 class="">PAIEMENTS 100% SÉCURISÉS</h4>
+                        <v-icon>mdi-lock-outline</v-icon>
+                    </div>
+                    <img style="width: 100%" :src="require('@/assets/imgachanger/paiements.png')" alt="paiement" />
+                </div>
+                <div class="g-bloc">
+                    <div class="pa-4" v-html="product.description" />
                 </div>
             </div>
             <div class="droite">
@@ -56,7 +59,7 @@
 
                     <div class="bloc prix">
                         Prix :
-                        <div class="price text-primary">{{ $r.formatPrix(product.prix) }} €</div>
+                        <div class="price text-primary">{{ $r.formatPrix(product.prix, true) }}</div>
                         (TTC)
                     </div>
 
@@ -83,16 +86,31 @@
                 </div>
             </div>
         </div>
+
+        <div class="similar-products mt-4" v-if="$r.products.length > 1">
+            <h3>NOS PRODUITS SIMILAIRES</h3>
+
+            <grilleArticles
+                :products="
+                    $r.products
+                        .filter((p) => {
+                            return p.uuid !== product.uuid
+                        })
+                        .splice(0, 7)
+                " />
+        </div>
     </div>
 </template>
 
 <script>
 import carrousel from '@/components/imageCarroussel.vue'
 import plusmoins from '@/components/plusmoins.vue'
+import grilleArticles from '@/components/ElementsContenu/grilleArticles.vue'
 export default {
     components: {
         carrousel,
-        plusmoins
+        plusmoins,
+        grilleArticles
     },
     data() {
         return {
@@ -147,16 +165,27 @@ export default {
 .breadcrumbs {
     font-size: 13px;
 }
+:deep(.articles) {
+    .bloc-article {
+        width: 15% !important;
+    }
+}
+.container-produit {
+    height: fit-content;
+}
 .product-detail {
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-between;
     .gauche {
         width: 49%;
-        .bloc-image { 
+        height: fit-content;
+        .bloc-image {
             width: 100%;
             height: 100%;
             border: none;
         }
+    }
+    .similar-products {
     }
     .quantite {
         .bloc {
@@ -164,7 +193,8 @@ export default {
             width: fit-content;
         }
     }
-    .g-bloc{
+    .g-bloc {
+        overflow: scroll;
         border: 1px solid #e0e0e0;
         padding: 20px;
         margin: 20px 0;
@@ -182,9 +212,10 @@ export default {
                 cursor: pointer;
             }
         }
-        .bloc-infos { 
+        .bloc-infos {
             width: 100%;
-            height: 100%;
+            position: sticky;
+            top: 170px;
             padding: 20px;
             .bloc {
                 margin: 20px 0;

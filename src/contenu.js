@@ -19,7 +19,7 @@ export const contenu = {
         système de résistances intégrées, vous n’aurez plus jamais froid. Chasseur, motard, amateur de sports de
         glisse ou simplement frileux, la doudoune chauffante deviendra vite un indispensable de votre garde-robe
         en hiver.`,
-            bouton: 'VOIR TOUTES LES VESTES CHAUFFANTES'
+            bouton: { titre: 'VOIR TOUT LES PRODUITS', url: 'http://localhost:8080/product/list' }
         },
         imagesTitre1: [
             { image: 'photo-accueil-2.png', titre: 'DOUDOUNE CHAUFFANTE' },

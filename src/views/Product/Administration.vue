@@ -122,13 +122,23 @@
                             v-model="product.name" />
                     </div>
                     <div class="product-name mt-2">
-                        <b>Description : </b>
-                        <v-textarea
-                            hide-details="true"
-                            style="max-width: 300px"
-                            density="compact"
-                            class="ml-2"
-                            v-model="product.description" />
+                        <b>Description : </b> 
+                        <editor
+                            api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
+                            v-model="product.description"
+                            :init="{
+                                height: 500,
+                                menubar: false,
+                                plugins: [
+                                    'advlist autolink lists link image charmap print preview anchor',
+                                    'searchreplace visualblocks code fullscreen',
+                                    'insertdatetime media table paste code help wordcount'
+                                ],
+                                toolbar:
+                                    'undo redo | formatselect | bold italic backcolor | \
+           alignleft aligncenter alignright alignjustify | \
+           bullist numlist outdent indent | removeformat | help'
+                            }" />
                     </div>
                     <div class="product-price mt-2">
                         <b>Prix : </b>
@@ -212,7 +222,11 @@
 </template>
 
 <script>
+import Editor from '@tinymce/tinymce-vue'
 export default {
+    components: {
+        editor: Editor
+    },
     data() {
         return {
             sureProduct: {
@@ -290,9 +304,7 @@ export default {
                     let images = JSON.parse(this.productAddImg.image)
                     images.push(base64)
                     this.productAddImg.image = JSON.stringify(images)
-                    if (index === event.target.files.length - 1) {
-                        this.$r.editProduct(this.productAddImg)
-                    }
+                     
                 }
             })
         },
@@ -339,7 +351,7 @@ export default {
         width: fit-content;
         padding: 10px;
     }
-    .chevrons{
+    .chevrons {
         width: 30px;
     }
     .images {
