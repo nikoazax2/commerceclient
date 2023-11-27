@@ -1,6 +1,7 @@
 <template>
     <div v-if="!load && product" class="ma-4 container-produit">
         <v-breadcrumbs
+            v-if="!$r.isPhone"
             divider=">"
             class="breadcrumbs"
             :items="[
@@ -14,11 +15,13 @@
                 </div>
             </template>
         </v-breadcrumbs>
+
         <div class="product-detail">
             <div class="gauche">
                 <div class="g-bloc bloc-image">
                     <carrousel :visuels="true" :images="product.image" />
                 </div>
+                <blocInfos v-if="$r.isPhone" :product="product" />
                 <div class="g-bloc paiement">
                     <div class="jcsb aic mb-4">
                         <h4 class="">PAIEMENTS 100% SÉCURISÉS</h4>
@@ -30,60 +33,9 @@
                     <div class="pa-4" v-html="product.description" />
                 </div>
             </div>
+
             <div class="droite">
-                <div class="g-bloc bloc-infos">
-                    <div class="name">
-                        {{ product.name }}
-                    </div>
-
-                    <!-- Variations -->
-                    <div v-if="product.variations?.length > 0" class="bloc">
-                        <div class="bloc">
-                            <div class="variations d-flex">
-                                <div
-                                    :style="{
-                                        'border-color': variation.selected ? $r.getColorTheme('primary') : '#e0e0e0',
-                                        'background-color': variation.selected
-                                            ? $r.getColorTheme('primary-nuance')
-                                            : 'white',
-                                        color: variation.selected ? $r.getColorTheme('primary') : 'black'
-                                    }"
-                                    class="bloc variation mr-2"
-                                    v-for="variation in product.variations"
-                                    @click="selectVariation(variation)">
-                                    <div v-if="variation.stock > 0">{{ variation.name }}</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bloc prix">
-                        Prix :
-                        <div class="price text-primary">{{ $r.formatPrix(product.prix, true) }}</div>
-                        (TTC)
-                    </div>
-
-                    <div class="quantite">
-                        <div class="bloc d-flex">
-                            <label class="mr-4">Quantité :</label>
-                            <plusmoins :number="numberValue" :product="product" />
-                        </div>
-                    </div>
-
-                    <v-btn
-                        @click="$r.addInCart(product, $r.userConnected, numberValue), ($r.menuCart = true)"
-                        class="rounded-sm pl-16 pr-16"
-                        color="primary"
-                        elevation="0"
-                        size="large">
-                        Ajouter au panier
-                    </v-btn>
-
-                    <div class="livraison aic mt-4 mb-4 mr-4">
-                        <v-icon class="mr-2">mdi-truck-delivery-outline</v-icon>{{ $c.detail.livraison }}
-                    </div>
-                    <!-- <div class="bloc description">{{ product.description }}</div> -->
-                </div>
+                <blocInfos v-if="!$r.isPhone" :product="product" />
             </div>
         </div>
 
@@ -106,11 +58,13 @@
 import carrousel from '@/components/imageCarroussel.vue'
 import plusmoins from '@/components/plusmoins.vue'
 import grilleArticles from '@/components/ElementsContenu/grilleArticles.vue'
+import blocInfos from '@/components/DetailProduitBlocInfos.vue'
 export default {
     components: {
         carrousel,
         plusmoins,
-        grilleArticles
+        grilleArticles,
+        blocInfos
     },
     data() {
         return {
@@ -148,6 +102,7 @@ export default {
 <style lang="scss" scoped>
 .isphone {
     .product-detail {
+        width: calc(100vw - 35px);
         flex-direction: column;
         .gauche {
             padding-bottom: 100px;
@@ -160,6 +115,11 @@ export default {
         .droite {
             width: 100%;
         }
+    }
+    .bloc-image {
+        margin: 0 !important;
+        padding: 0 !important;
+        height: fit-content !important;
     }
 }
 .breadcrumbs {
@@ -185,60 +145,19 @@ export default {
             border: none;
         }
     }
-    .similar-products {
-    }
+
     .quantite {
         .bloc {
             align-items: center;
             width: fit-content;
         }
     }
-    .g-bloc {
+    :deep(.g-bloc) {
         overflow: scroll;
         border: 1px solid #e0e0e0;
         padding: 20px;
         margin: 20px 0;
     }
-    .droite {
-        width: 49%;
-        .variations {
-            .variation {
-                border: 2px solid #e0e0e0;
-                border-radius: 5px;
-                padding: 10px;
-                margin: 10px;
-                width: 50px;
-                text-align: center;
-                cursor: pointer;
-            }
-        }
-        .bloc-infos {
-            width: 100%;
-            position: sticky;
-            top: 170px;
-            padding: 20px;
-            .bloc {
-                margin: 20px 0;
-            }
-            .name {
-                font-size: 1.5em;
-                font-weight: bold;
-                padding-bottom: 10px;
-                border-bottom: 1px solid #e0e0e0;
-            }
-            .prix {
-                align-items: center;
-                display: flex;
-                .price {
-                    margin: 0 10px;
-                    font-size: 1.5em;
-                    font-weight: bold;
-                }
-            }
-            .description {
-                margin-top: 20px;
-            }
-        }
-    }
+  
 }
 </style>

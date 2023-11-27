@@ -30,6 +30,17 @@ export const gMethods = {
         return myCustomLightTheme.colors[color]
     },
 
+    uuidv4() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+            // eslint-disable-next-line
+            let r = Math.random() * 16 | 0,
+                // eslint-disable-next-line
+                v = c == 'x' ? r : (r & 0x3 | 0x8);
+            // eslint-disable-next-line
+            return v.toString(16);
+        });
+    },
+
     // --------- Methodes pour les produits ---------
     categories: [],
     products: [],
@@ -45,8 +56,23 @@ export const gMethods = {
     },
     async getCategories() {
         this.loading = true
-        let categories = await axios
+        await axios
             .get(`${this.config.domain}/categorie`)
+            .then((response) => {
+                this.categories = response.data
+                this.loading = false
+            })
+            .catch((error) => {
+                console.error("Error fetching products data:", error);
+            })
+    },
+    async uploadImg(originalname, file) {
+        this.loading = true
+        let formData = new FormData()
+        file = new Blob([file], { type: 'image/jpeg' })
+        formData.append('photos[]', file, originalname);
+        let img = await axios
+            .post(`${this.config.domain}/product/uploadImage`, formData)
             .then((response) => {
                 this.loading = false
                 return response.data
@@ -54,21 +80,53 @@ export const gMethods = {
             .catch((error) => {
                 console.error("Error fetching products data:", error);
             })
-        return categories
+        return img
+    },
+    deleteImg(uuid) {
+        axios
+            .delete(`${this.config.domain}/product/image/${uuid}`)
+            .then((response) => {
+                console.log(response.data)
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+    },
+    async setImagesProduct(product) {
+        this.loading = true
+        product.imagesBlob = []
+        for await (let image of product.image) {
+            let img = await axios
+                .get(`${this.config.domain}/product/image/${image}`)
+                .then((response) => {
+                    this.loading = false
+                    return response.data
+
+                })
+                .catch((error) => {
+                    console.error("Error fetching products data:", error);
+                })
+
+            product.imagesBlob.push(img)
+        }
+        return product
     },
     async getProducts() {
         this.loading = true
-        let products = await axios
+        await axios
             .get(`${this.config.domain}/product`)
-            .then((response) => {
+            .then(async (response) => {
+                for await (let product of response.data) {
+                    product = await this.setImagesProduct(product)
+                }
+                this.products = response.data
                 this.loading = false
-                return response.data
             })
             .catch((error) => {
                 console.error("Error fetching products data:", error);
             })
-        return products
     },
+
     async deleteProduct(uuid) {
         this.loading = true
         await axios
@@ -82,7 +140,7 @@ export const gMethods = {
                 console.error("Error fetching products data:", error);
             })
     },
-    async editProduct(product) { 
+    async editProduct(product) {
         this.loading = true
         await axios
             .patch(`${this.config.domain}/product/${product.uuid}`, product)
@@ -120,7 +178,6 @@ export const gMethods = {
             }
         }
         )
-        document.location.reload()
 
 
     },

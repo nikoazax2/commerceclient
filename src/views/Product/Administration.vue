@@ -91,13 +91,13 @@
             </div>
             <div class="product">
                 <div class="images mb-4 aic">
-                    <div class="image d-flex" v-for="(image, index) in JSON.parse(product.image)">
-                        <img class="mr-4" :src="`data:image/png;base64, ${image}`" alt="Red dot" />
+                    <div class="image d-flex" v-for="(image, index) in product.imagesBlob">
+                        <img class="mr-4" :src="image" alt="Red dot" />
                         <div class="btns-actions">
                             <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                                 Agrandir
                             </v-btn>
-                            <v-btn elevation="0" color="#C62828" @click="deleteImage(product, image)">Supprimer</v-btn>
+                            <v-btn elevation="0" color="#C62828" @click="deleteImage(product, index)">Supprimer</v-btn>
                         </div>
                     </div>
 
@@ -122,7 +122,7 @@
                             v-model="product.name" />
                     </div>
                     <div class="product-name mt-2">
-                        <b>Description : </b> 
+                        <b>Description : </b>
                         <editor
                             api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
                             v-model="product.description"
@@ -295,39 +295,22 @@ export default {
             document.getElementById('file-input').click()
         },
         async handleFileChange(event) {
-            await Array.from(event.target.files).forEach(async (filefr, index) => {
-                const file = await this.compressImage(filefr)
-                const reader = new FileReader()
+            await Array.from(event.target.files).forEach(async (file, index) => {
+                let reader = new FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = () => {
-                    const base64 = reader.result.split(',')[1]
-                    let images = JSON.parse(this.productAddImg.image)
-                    images.push(base64)
-                    this.productAddImg.image = JSON.stringify(images)
-                     
+                    let base64 = reader.result
+                    let uuid = this.$r.uuidv4()
+                    this.productAddImg.image.push(uuid)
+                    this.$r.uploadImg(uuid, base64)
+                    this.$r.editProduct(this.productAddImg)
                 }
             })
         },
-        compressImage(file) {
-            return new Promise((resolve, reject) => {
-                const img = new Image()
-                img.src = URL.createObjectURL(file)
-                img.onload = () => {
-                    const canvas = document.createElement('canvas')
-                    const ctx = canvas.getContext('2d')
-                    canvas.width = img.width
-                    canvas.height = img.height
-                    ctx.drawImage(img, 0, 0, img.width, img.height)
-
-                    canvas.toBlob(resolve, 'image/jpeg', 75000 / file.size)
-                }
-                img.onerror = reject
-            })
-        },
-        deleteImage(product, image) {
-            let images = JSON.parse(product.image)
-            images.splice(images.indexOf(image), 1)
-            product.image = JSON.stringify(images)
+        async deleteImage(product, index) {
+            await this.$r.deleteImg(product.image[index])
+            product.image.splice(index, 1)
+            product.imagesBlob.splice(index, 1) 
             this.$r.editProduct(product)
         }
     }
@@ -353,6 +336,9 @@ export default {
     }
     .chevrons {
         width: 30px;
+    }
+    :deep(.tox-tinymce) {
+        width: calc(100vw - 100px) !important;
     }
     .images {
         max-height: 200px;

@@ -35,8 +35,8 @@ export default {
         //test if is on phone or computer with offset
         window.innerWidth > 640 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
 
-        this.$r.categories = await this.$r.getCategories()
-        this.$r.products = await this.$r.getProducts()
+    await this.$r.getCategories()
+         await this.$r.getProducts() 
         this.$r.getCart(this.$r.userConnected ? true : false)
         this.load = false
     },
@@ -86,6 +86,12 @@ export default {
 }
 </style>
 <style lang="scss">
+.isphone {
+    ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+}
 ::-webkit-scrollbar {
     width: 14px;
     height: 18px;

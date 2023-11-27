@@ -77,7 +77,7 @@ export default {
         },
         prevNext(next = true) {
             if (next) {
-                if (this.imageDisplay <this.localImages.length - 1) {
+                if (this.imageDisplay < this.localImages.length - 1) {
                     this.imageDisplay++
                 } else {
                     this.imageDisplay = 0
@@ -121,6 +121,24 @@ export default {
         cursor: pointer;
     }
 }
+.isphone {
+    .visuels {
+        flex-direction: row;
+        width: 100%;
+        height: 92px;
+    }
+    .visuel {
+        width: 92px !important;
+        height: 92px !important;
+    }
+    .container-carrousel {
+        flex-direction: column-reverse;
+    }
+    .bloc-image {
+        height: 500px !important;
+    }
+}
+
 .visuels::-webkit-scrollbar {
     width: 0px !important;
     height: 0;
