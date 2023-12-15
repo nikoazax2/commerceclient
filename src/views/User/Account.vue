@@ -27,12 +27,7 @@
                 hide-details="true"
                 label="Mail" />
 
-            <v-btn
-                color="blue"
-                variant="tonal"
-                @click="$r.createUser(user)">
-                Modifier
-            </v-btn>
+            <v-btn color="blue" variant="tonal" @click="$r.editUser(user)"> Modifier </v-btn>
         </div>
     </div>
 </template>
@@ -48,6 +43,8 @@ export default {
     created() {
         this.user = this.$r.getProfileConnected()
         if (!this.user) this.$r.goto('/user/login')
+    },
+    methods: { 
     }
 }
 </script>

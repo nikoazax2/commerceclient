@@ -19,7 +19,7 @@
         <div class="product-detail">
             <div class="gauche">
                 <div class="g-bloc bloc-image">
-                    <carrousel :visuels="true" :images="product.image" />
+                    <carrousel :visuels="true" :images="product.imagesBlob" />
                 </div>
                 <blocInfos v-if="$r.isPhone" :product="product" />
                 <div class="g-bloc paiement">
@@ -27,7 +27,7 @@
                         <h4 class="">PAIEMENTS 100% SÉCURISÉS</h4>
                         <v-icon>mdi-lock-outline</v-icon>
                     </div>
-                    <img style="width: 100%" :src="require('@/assets/imgachanger/paiements.png')" alt="paiement" />
+                    <img style="max-width: 100%" :src="require('@/assets/imgachanger/paiements.png')" alt="paiement" />
                 </div>
                 <div class="g-bloc">
                     <div class="pa-4" v-html="product.description" />
@@ -88,12 +88,6 @@ export default {
     methods: {
         isInCart(product) {
             return this.$r.cart && this.$r.cart.filter((p) => p.product == product.uuid).length > 0
-        },
-        selectVariation(variation) {
-            this.product.variations.forEach((v) => {
-                v.selected = false
-            })
-            variation.selected = true
         }
     }
 }
@@ -130,6 +124,9 @@ export default {
         width: 15% !important;
     }
 }
+.droite {
+    width: calc(50vw - 35px);
+}
 .container-produit {
     height: fit-content;
 }
@@ -158,6 +155,5 @@ export default {
         padding: 20px;
         margin: 20px 0;
     }
-  
 }
 </style>

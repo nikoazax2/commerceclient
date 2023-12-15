@@ -10,7 +10,7 @@
                 class="logo-website"
                 alt="logo" />
             <div class="titre-img-encart">
-                <h2>{{ bloc.titre }}</h2>
+                <h2 class="mb-4">{{ bloc.titre }}</h2>
                 <v-btn v-if="bloc.bouton" elevation="0" color="white"
                     ><v-icon>mdi-chevron-right</v-icon>{{ bloc.bouton }}</v-btn
                 >
@@ -49,9 +49,11 @@ export default {
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            h2{
+                text-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            }
         }
-        img {
-            padding: 20px;
+        img { 
             width: 100%;
         }
     }

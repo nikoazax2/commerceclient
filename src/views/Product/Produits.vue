@@ -9,7 +9,7 @@
             </div>
             <div class="produits">
                 <div class="produit" v-for="product in products" @click="$r.goto(`detail?id=${product.uuid}`)">
-                    <carroussel :images="product.image" />
+                    <carroussel v-if="product.imagesBlob" :images="product.imagesBlob" />
                     <div class="w100">
                         <div class="name">
                             {{ product.name }}
@@ -36,13 +36,15 @@ export default {
         }
     },
     async created() {
-        this.load = true 
+        this.load = true
         this.products = this.$r.products
         if (this.$route.query.categorie) {
             this.products = this.products.filter((p) => p.categorie.uuid === this.$route.query.categorie)
             this.categorie = this.$r.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
-        }else if(this.$route.query.recherche){
-            this.products = this.products.filter((p) => p.name.toLowerCase().includes(this.$route.query.recherche.toLowerCase()))
+        } else if (this.$route.query.recherche) {
+            this.products = this.products.filter((p) =>
+                p.name.toLowerCase().includes(this.$route.query.recherche.toLowerCase())
+            )
         }
         this.load = false
     }
@@ -57,13 +59,12 @@ h2 {
     margin: 20px 10% 20px 10%;
     .titre {
         border-bottom: 1px solid #e0e0e0;
-        h3{
+        h3 {
             border-bottom: 1px solid #e0e0e0;
         }
     }
     .ligne2 {
         padding: 20px;
-    
     }
     .produits {
         display: flex;

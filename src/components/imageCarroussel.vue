@@ -1,14 +1,14 @@
 <template>
-    <div v-if="localImages" class="d-flex container-carrousel">
-        <div v-if="visuels" ref="visuels" class="visuels ml-4 mt-4">
+    <div v-if="images" class="d-flex container-carrousel aic">
+        <div v-if="visuels" ref="visuels" class="visuels ml-4 mt-4"> 
             <img
                 class="visuel"
                 :class="{ 'image-selected': i == imageDisplay }"
-                v-for="(slide, i) in localImages"
+                v-for="(slide, i) in images"
                 :style="`border-color: ${
                     i == imageDisplay ? $vuetify.theme.themes.myCustomLightTheme.colors.primary : 'transparent'
                 }`"
-                :src="`data:image/png;base64, ${slide}`"
+                :src="`${slide}`"
                 @click=";(imageDisplay = i), setScroll(i)"
                 style="width: 70px"
                 alt="Red dot" />
@@ -21,14 +21,14 @@
             :show-arrows="!visuels"
             hide-delimiters="true"
             hide-delimiter-background>
-            <v-carousel-item v-for="(slide, i) in localImages" :key="i">
-                <img style="width: 100%" :src="`data:image/png;base64, ${slide}`" alt="Red dot" />
+            <v-carousel-item v-for="(slide, i) in images" :key="i">
+                <img style="width: 100%" :src="`${slide}`" alt="Red dot" />
             </v-carousel-item>
 
             <template v-slot:prev="{ on, attrs }">
                 <v-btn
                     icon="mdi-chevron-left"
-                    v-if="localImages.length >= 2"
+                    v-if="images.length >= 2"
                     v-bind="attrs"
                     v-on="on"
                     @click.stop="prevNext(false)" />
@@ -37,7 +37,7 @@
             <template v-slot:next="{ on, attrs }">
                 <v-btn
                     icon="mdi-chevron-right"
-                    v-if="localImages.length >= 2"
+                    v-if="images.length >= 2"
                     v-bind="attrs"
                     v-on="on"
                     @click.stop="prevNext()" />
@@ -50,8 +50,8 @@ export default {
     name: 'Carroussel',
     props: {
         images: {
-            type: String,
-            default: () => ''
+            type: Array,
+            default: () => []
         },
         visuels: {
             type: Boolean,
@@ -60,24 +60,17 @@ export default {
     },
     data() {
         return {
-            imageDisplay: 0,
-            localImages: null
+            imageDisplay: 0
         }
     },
-    created() {
-        if (typeof this.images == 'string') {
-            this.localImages = JSON.parse(this.images)
-        } else {
-            this.localImages = this.images
-        }
-    },
+    created() {},
     methods: {
         setScroll(i) {
             this.$refs.visuels.scrollTo(0, i * 70 - 140)
         },
         prevNext(next = true) {
             if (next) {
-                if (this.imageDisplay < this.localImages.length - 1) {
+                if (this.imageDisplay < this.images.length - 1) {
                     this.imageDisplay++
                 } else {
                     this.imageDisplay = 0
@@ -86,7 +79,7 @@ export default {
                 if (this.imageDisplay > 0) {
                     this.imageDisplay--
                 } else {
-                    this.imageDisplay = this.localImages.length - 1
+                    this.imageDisplay = this.images.length - 1
                 }
             }
         }

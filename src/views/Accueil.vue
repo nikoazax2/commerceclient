@@ -1,18 +1,16 @@
 <template>
-    <div class="accueil">
+    <div class="accueil" v-if="!$r.loading && $r.contenu">
         <!-- IMAGE ACCUEIL -->
         <img
             @click="$r.goto('/')"
-            :src="require('@/assets/imgachanger/photo-accueil-1.png')"
+            :src="$r.contenu.find((contenu) => contenu.valeur == 'photo-bandeau-site').imagesBlob[0]"
             class="logo-website"
             style="width: 100vw"
             alt="logo" />
-
         <!-- ENCART 1 -->
         <encartTitreTexte
             :bouton="$c.accueil.encart1.bouton"
-            :texte="$c.accueil.encart1.texte"
-            :titre="$c.accueil.encart1.titre" />
+            :texte="$r.contenu.find((contenu) => contenu.valeur == 'premier-encart-texte').contenu" />
 
         <!-- IMAGES TITRES -->
         <imgTitre :blocs="$c.accueil.imagesTitre1" />
@@ -31,12 +29,7 @@
 
         <div class="img-text">
             <!-- PHOTO PRODUIT 1 -->
-            <carroussel
-                v-if="products"
-                style="width: 100%"
-                :src="`data:image/png;base64, ${products[0].image}`"
-                alt="Red dot"
-                :images="products[0].image" /> 
+            <carroussel v-if="$r.products[0]" style="width: 100%" alt="Red dot" :images="$r.products[0].imagesBlob" />
 
             <!-- ENCART 4 -->
             <encartTitreTexte :texte="$c.accueil.encart4.texte" :titre="$c.accueil.encart4.titre" />

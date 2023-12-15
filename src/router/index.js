@@ -5,9 +5,19 @@ import Login from "../views/User/Login.vue";
 import Account from "../views/User/Account.vue";
 import Produits from "../views/Product/Produits.vue";
 import Produit from "../views/Product/Produit.vue";
-import Gestion from "../views/Product/Administration.vue";
+import Gestion from "../views/Product/AdministrationProduits.vue";
 import Panier from "../views/PanierVue.vue";
 import Payer from "../views/Payer.vue";
+import AdministrationSite from "../views/AdministrationSite.vue";
+import PageSample from "../views/PageSample.vue";
+
+const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
+
+const pageSampleRoutes = pageSamplePaths.map(path => ({
+    path,
+    name: path.substring(1), // remove the leading slash
+    component: PageSample,
+}));
 
 const routes = [
     {
@@ -41,7 +51,7 @@ const routes = [
         component: Produit,
     },
     {
-        path: "/product/administration",
+        path: "/product/administration-products",
         name: "Gestion Produits",
         component: Gestion,
     },
@@ -55,6 +65,15 @@ const routes = [
         name: "Payer",
         component: Payer,
     },
+    {
+        path: "/administration-site",
+        name: "AdministrationSite",
+        component: AdministrationSite,
+
+    },
+    ...pageSampleRoutes,
+
+
 ];
 
 const router = createRouter({

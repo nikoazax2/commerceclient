@@ -1,7 +1,7 @@
 <template>
     <div class="iframe">
         <v-dialog width="500" v-model="$r.iframeImg.show">
-            <img :src="`data:image/png;base64, ${$r.iframeImg.url}`" alt="Red dot" />
+            <img :src="`${$r.iframeImg.url}`" alt="Red dot" />
         </v-dialog>
     </div>
 </template>

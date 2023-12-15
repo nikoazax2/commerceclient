@@ -1,7 +1,7 @@
 <template>
     <!-- ENCART 1 -->
     <div class="encart1 encart pt-6 pb-6">
-        <h3 class="w100 jcc pb-4 tac">{{ titre }}</h3>
+        <h3 class="w100 jcc pb-4 tac">{{ titre||null }}</h3>
         <p class="tac text-caption ma-4" v-html="texte" />
 
         <div class="jcc" v-if="bouton">

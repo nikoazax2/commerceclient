@@ -3,7 +3,7 @@
         <v-expansion-panels v-if="$r.isPhone">
             <v-expansion-panel v-for="group in groupes" class="bg-black" :title="group.titre">
                 <v-expansion-panel-text v-for="lien in group.liens">
-                    <div class="text-caption pt-2 pb-2" @click="$r.goto(lien.url)">{{ lien.titre }}</div>
+                    <div class="text-caption pt-2 pb-2 lien" @click="$r.goto(lien.url)">{{ lien.titre }}</div>
                 </v-expansion-panel-text>
             </v-expansion-panel>
         </v-expansion-panels>
@@ -11,7 +11,7 @@
         <div v-else class="d-flex w100 jcsb footer-pc">
             <div v-for="group in groupes" class="ma-4">
                 <h4 class="mb-4">{{ group.titre }}</h4>
-                <div v-for="lien in group.liens" @click="$r.goto(lien.url)" class="text-caption mb-1">
+                <div v-for="lien in group.liens" @click="$r.goto(lien.url)" class="cursor-pointer text-caption mb-1 ">
                     {{ lien.titre }}
                 </div>
             </div>
@@ -63,5 +63,8 @@ export default {
 }
 .footer-pc {
     padding: 0 10% 0 10%;
+    .lien{
+        cursor: pointer;
+    }
 }
 </style>

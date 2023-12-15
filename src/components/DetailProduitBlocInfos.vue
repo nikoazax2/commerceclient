@@ -2,6 +2,14 @@
     <div class="g-bloc bloc-infos">
         <div class="name">
             {{ product.name }}
+            <div
+                v-if="product.ancienprixpromo"
+                class="promo-etiquette"
+                :style="`
+            background-color:${$vuetify.theme.themes.myCustomLightTheme.colors.primary};
+            `">
+                PROMO
+            </div>
         </div>
 
         <!-- Variations -->
@@ -26,7 +34,7 @@
         <div class="bloc prix">
             Prix :
             <div class="price text-primary">{{ $r.formatPrix(product.prix, true) }}</div>
-            (TTC)
+            <div class="price text-primary ancien">{{ $r.formatPrix(product.ancienprixpromo, true) }}</div>
         </div>
 
         <div class="quantite">
@@ -48,16 +56,32 @@
         <div class="livraison aic mt-4 mb-4 mr-4">
             <v-icon class="mr-2">mdi-truck-delivery-outline</v-icon>{{ $c.detail.livraison }}
         </div>
-        <!-- <div class="bloc description">{{ product.description }}</div> -->
     </div>
 </template>
 
 <script>
+import plusmoins from '@/components/plusmoins.vue'
 export default {
     props: {
         product: {
             type: Object,
             default: () => {}
+        }
+    },
+    data() {
+        return {
+            numberValue: 1
+        }
+    },
+    components: {
+        plusmoins
+    },
+    methods: {
+        selectVariation(variation) {
+            this.product.variations.forEach((v) => {
+                v.selected = false
+            })
+            variation.selected = true
         }
     }
 }
@@ -75,16 +99,24 @@ export default {
     }
 }
 .isphone {
-    .bloc-infos { 
+    .bloc-infos {
         position: relative;
         top: 0;
     }
+}
+.promo-etiquette {
+    width: fit-content;
+    background-color: #ff9800;
+    padding: 3px 6px;
+    font-size: 0.5em;
+    border-radius: 5px;
+    color: white;
 }
 
 .bloc-infos {
     width: 100%;
     position: sticky;
-    top: 170px;
+    top: 200px;
     padding: 20px;
     .bloc {
         margin: 20px 0;
@@ -102,6 +134,12 @@ export default {
             margin: 0 10px;
             font-size: 1.5em;
             font-weight: bold;
+        }
+        .price.ancien {
+            text-decoration: line-through;
+            color: #757575 !important;
+            font-weight: 400 !important;
+            font-size: 1em !important;
         }
     }
     .description {

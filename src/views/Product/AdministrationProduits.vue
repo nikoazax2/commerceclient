@@ -149,6 +149,25 @@
                             class="ml-2"
                             v-model="product.prix" />
                     </div>
+                    <div class="product-price mt-2">
+                        <b>Ancien prix avant promo : </b>
+                        <p>(Si l'article est en promo, insérez l'ancien prix sinon ne renseignez rien)</p>
+                        <v-text-field
+                            hide-details="true"
+                            style="max-width: 300px"
+                            density="compact"
+                            class="ml-2"
+                            v-model="product.ancienprixpromo" />
+                    </div>
+                    <div class="product-api-stripe">
+                        <b>Identifiant du produit sur Stripe : </b>
+                        <v-text-field
+                            hide-details="true"
+                            style="max-width: 300px"
+                            density="compact"
+                            class="ml-2"
+                            v-model="product.idapistripe" />
+                    </div>
                     <div class="product-category mt-4">
                         <b>Categorie : </b>
                         <br />
@@ -209,12 +228,7 @@
                         @click=";(sureProduct.uuid = product.uuid), (sureProduct.display = true)">
                         Supprimer
                     </v-btn>
-                    <v-btn
-                        color="blue"
-                        elevation="0"
-                        @click="product.nouveau ? $r.createProduct(product) : $r.editProduct(product)">
-                        Sauvegarder
-                    </v-btn>
+                    <v-btn color="blue" elevation="0" @click="$r.editProduct(product)"> Sauvegarder </v-btn>
                 </div>
             </div>
         </div>
@@ -272,16 +286,16 @@ export default {
         },
         addNewProduct() {
             this.$r.products.push({
-                name: '',
-                description: '',
-                prix: '',
+                name: null,
+                description: null,
+                prix: null,
                 nouveau: true,
-                image: '[]',
-                categorie: {
-                    name: ''
-                },
+                image: null,
+                categorieuuid: this.$r.categories[0].uuid,
+                categorie: this.$r.categories[0],
                 variations: []
             })
+            this.$r.createProduct(this.$r.products[this.$r.products.length - 1])
         },
         createVariation(product) {
             //order is max of key order of product + 1
@@ -301,6 +315,7 @@ export default {
                 reader.onload = () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
+                    this.productAddImg.image = this.productAddImg.image ? this.productAddImg.image : []
                     this.productAddImg.image.push(uuid)
                     this.$r.uploadImg(uuid, base64)
                     this.$r.editProduct(this.productAddImg)
@@ -310,7 +325,7 @@ export default {
         async deleteImage(product, index) {
             await this.$r.deleteImg(product.image[index])
             product.image.splice(index, 1)
-            product.imagesBlob.splice(index, 1) 
+            product.imagesBlob.splice(index, 1)
             this.$r.editProduct(product)
         }
     }

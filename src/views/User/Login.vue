@@ -3,12 +3,12 @@
         <h2>Se connecter</h2>
         <div class="formulaire mt-6 w-50">
             <v-text-field
-                v-model="user.name"
+                v-model="user.email"
                 class="mb-2"
                 variant="outlined"
                 density="compact"
                 hide-details="true"
-                label="Nom" />
+                label="Email" />
 
             <v-text-field
                 v-model="user.password"
@@ -19,7 +19,7 @@
                 type="password"
                 label="Mot de passe" />
 
-            <v-btn class="mr-2" color="primary"  elevation="0" @click="$r.login(user.name, user.password)">
+            <v-btn class="mr-2" color="primary"  elevation="0" @click="$r.login(user.email, user.password)">
                 Se connecter
             </v-btn>
             <v-btn color="primary" variant="tonal" @click="$r.goto('/user/register')">
@@ -35,7 +35,7 @@ export default {
     data() {
         return {
             user: {
-                name: '',
+                email: '',
                 password: ''
             }
         }

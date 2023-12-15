@@ -1,7 +1,7 @@
 <template>
     <div class="counter">
         <v-icon class="mr-1" @click="$r.addInCart(product, $r.userConnected, -1), number > 1 ? number-- : ''">mdi-minus</v-icon>
-        <div class="number">{{ number }}</div>
+        <div class="number ">{{ number }}</div>
         <v-icon class="ml-1" @click="$r.addInCart(product, $r.userConnected, 1), number++">mdi-plus</v-icon>
     </div>
 </template>
@@ -20,6 +20,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .counter {
+    width: 100px;
     display: flex;
     align-items: center;
     justify-content: space-between; 

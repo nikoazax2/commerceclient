@@ -29,7 +29,6 @@ export const gMethods = {
     getColorTheme(color) {
         return myCustomLightTheme.colors[color]
     },
-
     uuidv4() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             // eslint-disable-next-line
@@ -41,6 +40,73 @@ export const gMethods = {
         });
     },
 
+    // --------- Methodes pour les administrations ---------
+    contenu: null,
+    pages: [],
+    getContenu() {
+        this.loading = true
+        axios
+            .get(`${this.config.domain}/contenu`)
+            .then(async (response) => {
+                for await (let contenu of response.data) {
+                    if (contenu.photo) {
+                        contenu = await this.setImagesContenu(contenu)
+                    }
+                }
+                this.contenu = response.data
+                this.pages = [...new Set(response.data.map((item) => { return item.page }))]
+                this.loading = false
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+    },
+    async uploadImgContenu(originalname, file) {
+        this.loading = true
+        let formData = new FormData()
+        file = new Blob([file], { type: 'image/jpeg' })
+        formData.append('photos[]', file, originalname);
+        let img = await axios
+            .post(`${this.config.domain}/contenu/uploadImage`, formData)
+            .then((response) => {
+                this.loading = false
+                return response.data
+            })
+            .catch((error) => {
+                console.error("Error fetching products data:", error);
+            })
+        return img
+    },
+    async setImagesContenu(contenu) {
+        this.loading = true
+        contenu.imagesBlob = []
+        if (!contenu.image) return contenu
+        for await (let image of contenu.image) {
+            let img = await axios
+                .get(`${this.config.domain}/contenu/image/${image}`)
+                .then((response) => {
+                    this.loading = false
+                    return response.data
+
+                })
+                .catch((error) => {
+                    console.error("Error fetching contenus data:", error);
+                })
+
+            contenu.imagesBlob.push(img)
+        }
+        return contenu
+    },
+    deleteImgContenu(uuid) {
+        axios
+            .delete(`${this.config.domain}/contenu/image/${uuid}`)
+            .then((response) => {
+                console.log(response.data)
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+    },
     // --------- Methodes pour les produits ---------
     categories: [],
     products: [],
@@ -95,6 +161,7 @@ export const gMethods = {
     async setImagesProduct(product) {
         this.loading = true
         product.imagesBlob = []
+        if (!product.image) return product
         for await (let image of product.image) {
             let img = await axios
                 .get(`${this.config.domain}/product/image/${image}`)
@@ -182,7 +249,7 @@ export const gMethods = {
 
     },
     formatPrix(prix, devise = false) {
-        return prix.toFixed(2).toString().replace('.', ',') + (devise ? ' €' : '')
+        return prix ? prix.toFixed(2).toString().replace('.', ',') + (devise ? ' €' : '') : ''
     },
 
     // --------- Methodes pour les commandes ---------
@@ -190,7 +257,7 @@ export const gMethods = {
     cart: null,
     productsOfCart(cart, products) {
         let cartDetails = []
-        cart.forEach((productCart) => {
+        cart?.forEach((productCart) => {
             products.forEach((product) => {
                 if (productCart.product == product.uuid) {
                     cartDetails.push({ ...product, ...productCart })
@@ -233,7 +300,7 @@ export const gMethods = {
                     quantity: quantity
                 }]
             }
-            this.cart.cart = cart
+            this.cart = cart
             localStorage.setItem(this.nameInCookie(), JSON.stringify(cart))
             //set scroll of html at 0
             document.documentElement.scrollTop = 0
@@ -260,7 +327,7 @@ export const gMethods = {
                     cart.splice(index, 1)
                 }
             }
-            this.cart.cart = cart
+            this.cart = cart
             localStorage.setItem(this.nameInCookie(), JSON.stringify(cart))
             this.loading = false
         }
@@ -323,6 +390,18 @@ export const gMethods = {
                 console.error("Error fetching products data:", error);
             });
     },
+    editUser(body) {
+        axios
+            .patch(`${this.config.domain}/user/${body.uuid}`, body)
+            .then((response) => {
+                localStorage.removeItem('jwtToken');
+                this.getProfileConnected()
+            })
+            .catch((error) => {
+                console.error("Error fetching products data:", error);
+            });
+
+    },
     getProfile(userConnected = false) {
         this.loading = true
         const token = JSON.parse(localStorage.getItem('jwtToken'));
@@ -356,12 +435,11 @@ export const gMethods = {
         const expirationTime = decodedToken.exp * 1000; // Convert seconds to milliseconds
         return expirationTime < Date.now();
     },
-    login(name, password) {
+    login(email, password) {
         let body = {
-            username: name,
+            email: email,
             password: password,
         }
-
         axios
             .post(`${this.config.domain}/auth/login`, body)
             .then((response) => {

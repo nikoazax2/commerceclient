@@ -9,15 +9,7 @@
                 variant="outlined"
                 density="compact"
                 hide-details="true"
-                label="Nom" /> 
-
-            <v-text-field
-                v-model="user.adress"
-                class="mb-2"
-                variant="outlined"
-                density="compact"
-                hide-details="true"
-                label="Adresse" />
+                label="Nom" />
 
             <v-text-field
                 v-model="user.email"
@@ -35,12 +27,9 @@
                 hide-details="true"
                 label="Mot de passe" />
 
-            <v-btn
-                color="primary"
-                variant="tonal"
-                @click="$r.createUser(user)">
-                S'inscrire
-            </v-btn>
+            <v-btn color="primary"  elevation="0" @click="$r.createUser(user)"> S'inscrire </v-btn>
+            <v-btn color="primary"  class="ml-4" variant="tonal" @click="$router.push('/user/login')"> J'ai déjà un compte </v-btn>
+
         </div>
     </div>
 </template>
@@ -51,7 +40,7 @@ export default {
     data() {
         return {
             user: {
-                username: '', 
+                username: '',
                 email: '',
                 password: '',
                 adress: ''

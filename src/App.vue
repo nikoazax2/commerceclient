@@ -32,17 +32,47 @@ export default {
     },
 
     async created() {
-        //test if is on phone or computer with offset
         window.innerWidth > 640 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
 
-    await this.$r.getCategories()
-         await this.$r.getProducts() 
+        await this.$r.getCategories()
+        await this.$r.getProducts()
+        await this.$r.getContenu()
         this.$r.getCart(this.$r.userConnected ? true : false)
         this.load = false
     },
     data: () => ({ load: true })
 }
 </script>
+
+<style lang="scss">
+.jcc {
+    display: flex !important;
+    justify-content: center !important;
+}
+.w100 {
+    width: 100%;
+}
+.tac {
+    text-align: center;
+}
+
+.jcse {
+    justify-content: space-evenly;
+}
+.jcsb {
+    justify-content: space-between;
+}
+.aic {
+    display: flex;
+    align-items: center;
+}
+.pabs {
+    position: absolute;
+}
+.r0 {
+    right: 0;
+}
+</style>
 
 <style lang="scss" scoped>
 @import '@/assets/scss/_variables.scss';
@@ -55,10 +85,14 @@ export default {
 }
 * {
 }
-:deep(.jcc) {
-    display: flex;
-    justify-content: center;
+:deep(.cursor-pointer) {
+    cursor: pointer;
 }
+:deep(.jcc) {
+    display: flex !important;
+    justify-content: center !important;
+}
+
 :deep(.aic) {
     display: flex;
     align-items: center;
