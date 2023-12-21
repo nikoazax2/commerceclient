@@ -5,7 +5,7 @@
         <div class="footer-site bg-black">
             <div class="aic w100 jcc pt-4 pb-4">
                 <img
-                    @click="$r.goto('/')"
+                    @click="$r.goto('')"
                     :src="require(`@/assets/imgachanger/${$c.header.logoBlack}`)"
                     class="ml-2"
                     style="max-width: 30%"

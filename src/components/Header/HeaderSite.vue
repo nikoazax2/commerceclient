@@ -13,13 +13,13 @@
             <v-list>
                 <span v-if="user">
                     <!-- MENU SI CONNECTE -->
-                    <v-list-item @click="$r.goto('/user/account')">
+                    <v-list-item @click="$r.goto('user/account')">
                         <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="user.role == 1" @click="$r.goto('/product/administration-products')">
+                    <v-list-item v-if="user.role == 1" @click="$r.goto('product/administration-products')">
                         <v-list-item-title class="text-subtitle-2">Administration produits</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="user.role == 1" @click="$r.goto('/administration-site')">
+                    <v-list-item v-if="user.role == 1" @click="$r.goto('administration-site')">
                         <v-list-item-title class="text-subtitle-2">Administration Site</v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="$r.disconnect(), (user = null)">
@@ -28,10 +28,10 @@
                 </span>
                 <!-- MENU SI DECONNECTE -->
                 <span v-else>
-                    <v-list-item @click="$r.goto('/user/login')">
+                    <v-list-item @click="$r.goto('user/login')">
                         <v-list-item-title class="text-subtitle-2">Connexion</v-list-item-title>
                     </v-list-item>
-                    <v-list-item @click="$r.goto('/user/register')">
+                    <v-list-item @click="$r.goto('user/register')">
                         <v-list-item-title class="text-subtitle-2">Inscription</v-list-item-title>
                     </v-list-item>
                 </span>
@@ -39,7 +39,7 @@
                 <div style="border-top: 1px solid rgba(121, 121, 121, 0.3)">
                     <v-list>
                         <v-list-item
-                            @click="$r.goto('/product/list')"
+                            @click="$r.goto('product/list')"
                             class="text-subtitle-2 font-weight-bold text-primary">
                             Meilleures Ventes
                         </v-list-item>
@@ -66,7 +66,7 @@
             <div class="gauche aic">
                 <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
                 <img
-                    @click="$r.goto('/')"
+                    @click="$r.goto('')"
                     :src="require(`@/assets/imgachanger/${$c.header.logo}`)"
                     class="logo-website ml-2 mr-4"
                     :style="`width: ${$r.isPhone ? '180px' : '250px'}`"
@@ -83,7 +83,7 @@
                     class="barre-de-recherche"
                     variant="outlined">
                     <template v-slot:append-inner class="test">
-                        <v-icon @click="$r.goto(`/product/list?recherche=${$r.recherche}`)" class="bg-primary">
+                        <v-icon @click="$r.goto(`product/list?recherche=${$r.recherche}`)" class="bg-primary">
                             mdi-magnify
                         </v-icon>
                     </template>
@@ -101,12 +101,12 @@
         <div v-if="!$r.isPhone" class="liens-ordi aic" style="border-bottom: 1px solid rgba(121, 121, 121, 0.3)">
             <v-icon @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
 
-            <div @click="$r.goto('/product/list')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">
+            <div @click="$r.goto('product/list')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">
                 Meilleures Ventes
             </div>
             <div
                 v-for="lien in $r.categories"
-                @click="$r.goto(`/product/list?categorie=${lien.uuid}`)"
+                @click="$r.goto(`product/list?categorie=${lien.uuid}`)"
                 class="ma-4 text-subtitle-2"
                 :class="{ 'font-weight-bold text-primary': lien.important }">
                 {{ lien.name }}

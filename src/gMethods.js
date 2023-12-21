@@ -18,8 +18,8 @@ export const gMethods = {
     goto(url, newTab = false) {
         if (newTab) {
             window.open(url, '_blank');
-        } else {
-            document.location.href = url
+        } else {  
+            document.location.href = `${location.protocol}//${location.host}/${url}`
         }
 
     },
@@ -43,23 +43,29 @@ export const gMethods = {
     // --------- Methodes pour les administrations ---------
     contenu: null,
     pages: [],
-    getContenu() {
+
+    async getContenu() {
         this.loading = true
-        axios
+       await axios
             .get(`${this.config.domain}/contenu`)
             .then(async (response) => {
+                //load images website
                 for await (let contenu of response.data) {
                     if (contenu.photo) {
                         contenu = await this.setImagesContenu(contenu)
                     }
-                }
+                } 
+
                 this.contenu = response.data
+                //set pages of website
                 this.pages = [...new Set(response.data.map((item) => { return item.page }))]
                 this.loading = false
+                return
             })
             .catch((error) => {
                 console.error('Error fetching products data:', error)
             })
+            return 
     },
     async uploadImgContenu(originalname, file) {
         this.loading = true
@@ -107,6 +113,7 @@ export const gMethods = {
                 console.error('Error fetching products data:', error)
             })
     },
+
     // --------- Methodes pour les produits ---------
     categories: [],
     products: [],

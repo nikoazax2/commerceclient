@@ -1,10 +1,10 @@
-<template>
-    <div v-if="images" class="d-flex container-carrousel aic">
-        <div v-if="visuels" ref="visuels" class="visuels ml-4 mt-4"> 
+<template> 
+    <div v-if="product.imagesBlob" class="d-flex container-carrousel aic">
+        <div v-if="visuels" ref="visuels" class="visuels ml-4 mt-4">
             <img
                 class="visuel"
                 :class="{ 'image-selected': i == imageDisplay }"
-                v-for="(slide, i) in images"
+                v-for="(slide, i) in product.imagesBlob"
                 :style="`border-color: ${
                     i == imageDisplay ? $vuetify.theme.themes.myCustomLightTheme.colors.primary : 'transparent'
                 }`"
@@ -21,14 +21,22 @@
             :show-arrows="!visuels"
             hide-delimiters="true"
             hide-delimiter-background>
-            <v-carousel-item v-for="(slide, i) in images" :key="i">
+            <v-carousel-item v-for="(slide, i) in product.imagesBlob" :key="i">
                 <img style="width: 100%" :src="`${slide}`" alt="Red dot" />
+                <div
+                    v-if="product.ancienprixpromo&&displayPromo"
+                    class="promo-etiquette"
+                    :style="`
+            background-color:${$vuetify.theme.themes.myCustomLightTheme.colors.primary};
+            `">
+                    PROMO
+                </div>
             </v-carousel-item>
 
             <template v-slot:prev="{ on, attrs }">
                 <v-btn
                     icon="mdi-chevron-left"
-                    v-if="images.length >= 2"
+                    v-if="product.imagesBlob.length >= 2"
                     v-bind="attrs"
                     v-on="on"
                     @click.stop="prevNext(false)" />
@@ -37,7 +45,7 @@
             <template v-slot:next="{ on, attrs }">
                 <v-btn
                     icon="mdi-chevron-right"
-                    v-if="images.length >= 2"
+                    v-if="product.imagesBlob.length >= 2"
                     v-bind="attrs"
                     v-on="on"
                     @click.stop="prevNext()" />
@@ -49,13 +57,17 @@
 export default {
     name: 'Carroussel',
     props: {
-        images: {
-            type: Array,
+        product: {
+            type: Object,
             default: () => []
         },
         visuels: {
             type: Boolean,
             default: () => false
+        },
+        displayPromo: {
+            type: Boolean,
+            default: () => true
         }
     },
     data() {
@@ -70,7 +82,7 @@ export default {
         },
         prevNext(next = true) {
             if (next) {
-                if (this.imageDisplay < this.images.length - 1) {
+                if (this.imageDisplay < this.product.imagesBlob.length - 1) {
                     this.imageDisplay++
                 } else {
                     this.imageDisplay = 0
@@ -79,7 +91,7 @@ export default {
                 if (this.imageDisplay > 0) {
                     this.imageDisplay--
                 } else {
-                    this.imageDisplay = this.images.length - 1
+                    this.imageDisplay = this.product.imagesBlob.length - 1
                 }
             }
         }
@@ -102,6 +114,12 @@ export default {
             opacity: 1;
         }
     }
+}
+.promo-etiquette{
+    position: absolute;
+    top: 40px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
 }
 .visuels {
     width: 92px;

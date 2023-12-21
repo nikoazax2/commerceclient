@@ -1,11 +1,11 @@
 <template>
-    <div v-if="products && products[0]" class="articles">
+    <div class="articles">
         <div
             @click="$r.goto(`detail?id=${product.uuid}`)"
             :style="!$r.isPhone ? 'width:25%' : ''"
             v-for="product in products.slice(0, nb)"
             class="bloc-article"> 
-            <carroussel :images="product.imagesBlob" />
+            <carroussel :product="product" />
             <h4>{{ product.name }}</h4>
             <div>
                 <h4 class="text-primary">{{ $r.formatPrix(product.prix) }} €</h4>
@@ -31,11 +31,7 @@ export default {
             type: Number,
             default: 1000
         }
-    },
-    data() {
-        return {}
-    },
-    async created() {}
+    }
 }
 </script>
 

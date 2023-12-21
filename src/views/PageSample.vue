@@ -1,8 +1,8 @@
 <template>
-    <div class="page-sample" v-if="!$r.loading">
+    <div class="page-sample" v-if="!$r.loading && $r.contenu">
         <div
             class="contenu"
-            v-html="$r.contenu.find((contenu) => contenu.valeur == $route.path.replace('/', ''))?.contenu"></div>
+            v-html="$r.contenu.find((contenu) => contenu.valeur == $route.path.replace('/', ''))?.contenu" />
     </div>
 </template>
 

@@ -9,7 +9,7 @@
             </div>
             <div class="produits">
                 <div class="produit" v-for="product in products" @click="$r.goto(`detail?id=${product.uuid}`)">
-                    <carroussel v-if="product.imagesBlob" :images="product.imagesBlob" />
+                    <carroussel v-if="product.imagesBlob" :product="product" />
                     <div class="w100">
                         <div class="name">
                             {{ product.name }}
@@ -71,8 +71,7 @@ h2 {
         flex-wrap: wrap;
 
         .produit {
-            cursor: pointer;
-            padding: 10px;
+            cursor: pointer; 
             width: calc(100% / 3);
             display: flex;
             flex-direction: column;

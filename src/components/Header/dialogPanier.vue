@@ -11,7 +11,7 @@
             :scrim="false"
             transition="dialog-bottom-transition">
             <v-card>
-                <Panier />
+                <Panier :dialog="true" />
             </v-card>
         </v-dialog>
     </div>

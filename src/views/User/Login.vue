@@ -22,7 +22,7 @@
             <v-btn class="mr-2" color="primary"  elevation="0" @click="$r.login(user.email, user.password)">
                 Se connecter
             </v-btn>
-            <v-btn color="primary" variant="tonal" @click="$r.goto('/user/register')">
+            <v-btn color="primary" variant="tonal" @click="$r.goto('user/register')">
                 S'inscrire
             </v-btn>
         </div>

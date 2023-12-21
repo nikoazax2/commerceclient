@@ -5,7 +5,7 @@
             class="container-img-text pb-4"
             :style="`width:${$r.isPhone ? 100 : 100 / blocs.length}%`"> 
             <img
-                @click="$r.goto('/')"
+                @click="$r.goto('')"
                 :src="require(`@/assets/imgachanger/${bloc.image}`)"
                 class="logo-website"
                 alt="logo" />

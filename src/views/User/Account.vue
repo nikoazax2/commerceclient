@@ -42,7 +42,7 @@ export default {
     },
     created() {
         this.user = this.$r.getProfileConnected()
-        if (!this.user) this.$r.goto('/user/login')
+        if (!this.user) this.$r.goto('user/login')
     },
     methods: { 
     }

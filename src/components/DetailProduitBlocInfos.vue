@@ -104,14 +104,7 @@ export default {
         top: 0;
     }
 }
-.promo-etiquette {
-    width: fit-content;
-    background-color: #ff9800;
-    padding: 3px 6px;
-    font-size: 0.5em;
-    border-radius: 5px;
-    color: white;
-}
+
 
 .bloc-infos {
     width: 100%;

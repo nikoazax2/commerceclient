@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Panier/>
+        <Panier class="panier"/>
     </div>
 </template>
 
@@ -13,3 +13,8 @@ export default {
     
 }
 </script>
+<style lang="scss" scoped>
+.panier{
+    margin: 0 15%;
+}
+</style>

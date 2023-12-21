@@ -25,7 +25,7 @@
                     {{ contenu.description }}
                 </h5>
                 <editor
-                    v-if="!contenu.photo"
+                    v-if="contenu.type==1"
                     api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
                     v-model="contenu.contenu"
                     :init="{
@@ -39,7 +39,7 @@
                         toolbar:
                             'undo redo spellcheckdialog  | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
                     }" />
-                <div v-else>
+                <div v-else-if="contenu.type==2">
                     <div class="image d-flex" v-for="(image, index) in contenu.imagesBlob">
                         <img class="mr-4" :src="image" alt="Red dot" />
                         <div class="btns-actions">
@@ -60,6 +60,9 @@
                         @click=";(contenuChange = contenu), openFilePicker()">
                         <v-icon>mdi-plus</v-icon> Ajouter une image
                     </v-btn>
+                </div>
+                <div v-else-if="contenu.type==3"> 
+                    <v-color-picker :modes="[ 'rgb', 'hexa']" v-model="contenu.contenu"   show-swatches />
                 </div>
             </div>
         </div>

@@ -36,7 +36,10 @@ export default {
 
         await this.$r.getCategories()
         await this.$r.getProducts()
-        await this.$r.getContenu()
+        await this.$r.getContenu() 
+        
+        this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
+            this.$r.contenu.find((c) => c.valeur == 'couleur-site').contenu || '#D1514A'
         this.$r.getCart(this.$r.userConnected ? true : false)
         this.load = false
     },
@@ -45,6 +48,14 @@ export default {
 </script>
 
 <style lang="scss">
+.promo-etiquette {
+    width: fit-content;
+    padding: 3px 6px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 5px;
+    color: white;
+}
 .jcc {
     display: flex !important;
     justify-content: center !important;

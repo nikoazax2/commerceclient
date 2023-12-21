@@ -15,5 +15,4 @@ app.config.globalProperties.$c = contenu;
 
 app.use(router)
     .use(vuetify)
-    .mount('#app')
-
+    .mount('#app') 

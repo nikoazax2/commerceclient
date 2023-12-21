@@ -2,7 +2,7 @@
     <div class="accueil" v-if="!$r.loading && $r.contenu">
         <!-- IMAGE ACCUEIL -->
         <img
-            @click="$r.goto('/')"
+            @click="$r.goto('')"
             :src="$r.contenu.find((contenu) => contenu.valeur == 'photo-bandeau-site').imagesBlob[0]"
             class="logo-website"
             style="width: 100vw"
@@ -22,14 +22,14 @@
         <imgTitre :blocs="$c.accueil.imagesTitre2" />
 
         <!-- GRILLE ARTICLES -->
-        <grilleArticles :style="!$r.isPhone ? 'margin:0 10%;' : ''" :products="products" />
+        <grilleArticles v-if="$r.products[0]" :style="!$r.isPhone ? 'margin:0 10%;' : ''" :products="$r.products" />
 
         <!-- ENCART 3 -->
         <encartTitreTexte :texte="$c.accueil.encart3.texte" :titre="$c.accueil.encart3.titre" />
 
         <div class="img-text">
             <!-- PHOTO PRODUIT 1 -->
-            <carroussel v-if="$r.products[0]" style="width: 100%" alt="Red dot" :images="$r.products[0].imagesBlob" />
+            <carroussel v-if="$r.products[0]" style="width: 100%" alt="Red dot" :product="$r.products[0]" />
 
             <!-- ENCART 4 -->
             <encartTitreTexte :texte="$c.accueil.encart4.texte" :titre="$c.accueil.encart4.titre" />
