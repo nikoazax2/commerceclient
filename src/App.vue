@@ -39,7 +39,7 @@ export default {
         await this.$r.getContenu() 
         
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
-            this.$r.contenu?.find((c) => c.valeur == 'couleur-site').contenu || '#D1514A'
+            this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu || '#D1514A'
         this.$r.getCart(this.$r.userConnected ? true : false)
         this.load = false
     },
