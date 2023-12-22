@@ -1,7 +1,7 @@
 <template>
     <div class="login ma-4">
         <h2>Se connecter</h2>
-        <div class="formulaire mt-6 w-50">
+        <div class="formulaire mt-6 w-25">
             <v-text-field
                 v-model="user.email"
                 class="mb-2"

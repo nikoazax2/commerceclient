@@ -4,18 +4,21 @@ Faire un plan d'action / planning
 Site :
 ✅ Promos 
 Sécurité 
+Sécuriser Tokens/IDS
 Paramétrage site complet - export table contenu :
     Paramétrage dynamique ?
     ✅ Paramétrage couleurs (primary)
 Pages connexion inscription
+🚧 Mise en ligne
 🚧 Gestion des comptes/informations/commandes :
-    🚧 Désactivation comptes
     🚧 Gestion des commandes
+        Création d'un webhook après paiement stripe pour créer la commande sur le serveur
     🚧 Livraison (comptes) ?
     🚧 Mails de commande
-    🚧 Vérifications adresse API gouv ?
     🚧 Mot de passe perdu 
+    🚧 Désactivation comptes
     🚧 Mail de connexion double facteur 
+    🚧 Vérifications adresse API gouv ?
 Design complet avec Ariane
 Refaire avec produit ok
 
