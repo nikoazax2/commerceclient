@@ -7,7 +7,9 @@ Front :
     git pull puis npm run build
 
 Back : 
-lancer server :  npm run start:dev 
+lancer server :  
+pm2 start dist/main.js commerceserver
+voir logs : pm2 log
 
 BDD : 
 /!\ utiliser postgres pas mysql

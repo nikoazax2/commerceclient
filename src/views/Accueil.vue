@@ -3,14 +3,14 @@
         <!-- IMAGE ACCUEIL -->
         <img
             @click="$r.goto('')"
-            :src="$r.contenu.find((contenu) => contenu.valeur == 'photo-bandeau-site').imagesBlob[0]"
+            :src="$r.contenu.find((contenu) => contenu.valeur == 'photo-bandeau-site')?.imagesBlob[0]"
             class="logo-website"
             style="width: 100vw"
             alt="logo" />
         <!-- ENCART 1 -->
         <encartTitreTexte
             :bouton="$c.accueil.encart1.bouton"
-            :texte="$r.contenu.find((contenu) => contenu.valeur == 'premier-encart-texte').contenu" />
+            :texte="$r.contenu.find((contenu) => contenu.valeur == 'premier-encart-texte')?.contenu" />
 
         <!-- IMAGES TITRES -->
         <imgTitre :blocs="$c.accueil.imagesTitre1" />

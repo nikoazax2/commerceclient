@@ -2,7 +2,7 @@
     <div class="header">
         <div
             class="bandeau bg-black jcc font-weight-bold text-caption pa-2 text-center"
-            v-html="$r.contenu?.find((contenu) => contenu.valeur == 'message-bandeau-haut').contenu" />
+            v-html="$r.contenu?.find((contenu) => contenu.valeur == 'message-bandeau-haut')?.contenu" />
 
         <v-navigation-drawer
             style="height: 100%"
