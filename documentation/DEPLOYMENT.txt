@@ -1,1 +1,15 @@
+Projects sur le serveur : /var/www/html
+
 Front :
+    http://89.116.228.185/commerceclient/dist/
+    connecté au github 
+    pour maj :
+    git pull puis npm run build
+
+Back : 
+lancer server :  npm run start:dev 
+
+BDD : 
+/!\ utiliser postgres pas mysql
+ouvrir postgres:  
+
