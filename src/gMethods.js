@@ -15,11 +15,10 @@ export const gMethods = {
         url: null
     },
     recherche: '',
-    goto(url, newTab = false) {
-        debugger
+    goto(url, newTab = false) { 
         if (newTab) {
             window.open(url, '_blank');
-        } else {  
+        } else {
             document.location.href = `${location.protocol}//${location.host}/${url}`
         }
 
@@ -47,7 +46,7 @@ export const gMethods = {
 
     async getContenu() {
         this.loading = true
-       await axios
+        await axios
             .get(`${this.config.domain}/contenu`)
             .then(async (response) => {
                 //load images website
@@ -55,7 +54,7 @@ export const gMethods = {
                     if (contenu.photo) {
                         contenu = await this.setImagesContenu(contenu)
                     }
-                } 
+                }
 
                 this.contenu = response.data
                 //set pages of website
@@ -66,7 +65,7 @@ export const gMethods = {
             .catch((error) => {
                 console.error('Error fetching products data:', error)
             })
-            return 
+        return
     },
     async uploadImgContenu(originalname, file) {
         this.loading = true
