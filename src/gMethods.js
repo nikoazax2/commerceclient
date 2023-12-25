@@ -16,10 +16,11 @@ export const gMethods = {
     },
     recherche: '',
     goto(url, newTab = false) {
+        debugger
         if (newTab) {
             window.open(url, '_blank');
         } else {  
-            document.location.href = `${location.protocol}//${location.host}/${url}`
+            document.location.href = `${location.protocol}//${location.host}/commerceclient/dist/${url}`
         }
 
     },
