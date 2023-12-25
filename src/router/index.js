@@ -11,7 +11,7 @@ import Payer from "../views/Payer.vue";
 import AdministrationSite from "../views/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
 
-const pathUrl = 'commerceclient/'
+const pathUrl = 'commerceclient'
 const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
