@@ -11,6 +11,7 @@ import Payer from "../views/Payer.vue";
 import AdministrationSite from "../views/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
 
+const pathUrl = 'commerceclient/'
 const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
@@ -21,52 +22,52 @@ const pageSampleRoutes = pageSamplePaths.map(path => ({
 
 const routes = [
     {
-        path: "/",
+        path: pathUrl + "/",
         name: "Accueil",
         component: Accueil,
     },
     {
-        path: "/user/register",
+        path: pathUrl + "/user/register",
         name: "S'inscrire",
         component: Register,
     },
     {
-        path: "/user/login",
+        path: pathUrl + "/user/login",
         name: "Se connecter",
         component: Login,
     },
     {
-        path: "/user/account",
+        path: pathUrl + "/user/account",
         name: "Profil",
         component: Account,
     },
     {
-        path: "/product/list",
+        path: pathUrl + "/product/list",
         name: "Produits",
         component: Produits,
     },
     {
-        path: "/product/detail",
+        path: pathUrl + "/product/detail",
         name: "Produit",
         component: Produit,
     },
     {
-        path: "/product/administration-products",
+        path: pathUrl + "/product/administration-products",
         name: "Gestion Produits",
         component: Gestion,
     },
     {
-        path: "/panier",
+        path: pathUrl + "/panier",
         name: "Panier",
         component: Panier,
     },
     {
-        path: "/paiement",
+        path: pathUrl + "/paiement",
         name: "Payer",
         component: Payer,
     },
     {
-        path: "/administration-site",
+        path: pathUrl + "/administration-site",
         name: "AdministrationSite",
         component: AdministrationSite,
 
