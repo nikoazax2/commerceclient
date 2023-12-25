@@ -20,7 +20,7 @@ export const gMethods = {
         if (newTab) {
             window.open(url, '_blank');
         } else {  
-            document.location.href = `${location.protocol}//${location.host}/commerceclient/dist/${url}`
+            document.location.href = `${location.protocol}//${location.host}/${url}`
         }
 
     },
