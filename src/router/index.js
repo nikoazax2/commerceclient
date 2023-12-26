@@ -13,62 +13,61 @@ import PageSample from "../views/PageSample.vue";
 
 const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
-const productionPath = process.env.NODE_ENV === "production" ? "" : "";
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
-    path: productionPath + path,
+    path: path,
     name: path.substring(1), // remove the leading slash
     component: PageSample,
 }));
 
 const routes = [
     {
-        path: productionPath + "/",
+        path: "/",
         name: "Accueil",
         component: Accueil,
     },
     {
-        path: productionPath + "/user/register",
+        path: "/user/register",
         name: "S'inscrire",
         component: Register,
     },
     {
-        path: productionPath + "/user/login",
+        path: "/user/login",
         name: "Se connecter",
         component: Login,
     },
     {
-        path: productionPath + "/user/account",
+        path: "/user/account",
         name: "Profil",
         component: Account,
     },
     {
-        path: productionPath + "/product/list",
+        path: "/product/list",
         name: "Produits",
         component: Produits,
     },
     {
-        path: productionPath + "/product/detail",
+        path: "/product/detail",
         name: "Produit",
         component: Produit,
     },
     {
-        path: productionPath + "/product/administration-products",
+        path: "/product/administration-products",
         name: "Gestion Produits",
         component: Gestion,
     },
     {
-        path: productionPath + "/panier",
+        path: "/panier",
         name: "Panier",
         component: Panier,
     },
     {
-        path: productionPath + "/paiement",
+        path: "/paiement",
         name: "Payer",
         component: Payer,
     },
     {
-        path: productionPath + "/administration-site",
+        path: "/administration-site",
         name: "AdministrationSite",
         component: AdministrationSite,
 
@@ -80,6 +79,7 @@ const routes = [
 
 const router = createRouter({
     history: createWebHistory(process.env.BASE_URL),
+    base: process.env.NODE_ENV === "production" ? "/commerceclient/" : "/",
     routes,
 });
 
