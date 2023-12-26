@@ -13,13 +13,13 @@ import PageSample from "../views/PageSample.vue";
 
 const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
-const productionPath = process.env.NODE_ENV === "production" ? "commerceclient" : "";
+const productionPath = process.env.NODE_ENV === "production" ? "/commerceclient" : "";
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
     path: productionPath + path,
-    name: path.substring(1), 
-    component: PageSample
-}))
+    name: path.substring(1), // remove the leading slash
+    component: PageSample,
+}));
 
 const routes = [
     {
