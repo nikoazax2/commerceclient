@@ -19,7 +19,7 @@ export const gMethods = {
         if (newTab) {
             window.open(url, '_blank');
         } else {
-            document.location.href = `${location.protocol}//${location.host}/${ process.env.NODE_ENV === "production" ? "commerceclient" : ""}${url}`
+            document.location.href = `${location.protocol}//${location.host}/${ process.env.NODE_ENV === "production" ? "commerceclient/" : ""}${url}`
         }
 
     },

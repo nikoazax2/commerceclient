@@ -36,20 +36,20 @@ export default {
     data() {
         return {
             groupes: [
-                { titre: 'MENU PRINCIPAL', liens: [{ titre: 'Accueil', url: '/' }] },
+                { titre: 'MENU PRINCIPAL', liens: [{ titre: 'Accueil', url: '' }] },
                 {
                     titre: 'INFORMATIONS',
                     liens: [
-                        { titre: 'Mentions légales', url: '/mentions-legales' },
-                        { titre: 'Politique de retour', url: '/politique-de-retour' },
-                        { titre: 'Conditions Générales de Vente', url: '/conditions-de-vente' }
+                        { titre: 'Mentions légales', url: 'mentions-legales' },
+                        { titre: 'Politique de retour', url: 'politique-de-retour' },
+                        { titre: 'Conditions Générales de Vente', url: 'conditions-de-vente' }
                     ]
                 },
                 {
                     titre: "BESOIN D'AIDE ?",
                     liens: [
-                        { titre: 'Contactez-nous', url: '/contact' },
-                        { titre: 'Foire Aux Questions (FAQ)', url: '/faq' }
+                        { titre: 'Contactez-nous', url: 'contact' },
+                        { titre: 'Foire Aux Questions (FAQ)', url: 'faq' }
                     ]
                 }
             ]
