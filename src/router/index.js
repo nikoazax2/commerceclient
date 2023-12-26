@@ -83,13 +83,5 @@ const router = createRouter({
     routes,
 });
 
-router.beforeEach((to, from, next) => {
-    let subdomain = window.location.host.split('.')[0]
-    console.log(subdomain)
-    if (subdomain != 'www' && subdomain != 'localhost:3000') {
-        to.params['subdomain'] = subdomain
-    }
-    next()
-})
 
 export default router;
