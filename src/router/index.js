@@ -17,7 +17,7 @@ const productionPath = process.env.NODE_ENV === "production" ? "/commerceclient"
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
     path: productionPath + path,
-    name: path.substring(1), // remove the leading slash
+    name: path, // remove the leading slash
     component: PageSample,
 }));
 
