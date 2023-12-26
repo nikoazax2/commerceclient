@@ -10,8 +10,10 @@ import Panier from "../views/PanierVue.vue";
 import Payer from "../views/Payer.vue";
 import AdministrationSite from "../views/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
- 
+
 const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
+
+const productionPath = process.env.NODE_ENV === "production" ? "/commerceclient" : "";
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
     path,
@@ -21,52 +23,52 @@ const pageSampleRoutes = pageSamplePaths.map(path => ({
 
 const routes = [
     {
-        path: "/",
+        path: productionPath + "/",
         name: "Accueil",
         component: Accueil,
     },
     {
-        path: "/user/register",
+        path: productionPath + "/user/register",
         name: "S'inscrire",
         component: Register,
     },
     {
-        path: "/user/login",
+        path: productionPath + "/user/login",
         name: "Se connecter",
         component: Login,
     },
     {
-        path: "/user/account",
+        path: productionPath + "/user/account",
         name: "Profil",
         component: Account,
     },
     {
-        path: "/product/list",
+        path: productionPath + "/product/list",
         name: "Produits",
         component: Produits,
     },
     {
-        path: "/product/detail",
+        path: productionPath + "/product/detail",
         name: "Produit",
         component: Produit,
     },
     {
-        path: "/product/administration-products",
+        path: productionPath + "/product/administration-products",
         name: "Gestion Produits",
         component: Gestion,
     },
     {
-        path: "/panier",
+        path: productionPath + "/panier",
         name: "Panier",
         component: Panier,
     },
     {
-        path: "/paiement",
+        path: productionPath + "/paiement",
         name: "Payer",
         component: Payer,
     },
     {
-        path: "/administration-site",
+        path: productionPath + "/administration-site",
         name: "AdministrationSite",
         component: AdministrationSite,
 
