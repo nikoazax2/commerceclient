@@ -4,7 +4,7 @@ import { myCustomLightTheme } from "./plugins/vuetify";
 // --------- Methodes gloables ---------
 export const gMethods = {
     config: {
-        domain: "https://sagenicolas.fr:3000",
+        domain: "http://localhost:3000",
         token: null,
     },
     loading: true,
