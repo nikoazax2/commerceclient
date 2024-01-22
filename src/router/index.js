@@ -1,5 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router";
-import Accueil from "../views/Accueil.vue";
+import { createRouter, createWebHistory } from "vue-router"; 
 import Register from "../views/User/Register.vue";
 import Login from "../views/User/Login.vue";
 import Account from "../views/User/Account.vue";
@@ -11,7 +10,7 @@ import Payer from "../views/Payer.vue";
 import AdministrationSite from "../views/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
 
-const pageSamplePaths = ["/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
+const pageSamplePaths = ["/", "/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({
@@ -21,11 +20,6 @@ const pageSampleRoutes = pageSamplePaths.map(path => ({
 }));
 
 const routes = [
-    {
-        path: "/",
-        name: "Accueil",
-        component: Accueil,
-    },
     {
         path: "/user/register",
         name: "S'inscrire",

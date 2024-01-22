@@ -19,8 +19,16 @@
                     <v-list-item v-if="user.role == 1" @click="$r.goto('product/administration-products')">
                         <v-list-item-title class="text-subtitle-2">Administration produits</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="user.role == 1" @click="$r.goto('administration-site')">
+                    <!-- <v-list-item v-if="user.role == 1" @click="$r.goto('administration-site')">
                         <v-list-item-title class="text-subtitle-2">Administration Site</v-list-item-title>
+                    </v-list-item> -->
+                    <v-list-item
+                        v-if="user.role == 1"
+                        @click=";($r.modeEdition = !$r.modeEdition), (navDrawer = false)">
+                        <v-list-item-title :class="$r.modeEdition ? 'text-blue' : ''" class="text-subtitle-2">
+                            <v-icon v-if="$r.modeEdition">mdi-check</v-icon>
+                            Mode édition
+                        </v-list-item-title>
                     </v-list-item>
                     <v-list-item @click="$r.disconnect(), (user = null)">
                         <v-list-item-title class="text-subtitle-2">Déconnexion</v-list-item-title>
@@ -91,7 +99,7 @@
             </div>
             <v-btn text elevation="0" class="mr-6 aic text-none" @click="$r.menuCart = true">
                 <v-icon style="font-size: 30px">mdi-cart-outline</v-icon>
-                <div v-if="!$r.isPhone" class="ml-4 font-weight-bold" >Panier</div>
+                <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
                 <v-chip class="pastille" color="primary" variant="flat" size="x-small" v-if="$r.cart">
                     {{ $r.cart?.length }}
                 </v-chip>

@@ -1,6 +1,6 @@
 <template>
     <!-- ENCART 1 -->
-    <div class="encart1 encart pt-6 pb-6">
+    <div class="encart1 encart pt-2 pb-2">
         <h3 class="w100 jcc pb-4 tac">{{ titre||null }}</h3>
         <p class="tac text-caption ma-4" v-html="texte" />
 
@@ -26,7 +26,7 @@ export default {
 <style lang="scss" scoped>
 .isPC {
     .encart1 {
-        padding: 100px 10% !important;
+        padding: 20px 10% !important;
     }
 }
 </style>

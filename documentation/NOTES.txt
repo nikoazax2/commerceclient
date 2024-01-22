@@ -1,0 +1,10 @@
+Blocs d'admninistration du site :
+
+Blocs généraux : utilisés partout
+Blocs d'une page : utilisés dans l'ordre dans la page
+
+type 1 : Texte 
+type 2 : Bandeau Image
+type 3 : Couleur
+
+type 4 : Bouton

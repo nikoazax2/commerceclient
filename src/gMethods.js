@@ -7,6 +7,7 @@ export const gMethods = {
         domain: process.env.NODE_ENV === "production" ? "https://api-ecommerce.sagenicolas.fr" : "http://localhost:3000",
         token: null,
     },
+    modeEdition: false,
     loading: true,
     userConnected: null,
     isPhone: false,
@@ -15,11 +16,11 @@ export const gMethods = {
         url: null
     },
     recherche: '',
-    goto(url, newTab = false) { 
+    goto(url, newTab = false) {
         if (newTab) {
             window.open(url, '_blank');
         } else {
-            document.location.href = `${location.protocol}//${location.host}/${ process.env.NODE_ENV === "production" ? "" : ""}${url}`
+            document.location.href = `${location.protocol}//${location.host}/${process.env.NODE_ENV === "production" ? "" : ""}${url}`
         }
 
     },
@@ -43,6 +44,7 @@ export const gMethods = {
     // --------- Methodes pour les administrations ---------
     contenu: null,
     pages: [],
+    blocs: [],
 
     async getContenu() {
         this.loading = true
@@ -108,6 +110,35 @@ export const gMethods = {
             .delete(`${this.config.domain}/contenu/image/${uuid}`)
             .then((response) => {
                 console.log(response.data)
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+    },
+    async getBlocs() {
+        if (this.blocs.length > 0) return
+        await axios
+            .get(`${this.config.domain}/bloc`)
+            .then(async (response) => {
+                this.blocs = response.data
+                this.loading = false
+                return
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+        return
+
+    },
+    async insertBloc(bloc, index, page) {
+        bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
+
+        this.contenu.splice(index + 1, 0, bloc)
+
+        await axios
+            .post(`${this.config.domain}/contenu`, bloc)
+            .then(async (response) => { 
+                return
             })
             .catch((error) => {
                 console.error('Error fetching products data:', error)

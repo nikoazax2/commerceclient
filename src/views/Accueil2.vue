@@ -7,6 +7,7 @@
             class="logo-website"
             style="width: 100vw"
             alt="logo" />
+            
         <!-- ENCART 1 -->
         <encartTitreTexte
             :bouton="$c.accueil.encart1.bouton"

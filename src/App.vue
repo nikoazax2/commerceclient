@@ -36,8 +36,8 @@ export default {
 
         await this.$r.getCategories()
         await this.$r.getProducts()
-        await this.$r.getContenu() 
-        
+        await this.$r.getContenu()
+
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
             this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu || '#D1514A'
         this.$r.getCart(this.$r.userConnected ? true : false)
