@@ -1,13 +1,7 @@
 <template>
     <div>
         <!-- BLOC IMAGE -->
-        <img
-            v-if="bloc.type == 2 && bloc?.imagesBlob?.length > 0"
-            @click="$r.goto('')"
-            :src="bloc?.imagesBlob[0]"
-            class="logo-website"
-            style="width: 100vw"
-            alt="logo" />
+        <Images :bloc="bloc" />
 
         <!-- BLOC TEXTE -->
         <encartTitreTexte v-if="bloc.type == 1" :texte="bloc?.contenu" />
@@ -23,9 +17,9 @@
 
 <script>
 import encartTitreTexte from '@/components/ElementsContenu/encartTitreTexte.vue'
+import Images from '@/components/ElementsContenu/Images.vue'
 export default {
     name: 'Bloc',
-
     props: {
         bloc: {
             type: Object,
@@ -33,7 +27,8 @@ export default {
         }
     },
     components: {
-        encartTitreTexte
+        encartTitreTexte,
+        Images
     },
     methods: {
         getButton(bloc) {

@@ -1,15 +1,16 @@
 <template>
     <div class="page-sample" v-if="!$r.loading && $r.contenu">
-        <div v-for="(bloc,index) in $r.contenu.filter((page) => page.page == getPage()).sort((a, b) => a.ordre - b.ordre)">
+        <NouveauBloc v-if="$r.modeEdition" :index="index" :page="getPage()" />
+        <div
+            v-for="(bloc, index) in $r.contenu
+                .filter((page) => page.page == getPage())
+                .sort((a, b) => a.ordre - b.ordre)">
             <Bloc v-if="!$r.modeEdition" :bloc="bloc" />
 
             <div v-else>
                 <EditionBloc :contenu="bloc" />
                 <NouveauBloc :index="index" :page="getPage()" />
             </div>
-        </div>
-        <div v-if="$r.contenu.filter((page) => page.page == getPage()).length==0 && $r.modeEdition">
-            <NouveauBloc />
         </div>
     </div>
 </template>

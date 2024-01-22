@@ -6,6 +6,9 @@
             <h4>
                 {{ contenu.name }}
             </h4>
+            <v-btn variant="text" @click="deleteContenu(contenu)" elevation="0" class="ml-4" size="small" color="red">
+                Supprimer
+            </v-btn>
             <v-btn @click="saveContenu(contenu)" elevation="0" class="ml-4" size="small" color="blue">
                 Enregistrer
             </v-btn>
@@ -20,10 +23,9 @@
             api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
             v-model="contenu.contenu"
             :init="{
-                height: 700,
                 menubar: false,
                 plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
+                    'autoresize advlist autolink lists link charmap print preview anchor',
                     'searchreplace visualblocks code fullscreen',
                     'insertdatetime media table paste code help wordcount'
                 ],
@@ -34,7 +36,7 @@
         <!-- Bloc Image -->
         <div v-else-if="contenu.type == 2">
             <div class="image d-flex" v-for="(image, index) in contenu.imagesBlob">
-                <img class="mr-4" :src="image" alt="Red dot" />
+                <img class="mr-4 mb-4" :src="image" alt="Red dot" />
                 <div class="btns-actions">
                     <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                         Agrandir
@@ -48,8 +50,7 @@
                 color="primary"
                 elevation="0"
                 variant="tonal"
-                class="mb-4"
-                v-if="contenu.imagesBlob?.length == 0"
+                class="mb-4 mt-4"
                 @click=";(contenuChange = contenu), openFilePicker()">
                 <v-icon>mdi-plus</v-icon> Ajouter une image
             </v-btn>
@@ -62,9 +63,9 @@
 
         <!-- Bloc Bouton -->
         <div v-else-if="contenu.type == 4">
-            <v-text-field density="compact" v-model="contenu.text" label="Texte" />
-            <v-text-field density="compact" v-model="contenu.url" label="URL" />
-            <v-color-picker v-model="contenu.contenu" />
+            <v-text-field density="compact" v-model="contenu.contenu.titre" label="Texte" />
+            <v-text-field density="compact" v-model="contenu.contenu.url" label="URL" />
+            <v-color-picker hide-canvas hide-inputs show-swatches v-model="contenu.contenu.color" />
         </div>
     </div>
 </template>
@@ -81,6 +82,12 @@ export default {
     },
     components: {
         Editor
+    },
+    created() {
+        if (this.contenu.type == 4 && typeof this.contenu.contenu == 'string') {
+             
+            this.contenu.contenu = JSON.parse(this.contenu.contenu)
+        }
     },
     methods: {
         async handleFileChange(event) {
@@ -109,6 +116,24 @@ export default {
             axios
                 .patch(`${this.$r.config.domain}/contenu/${contenu.uuid}`, contenu, header)
                 .then((response) => {
+                    this.$r.loading = false
+                })
+                .catch((error) => {
+                    console.error('Error fetching products data:', error)
+                })
+        },
+        deleteContenu(contenu) {
+            this.$r.loading = true
+            let header = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+                }
+            }
+            axios
+                .delete(`${this.$r.config.domain}/contenu/${contenu.uuid}`, header)
+                .then((response) => {
+                    this.$r.contenu.splice(this.$r.contenu.indexOf(contenu), 1)
                     this.$r.loading = false
                 })
                 .catch((error) => {

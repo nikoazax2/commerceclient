@@ -53,7 +53,9 @@ export const gMethods = {
             .then(async (response) => {
                 //load images website
                 for await (let contenu of response.data) {
-                    if (contenu.photo) {
+
+                    if (contenu.image) {
+                        console.log(contenu.photo)
                         contenu = await this.setImagesContenu(contenu)
                     }
                 }
@@ -132,12 +134,22 @@ export const gMethods = {
     },
     async insertBloc(bloc, index, page) {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
+        if (bloc.type == 4) {
+            bloc.contenu = JSON.stringify({ url: '', titre: '', color: '' })
+        }
+        delete bloc.uuid
 
-        this.contenu.splice(index + 1, 0, bloc)
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
 
         await axios
-            .post(`${this.config.domain}/contenu`, bloc)
-            .then(async (response) => { 
+            .post(`${this.config.domain}/contenu`, bloc, header)
+            .then(async (response) => {
+                this.contenu.splice(index + 1, 0, response)
                 return
             })
             .catch((error) => {
