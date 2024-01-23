@@ -53,10 +53,12 @@ export const gMethods = {
             .then(async (response) => {
                 //load images website
                 for await (let contenu of response.data) {
-
                     if (contenu.image) {
                         console.log(contenu.photo)
                         contenu = await this.setImagesContenu(contenu)
+                    }
+                    if ([2, 4, 5].includes(contenu.type)) {
+                        contenu.contenu = JSON.parse(contenu.contenu)
                     }
                 }
 
@@ -137,6 +139,15 @@ export const gMethods = {
         if (bloc.type == 4) {
             bloc.contenu = JSON.stringify({ url: '', titre: '', color: '' })
         }
+        if (bloc.type == 2) {
+            bloc.contenu = JSON.stringify([])
+        }
+        if (bloc.type == 5) {
+            bloc.contenu = JSON.stringify({
+                nombre: 5,
+                categories: []
+            })
+        }
         delete bloc.uuid
 
         let header = {
@@ -149,14 +160,82 @@ export const gMethods = {
         await axios
             .post(`${this.config.domain}/contenu`, bloc, header)
             .then(async (response) => {
-                this.contenu.splice(index + 1, 0, response)
+                this.contenu.splice(index, 0, response.data)
+                let i = 0
+                for await (let item of this.contenu.filter((item) => item.page == page)) {
+                    item.order = i
+                    await axios
+                        .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
+                        .then((response) => {
+                            console.log(response.data)
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching products data:', error)
+                        })
+                    i++
+                }
+                document.location.reload()
                 return
             })
             .catch((error) => {
                 console.error('Error fetching products data:', error)
             })
     },
+    saveContenu(contenu) {
+        if (contenu.type == 4) {
+            contenu.contenu.url.replaceAll(document.location.origin, '')
+        } if (contenu.type == 2) {
+            contenu.contenu = JSON.stringify(contenu.contenu)
+        }
+        this.loading = true
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        axios
+            .patch(`${this.config.domain}/contenu/${contenu.uuid}`, contenu, header)
+            .then((response) => {
+                this.loading = false
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+    },
+    deleteContenu(contenu, page) {
+        this.loading = true
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        axios
+            .delete(`${this.config.domain}/contenu/${contenu.uuid}`, header)
+            .then(async (response) => {
+                this.contenu.splice(this.contenu.indexOf(contenu), 1)
+                let i = 0
 
+                for await (let item of this.contenu.filter((item) => item.page == page)) {
+                    item.order = i
+                    await axios
+                        .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
+                        .then((response) => {
+                            console.log(response.data)
+                        })
+                        .catch((error) => {
+                            console.error('Error fetching products data:', error)
+                        })
+                    i++
+                }
+
+                this.loading = false
+            })
+            .catch((error) => {
+                console.error('Error fetching products data:', error)
+            })
+    },
     // --------- Methodes pour les produits ---------
     categories: [],
     products: [],

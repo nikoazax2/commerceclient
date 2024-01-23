@@ -1,7 +1,7 @@
 <template>
     <div class="login ma-4">
         <h2>Se connecter</h2>
-        <div class="formulaire mt-6 w-25">
+        <div class="formulaire mt-6">
             <v-text-field
                 v-model="user.email"
                 class="mb-2"
@@ -19,12 +19,10 @@
                 type="password"
                 label="Mot de passe" />
 
-            <v-btn class="mr-2" color="primary"  elevation="0" @click="$r.login(user.email, user.password)">
+            <v-btn class="mr-2" color="primary" elevation="0" @click="$r.login(user.email, user.password)">
                 Se connecter
             </v-btn>
-            <v-btn color="primary" variant="tonal" @click="$r.goto('user/register')">
-                S'inscrire
-            </v-btn>
+            <v-btn color="primary" variant="tonal" @click="$r.goto('user/register')"> S'inscrire </v-btn>
         </div>
     </div>
 </template>
@@ -43,4 +41,8 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.formulaire {
+max-width: 400px;
+}
+</style>

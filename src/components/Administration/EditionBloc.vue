@@ -1,15 +1,28 @@
 <template>
     <div class="ml-6 mr-6 mt-4">
-        <input type="file" id="file-input" ref="fileInput" multiple style="display: none" @change="handleFileChange" />
+        <input
+            type="file"
+            :id="`file-input-${index}`"
+            ref="fileInput"
+            multiple
+            style="display: none"
+            @change="handleFileChange" />
 
         <div class="d-flex aic">
             <h4>
                 {{ contenu.name }}
             </h4>
-            <v-btn variant="text" @click="deleteContenu(contenu)" elevation="0" class="ml-4" size="small" color="red">
+            <v-btn
+                v-if="contenu.removable"
+                variant="text"
+                @click="$r.deleteContenu(contenu, page)"
+                elevation="0"
+                class="ml-4"
+                size="small"
+                color="red">
                 Supprimer
             </v-btn>
-            <v-btn @click="saveContenu(contenu)" elevation="0" class="ml-4" size="small" color="blue">
+            <v-btn @click="$r.saveContenu(contenu)" elevation="0" class="ml-4" size="small" color="blue">
                 Enregistrer
             </v-btn>
         </div>
@@ -35,23 +48,29 @@
 
         <!-- Bloc Image -->
         <div v-else-if="contenu.type == 2">
-            <div class="image d-flex" v-for="(image, index) in contenu.imagesBlob">
-                <img class="mr-4 mb-4" :src="image" alt="Red dot" />
-                <div class="btns-actions">
-                    <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
-                        Agrandir
-                    </v-btn>
-                    <v-btn elevation="0" color="#C62828" @click="deleteImage(contenu, index)">Supprimer</v-btn>
+            <div class="image-c" v-for="(image, index) in contenu.imagesBlob">
+                <div class="image d-flex">
+                    <img class="mr-4 mb-4" :src="image" alt="Red dot" />
+                    <div class="btns-actions">
+                        <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
+                            Agrandir
+                        </v-btn>
+                        <v-btn elevation="0" color="#C62828" @click="deleteImage(contenu, index)">Supprimer</v-btn>
+                    </div>
                 </div>
+                <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url" />
+                <v-text-field
+                    v-model="contenu.contenu[index].titre"
+                    density="compact"
+                    label="Titre (s'affiche au millieu de l'image)" />
             </div>
-
             <v-btn
                 size="small"
                 color="primary"
                 elevation="0"
                 variant="tonal"
                 class="mb-4 mt-4"
-                @click=";(contenuChange = contenu), openFilePicker()">
+                @click="openFilePicker()">
                 <v-icon>mdi-plus</v-icon> Ajouter une image
             </v-btn>
         </div>
@@ -67,6 +86,20 @@
             <v-text-field density="compact" v-model="contenu.contenu.url" label="URL" />
             <v-color-picker hide-canvas hide-inputs show-swatches v-model="contenu.contenu.color" />
         </div>
+
+        <!-- Bloc Bouton -->
+        <div v-else-if="contenu.type == 5">
+            {{ $r.categories }}
+            <v-select
+                v-if="$r.categories && contenu.contenu.categories"
+                v-model="contenu.contenu.categories"
+                multiple
+                item.value="uuid"
+                item.text="name"
+                :items="$r.categories" 
+                label="Catégorie" />
+            <v-text-field v-model="contenu.contenu.nombre" density="compact" label="Nombre de produits" />
+        </div>
     </div>
 </template>
 
@@ -78,6 +111,19 @@ export default {
         contenu: {
             type: Object,
             required: true
+        },
+        page: {
+            type: String,
+            required: true
+        },
+        index: {
+            type: Number,
+            required: true
+        }
+    },
+    data() {
+        return {
+            contenuChange: null
         }
     },
     components: {
@@ -85,69 +131,41 @@ export default {
     },
     created() {
         if (this.contenu.type == 4 && typeof this.contenu.contenu == 'string') {
-             
+            this.contenu.contenu = JSON.parse(this.contenu.contenu)
+        }
+        if (this.contenu.type == 2 && typeof this.contenu.contenu == 'string') {
             this.contenu.contenu = JSON.parse(this.contenu.contenu)
         }
     },
     methods: {
         async handleFileChange(event) {
+            this.contenuChange = this.contenu
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
-                    this.contenuChange.image = this.contenuChange.image || []
+                    this.contenuChange.image = this.contenuChange?.image || []
                     this.contenuChange.image.push(uuid)
+                    this.contenuChange.contenu.push({ url: '', titre: '' })
+                    this.contenuChange.contenu = this.contenuChange?.contenu || []
                     this.$r.uploadImgContenu(uuid, base64)
-                    this.saveContenu(this.contenuChange)
+                    this.$r.saveContenu(this.contenuChange)
+                    document.location.reload()
                 }
             })
         },
 
-        saveContenu(contenu) {
-            this.$r.loading = true
-            let header = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
-                }
-            }
-            axios
-                .patch(`${this.$r.config.domain}/contenu/${contenu.uuid}`, contenu, header)
-                .then((response) => {
-                    this.$r.loading = false
-                })
-                .catch((error) => {
-                    console.error('Error fetching products data:', error)
-                })
-        },
-        deleteContenu(contenu) {
-            this.$r.loading = true
-            let header = {
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
-                }
-            }
-            axios
-                .delete(`${this.$r.config.domain}/contenu/${contenu.uuid}`, header)
-                .then((response) => {
-                    this.$r.contenu.splice(this.$r.contenu.indexOf(contenu), 1)
-                    this.$r.loading = false
-                })
-                .catch((error) => {
-                    console.error('Error fetching products data:', error)
-                })
-        },
         async deleteImage(contenu, index) {
             await this.$r.deleteImgContenu(contenu.image[index])
+            contenu.contenu.splice(index, 1)
             contenu.image.splice(index, 1)
             contenu.imagesBlob.splice(index, 1)
-            this.saveContenu(contenu)
+            this.$r.saveContenu(contenu)
         },
         openFilePicker() {
-            document.getElementById('file-input').click()
+            document.getElementById(`file-input-${this.index}`).click()
         }
     }
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="page-sample" v-if="!$r.loading && $r.contenu">
-        <NouveauBloc v-if="$r.modeEdition" :index="index" :page="getPage()" />
+        <NouveauBloc v-if="$r.modeEdition" :index="0" :page="getPage()" />
         <div
             v-for="(bloc, index) in $r.contenu
                 .filter((page) => page.page == getPage())
@@ -8,8 +8,8 @@
             <Bloc v-if="!$r.modeEdition" :bloc="bloc" />
 
             <div v-else>
-                <EditionBloc :contenu="bloc" />
-                <NouveauBloc :index="index" :page="getPage()" />
+                <EditionBloc :index="index" :contenu="bloc" :page="getPage()" />
+                <NouveauBloc :index="index + 2" :page="getPage()" />
             </div>
         </div>
     </div>

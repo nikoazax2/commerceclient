@@ -16,13 +16,13 @@
                     <v-list-item @click="$r.goto('user/account')">
                         <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title>
                     </v-list-item>
-                    <v-list-item v-if="user.role == 1" @click="$r.goto('product/administration-products')">
+                    <v-list-item class="administration" v-if="user.role == 1" @click="$r.goto('product/administration-products')">
                         <v-list-item-title class="text-subtitle-2">Administration produits</v-list-item-title>
                     </v-list-item>
-                    <!-- <v-list-item v-if="user.role == 1" @click="$r.goto('administration-site')">
-                        <v-list-item-title class="text-subtitle-2">Administration Site</v-list-item-title>
-                    </v-list-item> -->
-                    <v-list-item
+                    <v-list-item class="administration" v-if="user.role == 1" @click="$r.goto('administration-site')">
+                        <v-list-item-title class="text-subtitle-2">Administration générale</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item class="administration"
                         v-if="user.role == 1"
                         @click=";($r.modeEdition = !$r.modeEdition), (navDrawer = false)">
                         <v-list-item-title :class="$r.modeEdition ? 'text-blue' : ''" class="text-subtitle-2">
@@ -72,10 +72,10 @@
 
         <div class="header-principal d-flex aic pt-4 pb-4">
             <div class="gauche aic">
-                <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
+                <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon> 
                 <img
                     @click="$r.goto('')"
-                    :src="require(`@/assets/imgachanger/${$c.header.logo}`)"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site').imagesBlob[0]"
                     class="logo-website ml-2 mr-4"
                     :style="`width: ${$r.isPhone ? '180px' : '250px'}`"
                     alt="logo" />
@@ -164,6 +164,9 @@ export default {
     position: sticky;
     z-index: 1000;
     top: 0;
+    .administration{
+        color: #2196f3;
+    }
     .logo-website {
         cursor: pointer;
     }

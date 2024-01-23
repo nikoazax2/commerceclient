@@ -8,7 +8,7 @@
 
         <!-- BLOC BOUTON -->
         <div v-if="bloc.type == 4" class="d-flex jcc tac">
-            <v-btn :color="getButton(bloc)?.color || 'primary'" class="mr-4" elevation="0">
+            <v-btn @click="$r.goto(getButton(bloc)?.url)" :color="getButton(bloc)?.color || 'primary'" class="mr-4" elevation="0">
                 {{ getButton(bloc)?.titre }}
             </v-btn>
         </div>

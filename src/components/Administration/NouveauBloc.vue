@@ -17,7 +17,7 @@
         <div v-else-if="$r.blocs" class="blocs">
             <div v-for="bloc in $r.blocs" class="bloc" @click="$r.insertBloc(bloc, index, page), (active = false)">
                 <v-icon>{{ bloc.logo }}</v-icon>
-                <div class="title">+ {{ bloc.name }}</div>
+                <div class="title">{{ bloc.name }}</div>
             </div>
         </div>
     </div>
@@ -49,17 +49,17 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
+    margin: 50px 0;
     .line {
         padding: 0 10px;
         width: calc(50% - 80px);
         height: 1px;
-        background-color: #ccc;
+        background-color: #2196f3;
     }
 }
 .blocs {
     width: 100%;
-    margin: 20px 0;
+    margin: 0px 0; 
     background-color: #cccccc6e;
     overflow-x: scroll;
     white-space: nowrap;
@@ -83,7 +83,8 @@ export default {
             justify-content: center;
             align-items: center;
             font-size: 21px;
-            font-weight: bold;
+            font-weight: 500;
+            transform: translateY(-20px);
         }
         i {
             font-size: 150px;
