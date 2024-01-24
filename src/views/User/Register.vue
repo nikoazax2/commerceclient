@@ -52,8 +52,11 @@ export default {
     },
     methods: {
         async sendCode() {
-            await this.$r.sendCode(this.user.email)
-            this.$r.goto(`user/mail-verif?email=${this.user.email}`)
+            if (this.user.email && this.user.password) {
+                let user = await this.$r.createUser(this.user)
+                await this.$r.sendCode(this.user.email)
+                this.$r.goto(`user/mail-verif?email=${this.user.email}`)
+            }
         }
     }
 }

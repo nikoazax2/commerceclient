@@ -506,18 +506,13 @@ export const gMethods = {
             return null
         }
     },
-    createUser(body) {
-        axios
-            .post(`${this.config.domain}/user`, body)
-            .then((response) => {
-                console.log(response.data);
-                if (response.data.uuid) {
-                    this.login(response.data.username, response.data.password)
-                }
-            })
-            .catch((error) => {
-                console.error("Error fetching products data:", error);
-            });
+    async createUser(body) {
+        try {
+            const response = await axios.post(`${this.config.domain}/user`, body);
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching products data:", error);
+        }
     },
     editUser(body) {
         axios
@@ -581,16 +576,15 @@ export const gMethods = {
                 console.error("Error fetching products data:", error);
             });
     },
-    sendCode(email) {
-        axios
-            .post(`${this.config.domain}/mail/sendCode`, {
+    async sendCode(email) {
+        try {
+            const response = await axios.post(`${this.config.domain}/mail/sendCode`, {
                 email: email
-            })
-            .then((response) => {
-                return
-            })
-            .catch((error) => {
             });
+            return response.data;
+        } catch (error) {
+            console.error("Error fetching products data:", error);
+        }
     },
     verifMailCode(mail, code) {
         axios

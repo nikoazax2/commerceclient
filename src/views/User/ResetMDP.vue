@@ -2,10 +2,14 @@
     <div class="login-container">
         <div>
             <div class="login">
-                <h2>Réinitialisation du mot de <br> passe</h2>
+                <h2>
+                    Réinitialisation du mot de <br />
+                    passe
+                </h2>
                 <div class="formulaire mt-6">
                     <p class="text-caption mb-4">
-                        Saisissez l'adresse e-mail associée à votre compte et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                        Saisissez l'adresse e-mail associée à votre compte et nous vous enverrons un lien pour
+                        réinitialiser votre mot de passe.
                     </p>
 
                     <div>
@@ -17,14 +21,16 @@
                             density="compact"
                             hide-details="true"
                             label="" />
-                    </div> 
+                    </div>
 
                     <div class="d-flex mt-8">
-                        <v-btn width="100%" color="primary" elevation="0" @click="$r.resetCode(user.email)">
+                        <v-btn width="100%" color="primary" elevation="0" @click="sendCode(user.email)">
                             Continuer
                         </v-btn>
                     </div>
-                    <div @click="$r.goto('user/login')" class="link d-flex jcc mt-4 text-caption font-weight-bold">Revenir à la page de connexion</div>
+                    <div @click="$r.goto('user/login')" class="link d-flex jcc mt-4 text-caption font-weight-bold">
+                        Revenir à la page de connexion
+                    </div>
                 </div>
             </div>
             <div class="mt-4 d-flex">
@@ -44,6 +50,12 @@ export default {
                 email: '',
                 password: ''
             }
+        }
+    },
+    methods: {
+        async sendCode() {
+            await this.$r.sendCode(this.user.email)
+            this.$r.goto(`user/mail-verif?email=${this.user.email}`)
         }
     }
 }
