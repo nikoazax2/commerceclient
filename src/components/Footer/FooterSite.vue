@@ -6,7 +6,7 @@
             <div class="aic w100 jcc pt-4 pb-4">
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site').imagesBlob[0]"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
                     class="ml-2"
                     style="max-width: 30%"
                     alt="logo" />

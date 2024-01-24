@@ -2,11 +2,12 @@
     <div class="login-container">
         <div>
             <div class="login">
-                <h2>
-                    Connectez-vous à votre <br />
-                    compte
-                </h2>
+                <h2>Réinitialisation du mot de <br> passe</h2>
                 <div class="formulaire mt-6">
+                    <p class="text-caption mb-4">
+                        Saisissez l'adresse e-mail associée à votre compte et nous vous enverrons un lien pour réinitialiser votre mot de passe.
+                    </p>
+
                     <div>
                         <div class="titre">E-mail</div>
                         <v-text-field
@@ -16,27 +17,14 @@
                             density="compact"
                             hide-details="true"
                             label="" />
-                    </div>
-                    <div>
-                        <div class="titre d-flex jcsb">
-                            <div>Mot de passe</div>
-                            <div class="link" @click="$r.goto('user/reset-password')">Mot de passe oublié ?</div>
-                        </div>
-                        <v-text-field
-                            v-model="user.password"
-                            class="mb-2"
-                            variant="outlined"
-                            density="compact"
-                            hide-details="true"
-                            type="password"
-                            label="" />
-                    </div>
+                    </div> 
 
                     <div class="d-flex mt-8">
-                        <v-btn width="100%" color="primary" elevation="0" @click="$r.login(user.email, user.password)">
-                            Se connecter
+                        <v-btn width="100%" color="primary" elevation="0" @click="$r.resetCode(user.email)">
+                            Continuer
                         </v-btn>
                     </div>
+                    <div @click="$r.goto('user/login')" class="link d-flex jcc mt-4 text-caption font-weight-bold">Revenir à la page de connexion</div>
                 </div>
             </div>
             <div class="mt-4 d-flex">

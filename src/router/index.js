@@ -9,6 +9,8 @@ import Panier from "../views/PanierVue.vue";
 import Payer from "../views/Payer.vue";
 import AdministrationSite from "../views/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
+import ResetMDP from "../views/User/ResetMDP.vue";
+import VerifMail from "../views/User/VerifMail.vue";
 
 const pageSamplePaths = ["/", "/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
@@ -65,6 +67,16 @@ const routes = [
         name: "AdministrationSite",
         component: AdministrationSite,
 
+    },
+    {
+        path: "/user/reset-password",
+        name: "ResetMDP",
+        component: ResetMDP,
+    },
+    {
+        path: "/user/mail-verif",
+        name: "VerifMail",
+        component: VerifMail,
     },
     ...pageSampleRoutes,
 

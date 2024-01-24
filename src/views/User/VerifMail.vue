@@ -2,40 +2,35 @@
     <div class="login-container">
         <div>
             <div class="login">
-                <h2>
-                    Connectez-vous à votre <br />
-                    compte
-                </h2>
+                <h2>Vérification de votre email</h2>
                 <div class="formulaire mt-6">
+                    <p class="text-caption mb-4">
+                        Nous avons envoyé un code de vérification à votre adresse e-mail. Veuillez saisir le code
+                        ci-dessous pour continuer.
+                    </p>
+
                     <div>
-                        <div class="titre">E-mail</div>
+                        <div class="titre">Code</div>
                         <v-text-field
-                            v-model="user.email"
+                            v-model="user.code"
                             class="mb-2"
                             variant="outlined"
                             density="compact"
                             hide-details="true"
-                            label="" />
-                    </div>
-                    <div>
-                        <div class="titre d-flex jcsb">
-                            <div>Mot de passe</div>
-                            <div class="link" @click="$r.goto('user/reset-password')">Mot de passe oublié ?</div>
-                        </div>
-                        <v-text-field
-                            v-model="user.password"
-                            class="mb-2"
-                            variant="outlined"
-                            density="compact"
-                            hide-details="true"
-                            type="password"
                             label="" />
                     </div>
 
                     <div class="d-flex mt-8">
-                        <v-btn width="100%" color="primary" elevation="0" @click="$r.login(user.email, user.password)">
-                            Se connecter
+                        <v-btn
+                            width="100%"
+                            color="primary"
+                            elevation="0"
+                            @click="$r.verifMailCode($route.query.email, user.code)">
+                            Continuer
                         </v-btn>
+                    </div>
+                    <div @click="$r.goto('user/register')" class="link d-flex jcc mt-4 text-caption font-weight-bold">
+                        Revenir à la page d'inscription
                     </div>
                 </div>
             </div>
@@ -54,7 +49,8 @@ export default {
         return {
             user: {
                 email: '',
-                password: ''
+                password: '',
+                code: ''
             }
         }
     }

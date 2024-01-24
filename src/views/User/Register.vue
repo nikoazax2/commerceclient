@@ -1,42 +1,45 @@
 <template>
-    <div class="register ma-4">
-        <h2>S'inscrire</h2>
+    <div class="login-container">
+        <div>
+            <div class="login">
+                <h2>Inscription</h2>
+                <div class="formulaire mt-6">
+                    <div>
+                        <div class="titre">E-mail</div>
+                        <v-text-field
+                            v-model="user.email"
+                            class="mb-2"
+                            variant="outlined"
+                            density="compact"
+                            hide-details="true"
+                            label="" />
+                    </div>
+                    <div>
+                        <div class="titre d-flex jcsb">
+                            <div>Mot de passe</div>
+                        </div>
+                        <v-text-field
+                            v-model="user.password"
+                            class="mb-2"
+                            variant="outlined"
+                            density="compact"
+                            hide-details="true"
+                            type="password"
+                            label="" />
+                    </div>
 
-        <div class="formulaire mt-2 w-50">
-            <v-text-field
-                v-model="user.username"
-                class="mb-2"
-                variant="outlined"
-                density="compact"
-                hide-details="true"
-                label="Nom" />
-
-            <v-text-field
-                v-model="user.email"
-                class="mb-2"
-                variant="outlined"
-                density="compact"
-                hide-details="true"
-                label="Mail" />
-
-            <v-text-field
-                v-model="user.password"
-                class="mb-2"
-                variant="outlined"
-                density="compact"
-                hide-details="true"
-                label="Mot de passe" />
-
-            <v-btn color="primary"  elevation="0" @click="$r.createUser(user)"> S'inscrire </v-btn>
-            <v-btn color="primary"  class="ml-4" variant="tonal" @click="$router.push('/user/login')"> J'ai déjà un compte </v-btn>
-
+                    <div class="d-flex mt-8">
+                        <v-btn @click="sendCode()" width="100%" color="primary" elevation="0"> Continuer </v-btn>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-    name: 'register',
+    name: 'login',
     data() {
         return {
             user: {
@@ -46,8 +49,34 @@ export default {
                 adress: ''
             }
         }
+    },
+    methods: {
+        async sendCode() {
+            await this.$r.sendCode(this.user.email)
+            this.$r.goto(`user/mail-verif?email=${this.user.email}`)
+        }
     }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.login-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    .login {
+        border-radius: 5px;
+        max-width: 700px;
+        min-width: 500px;
+        padding: 40px;
+        box-shadow: 0 15px 35px 0 rgba(60, 66, 87, 0.08), 0 5px 15px 0 rgba(0, 0, 0, 0.12);
+    }
+    .titre {
+        font-size: 14px;
+    }
+    .link {
+        color: #5e72d7;
+        cursor: pointer;
+    }
+}
+</style>

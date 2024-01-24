@@ -581,6 +581,31 @@ export const gMethods = {
                 console.error("Error fetching products data:", error);
             });
     },
+    sendCode(email) {
+        axios
+            .post(`${this.config.domain}/mail/sendCode`, {
+                email: email
+            })
+            .then((response) => {
+                return
+            })
+            .catch((error) => {
+            });
+    },
+    verifMailCode(mail, code) {
+        axios
+            .post(`${this.config.domain}/mail/verifCode`, {
+                email: mail,
+                code: code
+            })
+
+            .then((response) => {
+                return
+            })
+            .catch((error) => {
+            });
+
+    },
 
     // --------- Methodes pour les catégories ---------
     createCategorie(categorie) {

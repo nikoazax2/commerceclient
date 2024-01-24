@@ -75,7 +75,7 @@
                 <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon> 
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site').imagesBlob[0]"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
                     class="logo-website ml-2 mr-4"
                     :style="`width: ${$r.isPhone ? '180px' : '250px'}`"
                     alt="logo" />
