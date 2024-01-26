@@ -118,8 +118,14 @@ export const gMethods = {
         return contenu
     },
     deleteImgContenu(uuid) {
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
         axios
-            .delete(`${this.config.domain}/contenu/image/${uuid}`)
+            .delete(`${this.config.domain}/contenu/image/${uuid}`, header)
             .then((response) => {
                 console.log(response.data)
             })
