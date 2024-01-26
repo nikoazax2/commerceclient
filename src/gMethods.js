@@ -1,6 +1,7 @@
 import axios from "axios";
 import { contenu } from "./contenu";
 import { myCustomLightTheme } from "./plugins/vuetify";
+import router from "./router";
 // --------- Methodes gloables ---------
 export const gMethods = {
     config: {
@@ -15,12 +16,19 @@ export const gMethods = {
         show: false,
         url: null
     },
+    message: {
+        show: false,
+        text: null,
+        color: null,
+        timeout: 5000
+    },
     recherche: '',
     goto(url, newTab = false) {
         if (newTab) {
             window.open(url, '_blank');
         } else {
-            document.location.href = `${location.protocol}//${location.host}/${process.env.NODE_ENV === "production" ? "" : ""}${url}`
+            //document.location.href = `${location.protocol}//${location.host}/${process.env.NODE_ENV === "production" ? "" : ""}${url}`
+            router.push('/' + url)
         }
 
     },
@@ -567,7 +575,6 @@ export const gMethods = {
         axios
             .post(`${this.config.domain}/auth/login`, body)
             .then((response) => {
-                console.log(response.data)
                 localStorage.setItem('jwtToken', JSON.stringify({ access_token: response.data.access_token }))
                 this.getProfile(true)
                 document.location.href = '/'
@@ -590,15 +597,76 @@ export const gMethods = {
         axios
             .post(`${this.config.domain}/mail/verifCode`, {
                 email: mail,
-                code: code
+                code: code.replaceAll(' ', '')
             })
 
             .then((response) => {
+                this.message = {
+                    show: true,
+                    text: 'Code valide, connexion à votre compte',
+                    color: 'success',
+                    timeout: 5000
+                }
+                localStorage.setItem('jwtToken', JSON.stringify({ access_token: response.data.access_token }))
+                this.getProfile(true)
+                this.goto('user/new-password')
                 return
             })
             .catch((error) => {
+                this.message = {
+                    show: true,
+                    text: 'Code invalide, veuillez réessayer',
+                    color: 'error',
+                    timeout: 5000
+                }
+                this.goto('user/login')
             });
+    },
+    nouveauMDP(password) {
+        this.loading = true
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        axios
+            .patch(`${this.config.domain}/user/nouveauMDP`, { password: password }, header)
+            .then((response) => {
+                this.loading = false
+                this.message = {
+                    show: true,
+                    text: 'Mot de passe modifié',
+                    color: 'success',
+                    timeout: 5000
+                }
+                this.goto('')
 
+                return response.data
+            })
+            .catch((error) => {
+                console.error("Error fetching products data:", error);
+            })
+    },
+    deleteAccount() {
+        this.loading = true
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        axios
+            .delete(`${this.config.domain}/user/deleteAccount`, { password: password }, header)
+            .then((response) => {
+                this.loading = false
+                this.goto('')
+
+                return response.data
+            })
+            .catch((error) => {
+                console.error("Error fetching products data:", error);
+            })
     },
 
     // --------- Methodes pour les catégories ---------

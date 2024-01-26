@@ -1,6 +1,14 @@
 <template>
     <v-app v-if="!load" :class="{ isphone: $r.isPhone, isPC: !$r.isPhone }">
         <v-main>
+            <v-snackbar
+                v-model="$r.message.show"
+                :color="$r.message.color"
+                :timeout="$r.message.timeout"
+                location="top">
+                {{ $r.message.text }}
+            </v-snackbar>
+
             <Loading />
 
             <HeaderSite />
@@ -83,6 +91,13 @@ export default {
 .r0 {
     right: 0;
 }
+.link {
+    color: #2196f3;
+    cursor: pointer;
+
+    font-size: 13px;
+    margin: 0 0 5px 0;
+}
 </style>
 
 <style lang="scss" scoped>
@@ -131,6 +146,21 @@ export default {
 }
 </style>
 <style lang="scss">
+.millieu-container {
+    display: flex;
+    justify-content: center;
+    padding: 50px;
+    .millieu {
+        border-radius: 5px;
+        max-width: 500px;
+        min-width: 350px;
+        padding: 40px;
+        box-shadow: 0 15px 35px 0 rgba(60, 66, 87, 0.08), 0 5px 15px 0 rgba(0, 0, 0, 0.12);
+    }
+    .titre {
+        font-size: 14px;
+    }
+}
 .isphone {
     ::-webkit-scrollbar {
         width: 0;

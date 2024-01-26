@@ -7,24 +7,20 @@
                     passe
                 </h2>
                 <div class="formulaire mt-6">
-                    <p class="text-caption mb-4">
-                        Saisissez l'adresse e-mail associée à votre compte et nous vous enverrons un lien pour
-                        réinitialiser votre mot de passe.
-                    </p>
-
                     <div>
-                        <div class="titre">E-mail</div>
+                        <div class="titre">Nouveau mot de passe</div>
                         <v-text-field
-                            v-model="user.email"
+                            v-model="password"
                             class="mb-2"
                             variant="outlined"
+                            type="password"
                             density="compact"
                             hide-details="true"
                             label="" />
                     </div>
 
                     <div class="d-flex mt-8">
-                        <v-btn width="100%" color="primary" elevation="0" @click="sendCode(user.email)">
+                        <v-btn width="100%" color="primary" elevation="0" @click="$r.nouveauMDP(password)">
                             Continuer
                         </v-btn>
                     </div>
@@ -46,21 +42,8 @@ export default {
     name: 'login',
     data() {
         return {
-            user: {
-                email: '',
-                password: ''
-            }
-        }
-    },
-    methods: {
-        async sendCode() {
-            await this.$r.sendCode(this.user.email)
-            this.$r.goto(`user/mail-verif?email=${this.user.email}`)
+            password: ''
         }
     }
 }
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+</script> 

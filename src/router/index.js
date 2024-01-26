@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router"; 
+import { createRouter, createWebHistory } from "vue-router";
 import Register from "../views/User/Register.vue";
 import Login from "../views/User/Login.vue";
 import Account from "../views/User/Account.vue";
@@ -11,6 +11,7 @@ import AdministrationSite from "../views/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
 import ResetMDP from "../views/User/ResetMDP.vue";
 import VerifMail from "../views/User/VerifMail.vue";
+import NewMDP from "../views/User/NewMDP.vue";
 
 const pageSamplePaths = ["/", "/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
@@ -77,6 +78,11 @@ const routes = [
         path: "/user/mail-verif",
         name: "VerifMail",
         component: VerifMail,
+    },
+    {
+        path: "/user/new-password",
+        name: "NewMDP",
+        component: NewMDP,
     },
     ...pageSampleRoutes,
 
