@@ -12,6 +12,7 @@
                         <v-text-field
                             v-model="user.email"
                             class="mb-2"
+                            type="email"
                             variant="outlined"
                             density="compact"
                             hide-details="true"
@@ -28,6 +29,7 @@
                             variant="outlined"
                             density="compact"
                             hide-details="true"
+                            @keyup.enter="$r.login(user.email, user.password)"
                             type="password"
                             label="" />
                     </div>

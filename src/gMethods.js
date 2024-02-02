@@ -27,8 +27,13 @@ export const gMethods = {
         if (newTab) {
             window.open(url, '_blank');
         } else {
-            //document.location.href = `${location.protocol}//${location.host}/${process.env.NODE_ENV === "production" ? "" : ""}${url}`
-            router.push('/' + url)
+            if (url.includes(document.location.origin)) {
+                url = url.replaceAll(document.location.origin, '')
+                router.push('' + url)
+            } else {
+                router.push('/' + url)
+            }
+
         }
 
     },
@@ -48,53 +53,59 @@ export const gMethods = {
             return v.toString(16);
         });
     },
+    dateFormat(date, format) {
+        if (date) {
+            let dateF = new Date(date)
+            return format.replace('YYYY', dateF.getFullYear()).replace('MM', ('0' + (dateF.getMonth() + 1)).slice(-2)).replace('DD', ('0' + dateF.getDate()).slice(-2))
+        }
+    },
 
     // --------- Methodes pour les administrations ---------
     contenu: null,
     pages: [],
     blocs: [],
+    commandes: [],
 
     async getContenu() {
         this.loading = true
-        await axios
-            .get(`${this.config.domain}/contenu`)
-            .then(async (response) => {
-                //load images website
-                for await (let contenu of response.data) {
-                    if (contenu.image) {
-                        console.log(contenu.photo)
-                        contenu = await this.setImagesContenu(contenu)
-                    }
-                    if ([2, 4, 5].includes(contenu.type)) {
-                        contenu.contenu = JSON.parse(contenu.contenu)
-                    }
-                }
 
-                this.contenu = response.data
-                //set pages of website
-                this.pages = [...new Set(response.data.map((item) => { return item.page }))]
-                this.loading = false
-                return
-            })
-            .catch((error) => {
-                console.error('Error fetching products data:', error)
-            })
-        return
+        try {
+            const response = await axios.get(`${this.config.domain}/contenu`,)
+
+            //load contenu website
+            for await (let contenu of response.data) {
+                if (contenu.image) {
+                    contenu = await this.setImagesContenu(contenu)
+                }
+                if ([2, 4, 5].includes(contenu.type)) {
+                    contenu.contenu = JSON.parse(contenu.contenu)
+                }
+            }
+            this.contenu = response.data
+
+
+            //set pages of website
+            this.pages = [...new Set(response.data.map((item) => { return item.page }))]
+            this.loading = false
+
+            return response.data
+        } catch (error) {
+            console.error("Error fetching products data:", error);
+        }
     },
     async uploadImgContenu(originalname, file) {
         this.loading = true
         let formData = new FormData()
         file = new Blob([file], { type: 'image/jpeg' })
         formData.append('photos[]', file, originalname);
-        let img = await axios
-            .post(`${this.config.domain}/contenu/uploadImage`, formData)
-            .then((response) => {
-                this.loading = false
-                return response.data
-            })
-            .catch((error) => {
-                console.error("Error fetching products data:", error);
-            })
+        try {
+            let img = await axios.post(`${this.config.domain}/contenu/uploadImage`, formData)
+            this.loading = false
+            return img.data
+        }
+        catch (error) {
+            console.error("Error fetching products data:", error);
+        }
         return img
     },
     async setImagesContenu(contenu) {
@@ -154,13 +165,11 @@ export const gMethods = {
             bloc.contenu = JSON.stringify({ url: '', titre: '', color: '' })
         }
         if (bloc.type == 2) {
-            bloc.contenu = JSON.stringify([])
+            bloc.contenu = "[]"
         }
         if (bloc.type == 5) {
-            bloc.contenu = JSON.stringify({
-                nombre: 5,
-                categories: []
-            })
+            bloc.contenu = JSON.stringify({ nombre: 5, categories: [] })
+
         }
         delete bloc.uuid
 
@@ -178,6 +187,9 @@ export const gMethods = {
                 let i = 0
                 for await (let item of this.contenu.filter((item) => item.page == page)) {
                     item.order = i
+                    if ([2, 4, 5].includes(item.type)) {
+                        if (typeof item.contenu == 'object') item.contenu = JSON.stringify(item.contenu)
+                    }
                     await axios
                         .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
                         .then((response) => {
@@ -188,7 +200,6 @@ export const gMethods = {
                         })
                     i++
                 }
-                document.location.reload()
                 return
             })
             .catch((error) => {
@@ -196,26 +207,36 @@ export const gMethods = {
             })
     },
     saveContenu(contenu) {
-        if (contenu.type == 4) {
-            contenu.contenu.url.replaceAll(document.location.origin, '')
-        } if (contenu.type == 2) {
-            contenu.contenu = JSON.stringify(contenu.contenu)
-        }
         this.loading = true
+
+        let body = contenu
+        if (contenu.type == 4) body.contenu.url.replaceAll(document.location.origin, '')
+        if (contenu.type == 2) body.contenu = JSON.stringify(contenu.contenu)
+
         let header = {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
             }
         }
-        axios
-            .patch(`${this.config.domain}/contenu/${contenu.uuid}`, contenu, header)
-            .then((response) => {
-                this.loading = false
-            })
-            .catch((error) => {
-                console.error('Error fetching products data:', error)
-            })
+        try {
+            const response = axios.patch(`${this.config.domain}/contenu/${contenu.uuid}`, contenu, header)
+            this.loading = false
+            this.message = {
+                show: true,
+                text: 'Contenu enregistré',
+                color: 'success',
+                timeout: 5000
+            }
+            if ([2, 4, 5].includes(contenu.type) && typeof contenu.contenu == 'string') contenu.contenu = JSON.parse(contenu.contenu)
+
+            return response.data
+        }
+        catch (error) {
+            console.error("Error fetching products data:", error);
+        }
+        this.loading = false
+        return error
     },
     deleteContenu(contenu, page) {
         this.loading = true
@@ -249,6 +270,30 @@ export const gMethods = {
             .catch((error) => {
                 console.error('Error fetching products data:', error)
             })
+    },
+    async getCommandes() {
+        this.loading = true
+        const header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        try {
+            const response = await axios.get(`${this.config.domain}/commande`, header)
+            this.commandes = response.data
+            let users = await this.getUsers()
+            if (users[0]) {
+                this.commandes.forEach((commande) => {
+                    commande.user = users?.find((user) => user.useruuid == commande.user)
+                })
+            }
+            this.loading = false
+            return response.data
+        } catch (error) {
+            console.error("Error fetching products data:", error);
+        }
+
     },
     // --------- Methodes pour les produits ---------
     categories: [],
@@ -351,6 +396,9 @@ export const gMethods = {
             })
     },
     async editProduct(product) {
+        if (typeof product.prix == 'string') product.prix = parseFloat(product.prix.replaceAll(',', '.'))
+        if (typeof product.prixPromo == 'string') product.prixPromo = parseFloat(product.prixPromo.replaceAll(',', '.'))
+
         this.loading = true
         await axios
             .patch(`${this.config.domain}/product/${product.uuid}`, product)
@@ -494,6 +542,32 @@ export const gMethods = {
         }
 
     },
+    async confirmationPaiement(CHECKOUT_SESSION_ID) {
+
+        try {
+            let header = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+                }
+            }
+            const response = await axios.post(`${this.config.domain}/commande/confirmation`, { CHECKOUT_SESSION_ID: CHECKOUT_SESSION_ID }, header)
+            
+            if(response.data=="ERROR"){
+                this.message = {
+                    show: true,
+                    text: 'Erreur lors de la validationde votre commande.',
+                    color: 'error',
+                    timeout: 5000
+                }
+            }
+
+            return response.data
+        }
+        catch (error) {
+            console.error("Error fetching products data:", error);
+        }
+    },
 
     // --------- Methodes pour les utilisateurs --------- 
     disconnect() {
@@ -586,6 +660,12 @@ export const gMethods = {
                 document.location.href = '/'
             })
             .catch((error) => {
+                this.message = {
+                    show: true,
+                    text: 'Identifiants incorrects',
+                    color: 'error',
+                    timeout: 5000
+                }
                 console.error("Error fetching products data:", error);
             });
     },
@@ -673,6 +753,23 @@ export const gMethods = {
             .catch((error) => {
                 console.error("Error fetching products data:", error);
             })
+    },
+    async getUsers() {
+        this.loading = true
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        try {
+            const response = await axios.get(`${this.config.domain}/user`, header)
+            this.loading = false
+            return response.data
+        }
+        catch (error) {
+            console.error("Error fetching users data:", error);
+        }
     },
 
     // --------- Methodes pour les catégories ---------

@@ -15,9 +15,14 @@
         </div>
 
         <div v-else-if="$r.blocs" class="blocs">
-            <div v-for="bloc in $r.blocs" class="bloc" @click="$r.insertBloc(bloc, index, page), (active = false)">
-                <v-icon>{{ bloc.logo }}</v-icon>
-                <div class="title">{{ bloc.name }}</div>
+            <div class="bloc-container">
+                <div
+                    v-for="bloc in $r.blocs"
+                    class="bloc"
+                    @click="$r.insertBloc(bloc, index, page), (active = false)">
+                    <v-icon>{{ bloc.logo }}</v-icon>
+                    <div class="title">{{ bloc.name }}</div>
+                </div>
             </div>
         </div>
     </div>
@@ -49,49 +54,51 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 50px 0;
+    margin: 20px 0;
     .line {
         padding: 0 10px;
         width: calc(50% - 80px);
         height: 1px;
-        background-color: #2196f3;
+        border-bottom: 1px dashed #2196f3;
     }
 }
-.blocs {
-    width: 100%;
-    margin: 0px 0; 
-    background-color: #cccccc6e;
-    overflow-x: scroll;
-    white-space: nowrap;
-    display: -webkit-box;
-    .bloc {
-        margin: 10px;
-        height: 150px;
-        width: 150px;
+.blocs { 
+    background-color: #cccccc6e;  
+    .bloc-container {
+        overflow-x: auto;
         white-space: nowrap;
-        border-radius: 5px;
-        box-shadow: 0px 0px 5px 0px #00000041;
-        background-color: white;
-        &:hover {
-            cursor: pointer;
-            background-color: #cccccc6e;
-        }
-        .title {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 21px;
-            font-weight: 500;
-            transform: translateY(-20px);
-        }
-        i {
-            font-size: 150px;
-            opacity: 0.08;
-            position: relative;
-            height: 0;
-            transform: translateY(62px);
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        .bloc {
+            margin: 10px;
+            height: 150px;
+            width: 150px;
+            white-space: nowrap;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 0px #00000041;
+            background-color: white;
+            &:hover {
+                cursor: pointer;
+                background-color: #cccccc6e;
+            }
+            .title {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 21px;
+                font-weight: 500;
+                transform: translateY(-20px);
+            }
+            i {
+                font-size: 150px;
+                opacity: 0.08;
+                position: relative;
+                height: 0;
+                transform: translateY(62px);
+            }
         }
     }
 }

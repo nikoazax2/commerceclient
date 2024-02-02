@@ -45,6 +45,8 @@ export default {
         await this.$r.getCategories()
         await this.$r.getProducts()
         await this.$r.getContenu()
+        
+        this.$r.modeEdition = this.$route.query.edition || false
 
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
             this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu || '#D1514A'

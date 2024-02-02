@@ -1,8 +1,8 @@
 <template>
     <div class="articles">
         <div
-            @click="$r.goto(`detail?id=${product.uuid}`)"
-            :style="!$r.isPhone ? 'width:25%' : ''"
+            @click="$r.goto(`product/detail?id=${product.uuid}`)"
+            :style="!$r.isPhone ? 'width:22%' : ''"
             v-for="product in products.slice(0, nb)"
             class="bloc-article"> 
             <carroussel :product="product" />
@@ -39,6 +39,7 @@ export default {
 .articles {
     margin: 20px 0;
     display: flex;
+    justify-content: center;
     flex-wrap: wrap;
     .bloc-article {
         min-width: 200px;

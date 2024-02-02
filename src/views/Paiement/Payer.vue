@@ -3,24 +3,28 @@
         <stripe-checkout
             ref="checkoutRef"
             mode="payment"
-            :pk="'pk_test_51NboKUBTmmLQabfnwQKPey7xyIrmAhFXWhRhcrhnrlylOrlvZdT4R5xsa4XDvRLNhFnOI9UadFgaLMoeaNQvcXex00SvCHyjK7'"
+            :pk="stripeAPIKEY"
             :line-items="lineItems"
-            :customerEmail="user?.email"  
-            :success-url="successURL"
-            :cancel-url="cancelURL"
+            :customerEmail="user?.email"
+            :successUrl="getUrls().successUrl"
+            :cancel-url="getUrls().cancelUrl"
+            :shippingAddressCollection="{
+                allowedCountries: ['FR']
+            }"
             @loading="(v) => (loading = v)" />
         <button ref="buttonpaie" @click="submit" />
     </div>
 </template>
 
 <script>
-import axios from 'axios'
 import { StripeCheckout } from '@vue-stripe/vue-stripe'
 export default {
     components: {
         StripeCheckout
     },
+
     created() {
+        this.$r.getProfile()
         this.$r.productsOfCart(this.$r.cart, this.$r.products).forEach((element) => {
             this.lineItems.push({
                 price: element.idapistripe,
@@ -29,7 +33,7 @@ export default {
         })
     },
     async mounted() {
-        this.user = await this.$r.getProfileConnected() 
+        this.user = await this.$r.getProfileConnected()
         this.$refs.buttonpaie.click()
     },
     data() {
@@ -37,11 +41,19 @@ export default {
             user: null,
             loading: false,
             lineItems: [],
-            successUrl: 'http://localhost:3000',
-            cancelUrl: 'http://localhost:3000'
+            successUrl: '/paiement-valide',
+            cancelUrl: '',
+            stripeAPIKEY:
+                'pk_test_51NboKUBTmmLQabfnwQKPey7xyIrmAhFXWhRhcrhnrlylOrlvZdT4R5xsa4XDvRLNhFnOI9UadFgaLMoeaNQvcXex00SvCHyjK7'
         }
     },
     methods: {
+        getUrls() {
+            return {
+                successUrl: document.location.origin + '/paiement-valide?session_id={CHECKOUT_SESSION_ID}',
+                cancelUrl: document.location.origin
+            }
+        },
         submit() {
             this.$refs.checkoutRef.redirectToCheckout(this.lineItems)
         }

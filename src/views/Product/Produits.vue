@@ -8,7 +8,7 @@
                 <div class="ligne2">{{ products.length }} Produit{{ products.length > 1 ? 's' : '' }}</div>
             </div>
             <div class="produits">
-                <div class="produit" v-for="product in products" @click="$r.goto(`detail?id=${product.uuid}`)">
+                <div class="produit" v-for="product in products" @click="$r.goto(`product/detail?id=${product.uuid}`)">
                     <carroussel v-if="product.imagesBlob" :product="product" />
                     <div class="w100">
                         <div class="name">

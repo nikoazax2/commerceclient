@@ -14,17 +14,26 @@
                 <span v-if="user">
                     <!-- MENU SI CONNECTE -->
                     <v-list-item @click="$r.goto('user/account')">
-                        <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title>
+                        <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title> </v-list-item
+                    ><v-list-item @click="$r.goto('user/commandes')">
+                        <v-list-item-title class="text-subtitle-2">Mes commandes</v-list-item-title>
                     </v-list-item>
-                    <v-list-item class="administration" v-if="user.role == 1" @click="$r.goto('product/administration-products')">
+                    <v-list-item
+                        class="administration"
+                        v-if="user.role == 1"
+                        @click="$r.goto('product/administration-products')">
                         <v-list-item-title class="text-subtitle-2">Administration produits</v-list-item-title>
                     </v-list-item>
                     <v-list-item class="administration" v-if="user.role == 1" @click="$r.goto('administration-site')">
                         <v-list-item-title class="text-subtitle-2">Administration générale</v-list-item-title>
                     </v-list-item>
-                    <v-list-item class="administration"
+                    <v-list-item
+                        class="administration"
                         v-if="user.role == 1"
-                        @click=";($r.modeEdition = !$r.modeEdition), (navDrawer = false)">
+                        @click="$r.goto('administration/commandes')">
+                        <v-list-item-title class="text-subtitle-2">Gestionnaire de commandes</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item class="administration" v-if="user.role == 1" @click="activeEdition()">
                         <v-list-item-title :class="$r.modeEdition ? 'text-blue' : ''" class="text-subtitle-2">
                             <v-icon v-if="$r.modeEdition">mdi-check</v-icon>
                             Mode édition
@@ -72,7 +81,7 @@
 
         <div class="header-principal d-flex aic pt-4 pb-4">
             <div class="gauche aic">
-                <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon> 
+                <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
                 <img
                     @click="$r.goto('')"
                     :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
@@ -81,7 +90,7 @@
                     alt="logo" />
             </div>
 
-            <div v-if="!$r.isPhone" style="width: 10000px; min-width: 200px" class="pl-4 pr-4">
+            <div v-if="!$r.isPhone" style="width: 10000px; min-width: 200px; max-width: 700px" class="pl-4 pr-4">
                 <v-text-field
                     label="Rechercher..."
                     hide-details="true"
@@ -100,8 +109,13 @@
             <v-btn text elevation="0" class="mr-6 aic text-none" @click="$r.menuCart = true">
                 <v-icon style="font-size: 30px">mdi-cart-outline</v-icon>
                 <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
-                <v-chip class="pastille" color="primary" variant="flat" size="x-small" v-if="$r.cart">
-                    {{ $r.cart?.length }}
+                <v-chip
+                    class="pastille"
+                    color="primary"
+                    variant="flat"
+                    size="x-small"
+                    v-if="$r.productsOfCart($r.cart, $r.products)">
+                    {{ $r.productsOfCart($r.cart, $r.products).length }}
                 </v-chip>
             </v-btn>
         </div>
@@ -148,6 +162,14 @@ export default {
     created() {
         this.$r.recherche = this.$route.query.recherche || ''
         this.user = this.$r.getProfileConnected()
+    },
+    methods: {
+        activeEdition() {
+            this.$r.modeEdition = !this.$r.modeEdition
+            //add adition boolean in url
+            this.navDrawer = false
+            this.$router.push({ query: { edition: this.$r.modeEdition } })
+        }
     }
 }
 </script>
@@ -164,7 +186,7 @@ export default {
     position: sticky;
     z-index: 1000;
     top: 0;
-    .administration{
+    .administration {
         color: #2196f3;
     }
     .logo-website {
