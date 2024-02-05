@@ -80,8 +80,12 @@ export default {
         this.product = await this.$r.products.filter((p) => p.uuid === this.$route.query.id)[0]
         //select variation of middle
         if (this.product?.variations?.length > 0) {
-            let middle = Math.floor(this.product.variations.length / 2) - 1
-            this.product.variations[middle].selected = true
+            let middle = Math.floor(this.product.variations.length / 2) - 1 
+            if (this.product.variations[middle]) {
+                this.product.variations[middle].selected = true
+            } else {
+                this.product.variations[0].selected = true
+            }
         }
         this.load = false
     },

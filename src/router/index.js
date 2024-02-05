@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from "vue-router"; 
+import { createRouter, createWebHistory } from "vue-router";
 import Register from "../views/User/Register.vue";
 import Login from "../views/User/Login.vue";
 import Account from "../views/User/Account.vue";
@@ -6,11 +6,15 @@ import Produits from "../views/Product/Produits.vue";
 import Produit from "../views/Product/Produit.vue";
 import Gestion from "../views/Product/AdministrationProduits.vue";
 import Panier from "../views/PanierVue.vue";
-import Payer from "../views/Payer.vue";
-import AdministrationSite from "../views/AdministrationSite.vue";
+import Payer from "../views/Paiement/Payer.vue";
+import AdministrationSite from "../views/Administration/AdministrationSite.vue";
 import PageSample from "../views/PageSample.vue";
 import ResetMDP from "../views/User/ResetMDP.vue";
 import VerifMail from "../views/User/VerifMail.vue";
+import NewMDP from "../views/User/NewMDP.vue";
+import AdminCommandes from "../views/Administration/AdminCommandes.vue";
+import PaiementValide from "../views/Paiement/PaiementValide.vue";
+import Commandes from "../views/User/Commandes"
 
 const pageSamplePaths = ["/", "/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
 
@@ -77,6 +81,26 @@ const routes = [
         path: "/user/mail-verif",
         name: "VerifMail",
         component: VerifMail,
+    },
+    {
+        path: "/user/new-password",
+        name: "NewMDP",
+        component: NewMDP,
+    },
+    {
+        path: "/administration/commandes",
+        name: "AdminCommandes",
+        component: AdminCommandes,
+    },
+    {
+        path: "/paiement-valide",
+        name: "PaiementValide",
+        component: PaiementValide,
+    },
+    {
+        path: "/user/commandes",
+        name: "Commandes",
+        component: Commandes
     },
     ...pageSampleRoutes,
 

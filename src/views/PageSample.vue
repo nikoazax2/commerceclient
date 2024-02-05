@@ -1,5 +1,6 @@
 <template>
-    <div class="page-sample" v-if="!$r.loading && $r.contenu">
+    <div class="page-sample mt-4" v-if="!$r.loading && $r.contenu">
+        <h3 v-if="$r.modeEdition" class="ml-16 mb-4">Édition de l'écran {{ getPage() }}</h3>
         <NouveauBloc v-if="$r.modeEdition" :index="0" :page="getPage()" />
         <div
             v-for="(bloc, index) in $r.contenu
@@ -26,6 +27,14 @@ export default {
         Bloc,
         NouveauBloc,
         EditionBloc
+    },
+    watch: {
+        $route(to) {
+            this.$r.modeEdition = to.query.edition == 'true'
+        }
+    },
+    created() {
+        if(this.$route.query.edition == 'true') this.$r.getProfile()
     },
     data() {
         return {

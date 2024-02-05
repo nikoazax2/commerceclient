@@ -1,8 +1,14 @@
 <template>
-    <div v-if="bloc?.imagesBlob?.length == 1">
+    <div
+        class="images image-simple"
+        v-if="bloc?.imagesBlob?.length == 1"
+        @click="$r.goto(bloc.contenu[0].url, true)"
+        :style="bloc.contenu[0].url ? 'cursor: pointer' : ''">
+        <div class="titre">
+            {{ bloc?.contenu[0]?.titre }}
+        </div>
         <img
             v-if="bloc.type == 2 && bloc?.imagesBlob?.length > 0"
-            @click="$r.goto('')"
             :src="bloc?.imagesBlob[0]"
             class="logo-website"
             style="width: 100vw"
@@ -10,14 +16,16 @@
     </div>
     <div v-else>
         <div class="images">
-            <div v-for="(image, index) in bloc.imagesBlob">
+            <div
+                v-for="(image, index) in bloc.imagesBlob"
+                @click="$r.goto(bloc.contenu[index].url, true)"
+                :style="bloc.contenu[index]?.url ? 'cursor: pointer' : ''">
                 <div class="titre">
-                    {{ bloc.contenu[index].titre }}
+                    {{ bloc.contenu[index]?.titre }}
                 </div>
                 <img
-                    :style="`width: 100%`"
+                    :style="`width: calc(100vw / ${bloc.imagesBlob.length})`"
                     v-if="bloc.type == 2 && bloc?.imagesBlob?.length > 0"
-                    @click="$r.goto('')"
                     :src="image"
                     alt="logo" />
             </div>
@@ -50,6 +58,11 @@ export default {
         font-size: 1.5em;
         color: white;
         text-shadow: 0px 0px 10px black;
+    }
+}
+.image-simple{
+    img{
+        padding: 0!important;
     }
 }
 //for mobile make images v-for 100% width

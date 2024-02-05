@@ -1,5 +1,5 @@
 <template>
-    <div class="ml-6 mr-6 mt-4">
+    <div class="ml-6 mr-6">
         <input
             type="file"
             :id="`file-input-${index}`"
@@ -47,29 +47,41 @@
             }" />
 
         <!-- Bloc Image -->
-        <div v-else-if="contenu.type == 2">
-            <div class="image-c" v-for="(image, index) in contenu.imagesBlob">
+        <div v-else-if="contenu.type == 2" class="d-flex images">
+            <div class="image-c mr-4" v-for="(image, index) in contenu.imagesBlob">
                 <div class="image d-flex">
                     <img class="mr-4 mb-4" :src="image" alt="Red dot" />
                     <div class="btns-actions">
                         <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                             Agrandir
                         </v-btn>
-                        <v-btn elevation="0" color="#C62828" @click="deleteImage(contenu, index)">Supprimer</v-btn>
+                        <v-btn
+                            v-if="contenu.contenu[index]?.unique"
+                            elevation="0"
+                            color="#C62828"
+                            @click="deleteImage(contenu, index), openFilePicker()">
+                            Remplacer
+                        </v-btn>
+                        <v-btn
+                            v-if="!contenu.contenu[index]?.unique"
+                            elevation="0"
+                            color="#C62828"
+                            @click="deleteImage(contenu, index)">
+                            Supprimer
+                        </v-btn>
                     </div>
                 </div>
-                <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url" />
-                <v-text-field
-                    v-model="contenu.contenu[index].titre"
-                    density="compact"
-                    label="Titre (s'affiche au millieu de l'image)" />
-            </div>
+                <div class="details" v-if="contenu.contenu[index] && !contenu.contenu[index].unique">
+                    <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
+                    <v-text-field v-model="contenu.contenu[index].titre" density="compact" label="Titre centré" />
+                </div>
+            </div> 
             <v-btn
+                v-if="!contenu.contenu[0]?.unique||(contenu.contenu[0]?.unique&&contenu.imagesBlob.length==0)"
                 size="small"
                 color="primary"
                 elevation="0"
                 variant="tonal"
-                class="mb-4 mt-4"
                 @click="openFilePicker()">
                 <v-icon>mdi-plus</v-icon> Ajouter une image
             </v-btn>
@@ -81,23 +93,24 @@
         </div>
 
         <!-- Bloc Bouton -->
-        <div v-else-if="contenu.type == 4">
+        <div v-else-if="contenu.type == 4"> 
             <v-text-field density="compact" v-model="contenu.contenu.titre" label="Texte" />
             <v-text-field density="compact" v-model="contenu.contenu.url" label="URL" />
             <v-color-picker hide-canvas hide-inputs show-swatches v-model="contenu.contenu.color" />
         </div>
 
-        <!-- Bloc Bouton -->
-        <div v-else-if="contenu.type == 5">
-            {{ $r.categories }}
+        <!-- Bloc Articles -->
+        <div v-else-if="contenu.type == 5" class="articles">
             <v-select
                 v-if="$r.categories && contenu.contenu.categories"
                 v-model="contenu.contenu.categories"
                 multiple
-                item.value="uuid"
-                item.text="name"
-                :items="$r.categories" 
-                label="Catégorie" />
+                item-value="uuid"
+                item-title="name"
+                density="compact"
+                :items="$r.categories"
+                label="Catégorie">
+            </v-select>
             <v-text-field v-model="contenu.contenu.nombre" density="compact" label="Nombre de produits" />
         </div>
     </div>
@@ -139,27 +152,34 @@ export default {
     },
     methods: {
         async handleFileChange(event) {
+            this.$r.loading = true
             this.contenuChange = this.contenu
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
-                reader.onload = () => {
+                reader.onload = async () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
                     this.contenuChange.image = this.contenuChange?.image || []
                     this.contenuChange.image.push(uuid)
-                    this.contenuChange.contenu.push({ url: '', titre: '' })
+                    if (typeof this.contenuChange.contenu == 'object') {
+                        this.contenuChange.contenu.push({ url: '', titre: '' })
+                    } else {
+                        this.contenuChange.contenu = [{ url: '', titre: '' }]
+                    }
                     this.contenuChange.contenu = this.contenuChange?.contenu || []
-                    this.$r.uploadImgContenu(uuid, base64)
-                    this.$r.saveContenu(this.contenuChange)
-                    document.location.reload()
+                    await this.$r.uploadImgContenu(uuid, base64)
+                    await this.$r.saveContenu(this.contenuChange)
+                    await this.$r.getContenu()
+
+                    this.$r.loading = false
                 }
             })
         },
 
         async deleteImage(contenu, index) {
             await this.$r.deleteImgContenu(contenu.image[index])
-            contenu.contenu.splice(index, 1)
+            if (!contenu.contenu[index].unique) contenu.contenu.splice(index, 1)
             contenu.image.splice(index, 1)
             contenu.imagesBlob.splice(index, 1)
             this.$r.saveContenu(contenu)
@@ -172,31 +192,40 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.image {
-    width: fit-content;
-    position: relative;
-    max-height: 200px;
-    img {
-        max-height: inherit;
-    }
-    .btns-actions {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        -ms-transform: translate(-50%, -50%);
-        cursor: pointer;
-        opacity: 0;
-        display: flex;
-        flex-direction: column;
-        .v-btn {
-            margin-bottom: 10px;
+.images {
+    width: 100vw;
+    overflow-x: auto;
+    .image-c {
+        .image {
+            width: fit-content;
+            position: relative;
+            max-height: 200px;
+            img {
+                max-height: inherit;
+            }
+            .btns-actions {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                -ms-transform: translate(-50%, -50%);
+                cursor: pointer;
+                opacity: 0;
+                display: flex;
+                flex-direction: column;
+                .v-btn {
+                    margin-bottom: 10px;
+                }
+            }
+            &:hover {
+                .btns-actions {
+                    opacity: 1;
+                }
+            }
         }
     }
-    &:hover {
-        .btns-actions {
-            opacity: 1;
-        }
-    }
+}
+.articles {
+    max-width: 400px;
 }
 </style>

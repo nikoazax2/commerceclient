@@ -1,7 +1,7 @@
 <template>
-    <div class="login-container">
+    <div class="millieu-container">
         <div>
-            <div class="login">
+            <div class="millieu">
                 <h2>
                     Connectez-vous à votre <br />
                     compte
@@ -12,6 +12,7 @@
                         <v-text-field
                             v-model="user.email"
                             class="mb-2"
+                            type="email"
                             variant="outlined"
                             density="compact"
                             hide-details="true"
@@ -28,6 +29,7 @@
                             variant="outlined"
                             density="compact"
                             hide-details="true"
+                            @keyup.enter="$r.login(user.email, user.password)"
                             type="password"
                             label="" />
                     </div>
@@ -60,24 +62,4 @@ export default {
     }
 }
 </script>
-
-<style lang="scss" scoped>
-.login-container {
-    display: flex;
-    justify-content: center;
-    padding: 50px;
-    .login {
-        border-radius: 5px;
-        max-width: 500px;
-        padding: 40px;
-        box-shadow: 0 15px 35px 0 rgba(60, 66, 87, 0.08), 0 5px 15px 0 rgba(0, 0, 0, 0.12);
-    }
-    .titre {
-        font-size: 14px;
-    }
-    .link {
-        color: #5e72d7;
-        cursor: pointer;
-    }
-}
-</style>
+ 
