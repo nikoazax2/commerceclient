@@ -10,6 +10,7 @@ Back :
 pour maj : 
 (kill pm2)
 git pull 
+delete dist
 puis lancer serveur
 
 lancer server :  
