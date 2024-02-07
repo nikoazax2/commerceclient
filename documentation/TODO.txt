@@ -6,19 +6,19 @@ Site :
 Sécurité 
 Sécuriser Tokens/IDS
 Paramétrage site complet - export table contenu :
-    Paramétrage dynamique ?
+    ✅ Paramétrage dynamique ?
     ✅ Paramétrage couleurs (primary)
-Pages connexion inscription
-🚧 Mise en ligne
+✅ Pages connexion inscription
+✅ Mise en ligne
 🚧 Gestion des comptes/informations/commandes :
     🚧 Gestion des commandes
         Création d'un webhook après paiement stripe pour créer la commande sur le serveur
     🚧 Livraison (comptes) ?
     🚧 Mails de commande
-    🚧 Mot de passe perdu 
+    ✅ Mot de passe perdu 
     🚧 Désactivation comptes
-    🚧 Mail de connexion double facteur 
-    🚧 Vérifications adresse API gouv ?
+    ✅ Mail de connexion double facteur 
+     Vérifications adresse API gouv ?
 Design complet avec Ariane
 Refaire avec produit ok
 
@@ -28,6 +28,6 @@ Fixer les prix
    Calculer coûts hébergement et autres
 Business plan
 Landing page vente produit 
-Mise en ligne 
-Mail prospection
+🚧 Mise en ligne 
+✅ Mail prospection
 Refaire scrapping ? ( Ancien - nouveaux ?)
