@@ -14,7 +14,7 @@
             <div class="line" />
         </div>
 
-        <div v-else-if="$r.blocs" class="blocs">
+        <div v-else-if="$r.blocs" class="blocs mb-4">
             <div class="bloc-container">
                 <div
                     v-for="bloc in $r.blocs"

@@ -58,6 +58,10 @@ export default {
 </script>
 
 <style lang="scss">
+*{
+    font-family: 'Mulish', sans-serif !important;
+    font-weight: 700 !important;
+}
 .promo-etiquette {
     width: fit-content;
     padding: 3px 6px;

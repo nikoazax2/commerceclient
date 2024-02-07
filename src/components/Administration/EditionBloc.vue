@@ -75,9 +75,9 @@
                     <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
                     <v-text-field v-model="contenu.contenu[index].titre" density="compact" label="Titre centré" />
                 </div>
-            </div> 
+            </div>
             <v-btn
-                v-if="!contenu.contenu[0]?.unique||(contenu.contenu[0]?.unique&&contenu.imagesBlob.length==0)"
+                v-if="!contenu.contenu[0]?.unique || (contenu.contenu[0]?.unique && contenu.imagesBlob.length == 0)"
                 size="small"
                 color="primary"
                 elevation="0"
@@ -93,7 +93,7 @@
         </div>
 
         <!-- Bloc Bouton -->
-        <div v-else-if="contenu.type == 4"> 
+        <div v-else-if="contenu.type == 4">
             <v-text-field density="compact" v-model="contenu.contenu.titre" label="Texte" />
             <v-text-field density="compact" v-model="contenu.contenu.url" label="URL" />
             <v-color-picker hide-canvas hide-inputs show-swatches v-model="contenu.contenu.color" />
@@ -112,6 +112,11 @@
                 label="Catégorie">
             </v-select>
             <v-text-field v-model="contenu.contenu.nombre" density="compact" label="Nombre de produits" />
+        </div>
+
+        <!-- Bloc Catégories -->
+        <div v-else-if="contenu.type == 6" class="articles">
+           
         </div>
     </div>
 </template>

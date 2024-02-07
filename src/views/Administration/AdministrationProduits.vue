@@ -1,6 +1,19 @@
 <template>
     <div class="administration" v-if="!$r.loading">
-        <input type="file" id="file-input" ref="fileInput" multiple style="display: none" @change="handleFileChange" />
+        <input
+            type="file"
+            id="file-input"
+            ref="fileInput"
+            multiple
+            style="display: none"
+            @change="handleFileChange($event)" />
+        <input
+            type="file"
+            id="file-input-cat"
+            ref="fileInput"
+            multiple
+            style="display: none"
+            @change="handleFileChange($event, true)" />
 
         <v-dialog v-model="sureProduct.display">
             <div class="bg-white pa-6">
@@ -34,13 +47,14 @@
         </div>
         <div class="categories">
             <div class="categorie" v-for="(categorie, index) in $r.categories">
-                <div class="name-cat mb-4 d-flex aic">
+                <div class="name-cat d-flex aic">
                     <v-text-field
                         hide-details="true"
-                        style="max-width: 300px"
+                        style="width: 300px"
                         density="compact"
                         class="ml-2 mr-4"
                         v-model="categorie.name" />
+
                     <div class="mr-4">
                         ({{
                             $r.products.filter((product) => product.categorieuuid === categorie.uuid).length > 1
@@ -55,9 +69,44 @@
                                 : '&nbsp;'
                         }})
                     </div>
+
+                    <div class="image">
+                        <div class="images aic">
+                            <div class="image d-flex" v-if="categorie.image">
+                                <img class="mr-4" :src="categorie.imagesBlob" alt="Red dot" />
+                                <div class="btns-actions">
+                                    <v-btn
+                                        elevation="0"
+                                        color="grey"
+                                        @click="$r.iframeImg = { show: true, url: categorie.imagesBlob }">
+                                        Agrandir
+                                    </v-btn>
+                                    <v-btn
+                                        elevation="0"
+                                        color="#C62828"
+                                        @click="deleteImage('categorie', categorie, index)">
+                                        Supprimer
+                                    </v-btn>
+                                </div>
+                            </div>
+
+                            <v-btn
+                                size="small"
+                                color="primary"
+                                v-if="!categorie.image"
+                                elevation="0"
+                                variant="tonal"
+                                class="mr-4"
+                                @click=";(categorieAddImgj = categorie), openFilePicker('file-input-cat')">
+                                <v-icon>mdi-plus</v-icon> Ajouter une image
+                            </v-btn>
+                        </div>
+                    </div>
+
                     <v-btn
                         variant="tonal"
                         elevation="0"
+                        size="small"
                         @click=";(sureCategorie.uuid = categorie.uuid), (sureCategorie.display = true)">
                         Supprimer
                     </v-btn>
@@ -66,6 +115,7 @@
                         class="ml-4"
                         variant="tonal"
                         elevation="0"
+                        size="small"
                         @click="categorie.nouveau ? $r.createCategorie(categorie) : $r.editCategorie(categorie)">
                         Sauvegarder
                     </v-btn>
@@ -97,7 +147,9 @@
                             <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                                 Agrandir
                             </v-btn>
-                            <v-btn elevation="0" color="#C62828" @click="deleteImage(product, index)">Supprimer</v-btn>
+                            <v-btn elevation="0" color="#C62828" @click="deleteImage('product', product, index)"
+                                >Supprimer</v-btn
+                            >
                         </div>
                     </div>
 
@@ -107,7 +159,7 @@
                         elevation="0"
                         variant="tonal"
                         class="mb-4"
-                        @click=";(productAddImg = product), openFilePicker()">
+                        @click=";(productAddImg = product), openFilePicker('file-input')">
                         <v-icon>mdi-plus</v-icon> Ajouter une image
                     </v-btn>
                 </div>
@@ -248,6 +300,7 @@ export default {
                 display: false,
                 productAddImg: null
             },
+            categorieAddImg: null,
             sureCategorie: {
                 uuid: null,
                 display: false
@@ -305,28 +358,41 @@ export default {
                 ? product.variations.push({ name: '', stock: '', productuuid: product.uuid, order: order })
                 : (product.variations = [{ name: '', stock: '', productuuid: product.uuid, order: order }])
         },
-        openFilePicker() {
-            document.getElementById('file-input').click()
+        openFilePicker(id) {
+            document.getElementById(id).click()
         },
-        async handleFileChange(event) {
+        async handleFileChange(event, categorie = false) {
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
                 reader.onload = () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
-                    this.productAddImg.image = this.productAddImg.image ? this.productAddImg.image : []
-                    this.productAddImg.image.push(uuid)
-                    this.$r.uploadImg(uuid, base64)
-                    this.$r.editProduct(this.productAddImg)
+                    if (categorie) {
+                        this.categorieAddImg.image = uuid
+                        this.$r.uploadImg(uuid, base64)
+                        this.$r.editCategorie(this.categorieAddImg)
+                    } else {
+                        this.productAddImg.image = this.productAddImg.image ? this.productAddImg.image : []
+                        this.productAddImg.image.push(uuid)
+                        this.$r.uploadImg(uuid, base64)
+                        this.$r.editProduct(this.productAddImg)
+                    }
                 }
             })
         },
-        async deleteImage(product, index) {
-            await this.$r.deleteImg(product.image[index])
-            product.image.splice(index, 1)
-            product.imagesBlob.splice(index, 1)
-            this.$r.editProduct(product)
+        async deleteImage(type, obj, index) {
+            if (type === 'categorie') {
+                await this.$r.deleteImg(obj.imagesBlob)
+                obj.imagesBlob = null
+                obj.image = null
+                this.$r.editCategorie(obj)
+            } else {
+                await this.$r.deleteImg(obj.image[index])
+                obj.image.splice(index, 1)
+                obj.imagesBlob.splice(index, 1)
+                this.$r.editProduct(obj)
+            }
         }
     }
 }

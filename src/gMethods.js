@@ -308,18 +308,7 @@ export const gMethods = {
                 console.error("Error fetching products data:", error);
             })
     },
-    async getCategories() {
-        this.loading = true
-        await axios
-            .get(`${this.config.domain}/categorie`)
-            .then((response) => {
-                this.categories = response.data
-                this.loading = false
-            })
-            .catch((error) => {
-                console.error("Error fetching products data:", error);
-            })
-    },
+
     async uploadImg(originalname, file) {
         this.loading = true
         let formData = new FormData()
@@ -552,8 +541,8 @@ export const gMethods = {
                 }
             }
             const response = await axios.post(`${this.config.domain}/commande/confirmation`, { CHECKOUT_SESSION_ID: CHECKOUT_SESSION_ID }, header)
-            
-            if(response.data=="ERROR"){
+
+            if (response.data == "ERROR") {
                 this.message = {
                     show: true,
                     text: 'Erreur lors de la validationde votre commande.',
@@ -773,6 +762,37 @@ export const gMethods = {
     },
 
     // --------- Methodes pour les catégories ---------
+    async getCategories() {
+        this.loading = true
+        await axios
+            .get(`${this.config.domain}/categorie`)
+            .then(async (response) => {
+                for await (let categorie of response.data) {
+                    if (categorie.image) categorie = await this.setImagesCategorie(categorie)
+                }
+                this.categories = response.data
+                this.loading = false
+            })
+            .catch((error) => {
+                console.error("Error fetching products data:", error);
+            })
+    },
+    async setImagesCategorie(categorie) {
+        this.loading = true
+        let img = await axios
+            .get(`${this.config.domain}/product/image/${categorie.image}`)
+            .then((response) => {
+                this.loading = false
+                return response.data
+
+            })
+            .catch((error) => {
+                console.error("Error fetching categorie data:", error);
+            })
+
+        categorie.imagesBlob = img
+        return categorie
+    },
     createCategorie(categorie) {
         this.loading = true
         axios
@@ -812,4 +832,5 @@ export const gMethods = {
             })
         document.location.reload()
     },
+
 };

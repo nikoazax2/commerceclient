@@ -120,7 +120,7 @@
             </v-btn>
         </div>
 
-        <div v-if="!$r.isPhone" class="liens-ordi aic" style="border-bottom: 1px solid rgba(121, 121, 121, 0.3)">
+        <div v-if="!$r.isPhone" class="liens-ordi aic">
             <v-icon @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
 
             <div @click="$r.goto('product/list')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">
@@ -202,6 +202,8 @@ export default {
         }
     }
     .liens-ordi {
+        //border-bottom: 1px solid rgba(121, 121, 121, 0.3);
+        box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.2);
         div {
             cursor: pointer;
         }

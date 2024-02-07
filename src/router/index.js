@@ -4,7 +4,7 @@ import Login from "../views/User/Login.vue";
 import Account from "../views/User/Account.vue";
 import Produits from "../views/Product/Produits.vue";
 import Produit from "../views/Product/Produit.vue";
-import Gestion from "../views/Product/AdministrationProduits.vue";
+import Gestion from "../views/Administration/AdministrationProduits.vue";
 import Panier from "../views/PanierVue.vue";
 import Payer from "../views/Paiement/Payer.vue";
 import AdministrationSite from "../views/Administration/AdministrationSite.vue";
