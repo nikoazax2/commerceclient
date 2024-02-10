@@ -39,6 +39,7 @@
 
         <h3 class="mt-4 mb-4">Administration Produits</h3>
 
+        <!-- Categories -->
         <div class="d-flex">
             <h3 class="mb-4">Catégories</h3>
             <v-btn size="small" class="ml-4" color="primary" elevation="0" @click="createCategorie()">
@@ -123,23 +124,26 @@
             </div>
         </div>
 
+        <!-- Products -->
         <div class="mb-4 d-flex">
             <h3>Produits</h3>
             <v-btn size="small" class="ml-4" color="primary" elevation="0" @click="addNewProduct()">
                 <v-icon>mdi-plus</v-icon> Nouveau produit
             </v-btn>
         </div>
-
         <div class="products mb-6" v-for="(product, index) in $r.products">
-            <div class="name-cat mb-4" v-if="product.categorie.name">
+            <div class="name-cat" v-if="product.categorie.name" @click="product.deplie = !product.deplie">
                 <b class="d-flex">
                     <div>{{ product.categorie.name }} - {{ product.name }}</div>
                     <v-icon @click="$r.goto(`/product/detail?id=${product.uuid}`, true)" class="ml-2">
                         mdi-open-in-new
                     </v-icon>
+                    <v-icon>
+                        {{ product.deplie ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+                    </v-icon>
                 </b>
             </div>
-            <div class="product">
+            <div v-if="product.deplie" class="product">
                 <div class="images mb-4 aic">
                     <div class="image d-flex" v-for="(image, index) in product.imagesBlob">
                         <img class="mr-4" :src="image" alt="Red dot" />
@@ -211,7 +215,7 @@
                             class="ml-2"
                             v-model="product.ancienprixpromo" />
                     </div>
-                    <div class="product-api-stripe">
+                    <!-- <div class="product-api-stripe">
                         <b>Identifiant du produit sur Stripe : </b>
                         <v-text-field
                             hide-details="true"
@@ -219,7 +223,7 @@
                             density="compact"
                             class="ml-2"
                             v-model="product.idapistripe" />
-                    </div>
+                    </div> -->
                     <div class="product-category mt-4">
                         <b>Categorie : </b>
                         <br />
@@ -412,7 +416,7 @@ export default {
         box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
         border-radius: 5px;
         min-width: 50vw;
-        width: fit-content;
+        width: calc(100vw - 40px);
         padding: 10px;
     }
     .chevrons {

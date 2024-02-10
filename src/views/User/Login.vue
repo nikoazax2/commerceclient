@@ -6,7 +6,7 @@
                     Connectez-vous à votre <br />
                     compte
                 </h2>
-                <div class="formulaire mt-6">
+                <form class="formulaire mt-6">
                     <div>
                         <div class="titre">E-mail</div>
                         <v-text-field
@@ -39,7 +39,7 @@
                             Se connecter
                         </v-btn>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="mt-4 d-flex">
                 Vous n'avez pas de compte ?

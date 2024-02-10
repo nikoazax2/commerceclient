@@ -80,7 +80,9 @@ export default {
 .tac {
     text-align: center;
 }
-
+.jce {
+    justify-content: flex-end;
+}
 .jcse {
     justify-content: space-evenly;
 }

@@ -271,30 +271,7 @@ export const gMethods = {
                 console.error('Error fetching products data:', error)
             })
     },
-    async getCommandes() {
-        this.loading = true
-        const header = {
-            headers: {
-                'Content-Type': 'application/json',
-                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
-            }
-        }
-        try {
-            const response = await axios.get(`${this.config.domain}/commande`, header)
-            this.commandes = response.data
-            let users = await this.getUsers()
-            if (users[0]) {
-                this.commandes.forEach((commande) => {
-                    commande.user = users?.find((user) => user.useruuid == commande.user)
-                })
-            }
-            this.loading = false
-            return response.data
-        } catch (error) {
-            console.error("Error fetching products data:", error);
-        }
 
-    },
     // --------- Methodes pour les produits ---------
     categories: [],
     products: [],
@@ -302,6 +279,7 @@ export const gMethods = {
         axios
             .post(`${this.config.domain}/product`, product)
             .then((response) => {
+                product.uuid = response.data.uuid
                 console.log(response.data);
             })
             .catch((error) => {
@@ -435,6 +413,13 @@ export const gMethods = {
     // --------- Methodes pour les commandes ---------
     menuCart: false,
     cart: null,
+    etats: [
+        { value: 1, text: 'En attente', color: 'orange' },
+        { value: 2, text: 'En cours de livraison', color: 'orange' },
+        { value: 3, text: 'Livrée', color: 'green' },
+        { value: 4, text: 'Annulée', color: 'red' }
+    ],
+
     productsOfCart(cart, products) {
         let cartDetails = []
         cart?.forEach((productCart) => {
@@ -557,7 +542,57 @@ export const gMethods = {
             console.error("Error fetching products data:", error);
         }
     },
+    async editCommande(commande) {
+        this.loading = true
+        let header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        try {
+            const response = await axios.patch(`${this.config.domain}/commande/${commande.uuid}`, commande, header)
+            this.loading = false
+            return response.data
+        }
+        catch (error) {
+            console.error("Error fetching products data:", error);
+        }
+    },
+    async getCommandes() {
+        this.loading = true
+        const header = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('jwtToken')).access_token
+            }
+        }
+        try {
+            const response = await axios.get(`${this.config.domain}/commande`, header)
+            this.commandes = response.data
+            let users = await this.getUsers()
+            if (users[0]) {
+                this.commandes.forEach((commande) => {
+                    commande.user = users?.find((user) => user.useruuid == commande.user)
+                })
+            }
 
+
+            const promises = this.commandes.map(async (commande) => {
+                commande.products = commande.products.map((product) => {
+                    const productAll = this.products.find((item) => item.uuid == product.productuuid);
+                    return { ...product, ...productAll };
+                });
+            });
+            await Promise.all(promises);
+
+            this.loading = false
+            return response.data
+        } catch (error) {
+            console.error("Error fetching products data:", error);
+        }
+
+    },
     // --------- Methodes pour les utilisateurs --------- 
     disconnect() {
         localStorage.removeItem('jwtToken');

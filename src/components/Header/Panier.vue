@@ -2,7 +2,7 @@
     <v-card elevation="0" class="products-cart">
         <div v-if="$r.productsOfCart($r.cart, $r.products).length > 0">
             <div class="pa-4 product-cart d-flex jcsb" v-for="productCart in $r.productsOfCart($r.cart, $r.products)">
-                <img v-if="productCart" style="width: 100px" :src="productCart.imagesBlob[0]" alt="" />
+                <img v-if="productCart&&productCart.imagesBlob.length>0" style="width: 100px" :src="productCart.imagesBlob[0]" alt="" />
                 <div class="infos-droite d-flex">
                     <div class="ml-2 mr-6">
                         <div class="name">

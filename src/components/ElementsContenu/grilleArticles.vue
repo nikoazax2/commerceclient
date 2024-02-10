@@ -6,7 +6,7 @@
             v-for="product in products.slice(0, nb)"
             class="bloc-article"> 
             <carroussel :product="product" />
-            <h4>{{ product.name }}</h4>
+            <h4 class="pl-2 pr-2">{{ product.name }}</h4>
             <div>
                 <h4 class="text-primary">{{ $r.formatPrix(product.prix) }} €</h4>
             </div>
