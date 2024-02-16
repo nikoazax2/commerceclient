@@ -1,7 +1,17 @@
 <template>
     <div class="header">
         <div
+            class="switch-edition"
+            v-if="user && user.role == 1"
+            @click=";($r.modeEdition = !$r.modeEdition), $router.push({ query: { edition: this.$r.modeEdition } })"
+            :style="$r.modeEdition ? 'background-color: #4CAF50;' : 'background-color: #2196f3;'">
+            <v-icon v-if="$r.modeEdition" class="mr-4">mdi-check</v-icon>
+            Mode édition
+        </div>
+
+        <div
             class="bandeau bg-black jcc font-weight-bold text-caption pa-2 text-center"
+            v-if="$r.contenu?.find((contenu) => contenu.valeur == 'message-bandeau-haut')?.contenu"
             v-html="$r.contenu?.find((contenu) => contenu.valeur == 'message-bandeau-haut')?.contenu" />
 
         <v-navigation-drawer
@@ -90,34 +100,38 @@
                     alt="logo" />
             </div>
 
-            <div v-if="!$r.isPhone" style="width: 10000px; min-width: 200px; max-width: 700px" class="pl-4 pr-4">
-                <v-text-field
-                    label="Rechercher..."
-                    hide-details="true"
-                    dense
-                    density="compact"
-                    v-model="$r.recherche"
-                    class="barre-de-recherche"
-                    variant="outlined">
-                    <template v-slot:append-inner class="test">
-                        <v-icon @click="$r.goto(`product/list?recherche=${$r.recherche}`)" class="bg-primary">
-                            mdi-magnify
-                        </v-icon>
-                    </template>
-                </v-text-field>
+            <div
+                v-if="!$r.isPhone && recherche"
+                style="width: 10000px; min-width: 200px; max-width: 700px"
+                class="pl-4 pr-4">
+                <div class="barre-de-recherche d-flex">
+                    <input
+                        v-model="$r.recherche"
+                        placeholder="Rechercher..."
+                        @keyup.enter="$r.goto(`product/list?recherche=${$r.recherche}`)" />
+                    <div class="btn-recherche" @click="$r.goto(`product/list?recherche=${$r.recherche}`)">
+                        <v-icon>mdi-magnify</v-icon>
+                    </div>
+                </div>
             </div>
-            <v-btn text elevation="0" class="mr-6 aic text-none" @click="$r.menuCart = true">
-                <v-icon style="font-size: 30px">mdi-cart-outline</v-icon>
-                <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
-                <v-chip
-                    class="pastille"
-                    color="primary"
-                    variant="flat"
-                    size="x-small"
-                    v-if="$r.productsOfCart($r.cart, $r.products)">
-                    {{ $r.productsOfCart($r.cart, $r.products).length }}
-                </v-chip>
-            </v-btn>
+            <div class="d-flex aic">
+                <v-icon @click="recherche = !recherche" v-if="!$r.isPhone && !recherche" style="font-size: 30px">
+                    mdi-magnify
+                </v-icon>
+                <v-btn text elevation="0" class="mr-6 aic text-none" @click="$r.menuCart = true">
+                    <v-icon style="font-size: 30px">mdi-cart-outline</v-icon>
+                    <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
+                    <v-chip
+                        class="pastille"
+                        :style="$r.isPhone ? 'right: 4px;' : 'right: 72px;'"
+                        color="primary"
+                        variant="flat"
+                        size="x-small"
+                        v-if="$r.productsOfCart($r.cart, $r.products)">
+                        {{ $r.productsOfCart($r.cart, $r.products).length }}
+                    </v-chip>
+                </v-btn>
+            </div>
         </div>
 
         <div v-if="!$r.isPhone" class="liens-ordi aic">
@@ -156,7 +170,8 @@ export default {
         return {
             user: null,
             panier: false,
-            navDrawer: false
+            navDrawer: false,
+            recherche: false
         }
     },
     created() {
@@ -181,6 +196,19 @@ export default {
         padding: 0 80px;
     }
 }
+.switch-edition {
+    position: absolute;
+    top: 0;
+    left: 10px;
+    background-color: #2196f3;
+    color: white;
+    width: 180px;
+    display: flex;
+    justify-content: center;
+    border-radius: 0 0 5px 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 .header {
     background-color: white;
     position: sticky;
@@ -196,32 +224,39 @@ export default {
         justify-content: space-between;
         .pastille {
             position: absolute;
-            left: 30px;
             margin-top: -20px;
             color: white;
         }
     }
     .liens-ordi {
         //border-bottom: 1px solid rgba(121, 121, 121, 0.3);
-        box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.2);
+        //  box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.2);
         div {
             cursor: pointer;
         }
     }
-    .barre-de-recherche::v-deep .v-field {
-        padding: 0;
-        i {
-            height: 100%;
-            width: 40px;
-            border-top-right-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
-        .v-field__field {
-            border: none !important;
-        }
-    }
     :deep(.v-navigation-drawer__scrim) {
         background-color: rgba(255, 255, 255, 0) !important;
+    }
+    .barre-de-recherche {
+        border-radius: 20px;
+        background-color: rgba(0, 0, 0, 0.1);
+        height: 35px;
+        input {
+            width: calc(100% - 50px);
+            padding-left: 15px;
+        }
+        .btn-recherche {
+            cursor: pointer;
+            width: 50px;
+            background-color: #000000;
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
     }
 }
 </style>

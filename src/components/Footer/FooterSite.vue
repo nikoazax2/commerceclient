@@ -1,12 +1,11 @@
 <template>
     <div class="footer-container">
-        <iconsCarrouselFooter v-if="displayIconsCarrousel" />
-
+        <iconsCarrouselFooter v-if="displayIconsCarrousel && $r.getItemContenu('criteres-dessus-footer')" />
         <div class="footer-site bg-black">
             <div class="aic w100 jcc pt-4 pb-4">
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site-footer')?.imagesBlob[0]"
                     class="ml-2"
                     style="max-width: 30%"
                     alt="logo" />
@@ -48,7 +47,7 @@ export default {
 <style lang="scss" scoped>
 .footer-container {
     width: 100%;
-    position: static;
+    position: absolute;
     bottom: 0;
     background-color: white;
 }

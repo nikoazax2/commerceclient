@@ -52,7 +52,7 @@
                     <div class="name">Votre panier est vide</div>
                 </div>
             </div>
-            <div class="d-flex jcc">
+            <div class="d-flex jcc pl-4 pr-4">
                 <v-btn
                     class="rounded-sm pl-16 pr-16 ma-2"
                     elevation="0"
@@ -119,6 +119,7 @@ export default {
     }
 }
 .cart-empty {
+    margin: 0 10px;
     .icon-cart {
         font-weight: 100;
         font-size: 60px;

@@ -22,6 +22,18 @@ export const gMethods = {
         color: null,
         timeout: 5000
     },
+    reroot: [
+        {
+            page: 'accueil',
+            url: '/'
+        }
+    ],
+    getPage() {
+
+        return (
+            this.reroot.find((page) => page.url == document.location.pathname)?.page || document.location.pathname.replace('/', '')
+        )
+    },
     recherche: '',
     goto(url, newTab = false) {
         if (newTab) {
@@ -76,10 +88,7 @@ export const gMethods = {
             for await (let contenu of response.data) {
                 if (contenu.image) {
                     contenu = await this.setImagesContenu(contenu)
-                }
-                if ([2, 4, 5].includes(contenu.type)) {
-                    contenu.contenu = JSON.parse(contenu.contenu)
-                }
+                } 
             }
             this.contenu = response.data
 
@@ -92,6 +101,9 @@ export const gMethods = {
         } catch (error) {
             console.error("Error fetching products data:", error);
         }
+    },
+    getItemContenu(valeur) {
+        return this.contenu.find((item) => item.valeur == valeur)?.contenu
     },
     async uploadImgContenu(originalname, file) {
         this.loading = true
@@ -210,8 +222,7 @@ export const gMethods = {
         this.loading = true
 
         let body = contenu
-        if (contenu.type == 4) body.contenu.url.replaceAll(document.location.origin, '')
-        if (contenu.type == 2) body.contenu = JSON.stringify(contenu.contenu)
+        if (contenu?.type == 4) body.contenu.url.replaceAll(document.location.origin, '') 
 
         let header = {
             headers: {
@@ -227,9 +238,7 @@ export const gMethods = {
                 text: 'Contenu enregistré',
                 color: 'success',
                 timeout: 5000
-            }
-            if ([2, 4, 5].includes(contenu.type) && typeof contenu.contenu == 'string') contenu.contenu = JSON.parse(contenu.contenu)
-
+            } 
             return response.data
         }
         catch (error) {

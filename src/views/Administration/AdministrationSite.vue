@@ -4,8 +4,8 @@
             <div
                 v-if="$r.contenu"
                 class="mt-6"
-                v-for="contenu in $r.contenu.filter((c) => c.page == 'Général').sort((a, b) => a.order - b.order)">
-                <EditionBloc :contenu="contenu" :page="'Général'" />
+                v-for="(contenu,index) in $r.contenu.filter((c) => c.page == 'Général').sort((a, b) => a.order - b.order)">
+                <EditionBloc :contenu="contenu" :index="index" :page="'Général'" />
             </div>
         </div>
     </div>

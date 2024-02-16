@@ -16,7 +16,7 @@
             <Iframe />
 
             <div>
-                <router-view />
+                <router-view class="router-view" />
 
                 <FooterSite />
             </div>
@@ -46,7 +46,7 @@ export default {
         await this.$r.getProducts()
         await this.$r.getContenu()
         
-        this.$r.modeEdition = this.$route.query.edition || false
+        this.$r.modeEdition = this.$route.query.edition == 'true' || false
 
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
             this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu || '#D1514A'
@@ -58,9 +58,9 @@ export default {
 </script>
 
 <style lang="scss">
-*{
-    font-family: 'Mulish', sans-serif !important;
-    font-weight: 700 !important;
+* {
+    font-family: 'Jost', sans-serif !important;
+    font-weight: 500 !important;
 }
 .promo-etiquette {
     width: fit-content;
@@ -174,6 +174,9 @@ export default {
         width: 0;
         height: 0;
     }
+}
+.router-view {
+    padding-bottom: 540px;
 }
 ::-webkit-scrollbar {
     width: 14px;
