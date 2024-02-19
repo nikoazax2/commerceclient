@@ -10,45 +10,60 @@
         </div>
 
         <div
-            class="bandeau bg-black jcc font-weight-bold text-caption pa-2 text-center"
-            v-if="$r.contenu?.find((contenu) => contenu.valeur == 'message-bandeau-haut')?.contenu"
-            v-html="$r.contenu?.find((contenu) => contenu.valeur == 'message-bandeau-haut')?.contenu" />
+            :style="`background-color: ${
+                $r.getItemContenu('message-bandeau-haut').color || 'black'
+            }; color: ${getContrast($r.getItemContenu('message-bandeau-haut').color || 'black')}`"
+            class="bandeau jcc font-weight-bold text-caption pa-2 text-center"
+            v-if="$r.getItemContenu('message-bandeau-haut')"
+            v-html="$r.getItemContenu('message-bandeau-haut')?.texte || $r.getItemContenu('message-bandeau-haut')" />
 
         <v-navigation-drawer
-            style="height: 100%"
-            :style="navDrawer ? 'top:109px' : ''"
-            location="top"
+            style="height: 100%; max-width: 300px"
+            :style="!$r.isPhone ? 'top:0; left:0;' : 'max-height: 400px; top:120px; left:20px;'"
             v-model="navDrawer"
             temporary>
             <v-list>
                 <span v-if="user">
                     <!-- MENU SI CONNECTE -->
                     <v-list-item @click="$r.goto('user/account')">
-                        <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title> </v-list-item
-                    ><v-list-item @click="$r.goto('user/commandes')">
+                        <v-list-item-title class="text-subtitle-2">Mes infomations</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item @click="$r.goto('user/commandes')">
                         <v-list-item-title class="text-subtitle-2">Mes commandes</v-list-item-title>
                     </v-list-item>
-                    <v-list-item
-                        class="administration"
-                        v-if="user.role == 1"
-                        @click="$r.goto('product/administration-products')">
-                        <v-list-item-title class="text-subtitle-2">Administration produits</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item class="administration" v-if="user.role == 1" @click="$r.goto('administration-site')">
-                        <v-list-item-title class="text-subtitle-2">Administration générale</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item
-                        class="administration"
-                        v-if="user.role == 1"
-                        @click="$r.goto('administration/commandes')">
-                        <v-list-item-title class="text-subtitle-2">Gestionnaire de commandes</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item class="administration" v-if="user.role == 1" @click="activeEdition()">
-                        <v-list-item-title :class="$r.modeEdition ? 'text-blue' : ''" class="text-subtitle-2">
-                            <v-icon v-if="$r.modeEdition">mdi-check</v-icon>
-                            Mode édition
-                        </v-list-item-title>
-                    </v-list-item>
+
+                    <div v-if="$r.isPhone">
+                        <v-list-item v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
+                            <div
+                                @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))"
+                                class="ma-4 text-subtitle-2">
+                                {{ page.name }}
+                            </div>
+                        </v-list-item>
+                    </div>
+
+                    <!-- Administation -->
+                    <div>
+                        <v-list-item
+                            class="administration"
+                            v-if="user.role == 1"
+                            @click="$r.goto('administration-site')">
+                            <v-list-item-title class="text-subtitle-2">Administration générale</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                            class="administration"
+                            v-if="user.role == 1"
+                            @click="$r.goto('product/administration-products')">
+                            <v-list-item-title class="text-subtitle-2">Administration produits</v-list-item-title>
+                        </v-list-item>
+                        <v-list-item
+                            class="administration"
+                            v-if="user.role == 1"
+                            @click="$r.goto('administration/commandes')">
+                            <v-list-item-title class="text-subtitle-2">Gestionnaire de commandes</v-list-item-title>
+                        </v-list-item>
+                    </div>
+
                     <v-list-item @click="$r.disconnect(), (user = null)">
                         <v-list-item-title class="text-subtitle-2">Déconnexion</v-list-item-title>
                     </v-list-item>
@@ -96,7 +111,7 @@
                     @click="$r.goto('')"
                     :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
                     class="logo-website ml-2 mr-4"
-                    :style="`width: ${$r.isPhone ? '180px' : '250px'}`"
+                    :style="`max-width: ${$r.isPhone ? '180px' : '250px'};max-height: ${$r.isPhone ? '55px' : '75px'};`"
                     alt="logo" />
             </div>
 
@@ -109,7 +124,10 @@
                         v-model="$r.recherche"
                         placeholder="Rechercher..."
                         @keyup.enter="$r.goto(`product/list?recherche=${$r.recherche}`)" />
-                    <div class="btn-recherche" @click="$r.goto(`product/list?recherche=${$r.recherche}`)">
+                    <div
+                        :style="`background-color: ${$vuetify.theme.themes.myCustomLightTheme.colors.primary}`"
+                        class="btn-recherche"
+                        @click="$r.goto(`product/list?recherche=${$r.recherche}`)">
                         <v-icon>mdi-magnify</v-icon>
                     </div>
                 </div>
@@ -137,14 +155,30 @@
         <div v-if="!$r.isPhone" class="liens-ordi aic">
             <v-icon @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
 
-            <div @click="$r.goto('product/list')" class="ma-4 text-subtitle-2 font-weight-bold text-primary">
+            <div
+                v-if="$r.getItemContenu('page-meilleures-ventes')"
+                @click="$r.goto('product/list')"
+                :class="{ 'page-selected text-primary': $route.name == 'Produits' && !$route.query.categorie }"
+                class="ma-4 text-subtitle-2">
                 Meilleures Ventes
             </div>
+
+            <div
+                :class="{ 'page-selected text-primary': $route.name == page.name }"
+                v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
+                <div @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))" class="ma-4 text-subtitle-2">
+                    {{ page.name }}
+                </div>
+            </div>
+
             <div
                 v-for="lien in $r.categories"
                 @click="$r.goto(`product/list?categorie=${lien.uuid}`)"
                 class="ma-4 text-subtitle-2"
-                :class="{ 'font-weight-bold text-primary': lien.important }">
+                :class="{
+                    'font-weight-bold text-primary': lien.important,
+                    'page-selected text-primary': lien.uuid == $route.query.categorie
+                }">
                 {{ lien.name }}
             </div>
             <div
@@ -179,6 +213,15 @@ export default {
         this.user = this.$r.getProfileConnected()
     },
     methods: {
+        getContrast(hexColor) {
+            let r = parseInt(hexColor.substr(1, 2), 16)
+            let g = parseInt(hexColor.substr(3, 2), 16)
+            let b = parseInt(hexColor.substr(5, 2), 16)
+
+            let brightness = (r * 299 + g * 587 + b * 114) / 1000
+
+            return brightness > 155 ? 'black' : 'white'
+        },
         activeEdition() {
             this.$r.modeEdition = !this.$r.modeEdition
             //add adition boolean in url
@@ -214,6 +257,9 @@ export default {
     position: sticky;
     z-index: 1000;
     top: 0;
+    .page-selected {
+        color: #2196f3;
+    }
     .administration {
         color: #2196f3;
     }
@@ -230,7 +276,7 @@ export default {
     }
     .liens-ordi {
         //border-bottom: 1px solid rgba(121, 121, 121, 0.3);
-        //  box-shadow: 0 2px 5px -2px rgba(0, 0, 0, 0.2);
+        box-shadow: 0px 16px 10px -5px rgba(0, 0, 0, 0.05);
         div {
             cursor: pointer;
         }
@@ -243,13 +289,12 @@ export default {
         background-color: rgba(0, 0, 0, 0.1);
         height: 35px;
         input {
-            width: calc(100% - 50px);
+            width: calc(100% - 75px);
             padding-left: 15px;
         }
         .btn-recherche {
             cursor: pointer;
-            width: 50px;
-            background-color: #000000;
+            width: 75px;
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
             display: flex;

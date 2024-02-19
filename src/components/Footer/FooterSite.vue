@@ -8,6 +8,7 @@
                     :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site-footer')?.imagesBlob[0]"
                     class="ml-2"
                     style="max-width: 30%"
+                    :style="`${!$r.isPhone ? 'max-height: 92px;' : ''}`"
                     alt="logo" />
             </div>
 
@@ -16,7 +17,7 @@
             <div class="w100 d-flex jcsb aic">
                 <nousAcceptons />
 
-                <h5 class="pa-4">@ 2023 Template</h5>
+                <h5 class="pa-4 cp" @click="$r.goto('https://portefolio.sagenicolas.fr/', true)">@2024 Sage Nicolas</h5>
             </div>
         </div>
     </div>

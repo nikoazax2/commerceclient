@@ -22,10 +22,23 @@
             <grilleArticles
                 :products="
                     $r.products
-                        .filter((product) => bloc.contenu.categories.includes(product.categorie.uuid))
+                        .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
                         .slice(0, bloc.contenu.nombre || 999)
                 " />
         </div>
+
+        <!-- BLOC CATEGORIES-->
+        <div v-if="bloc.type == 6" class="articles">
+            <grilleArticles
+                :products="
+                    $r.products
+                        .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
+                        .slice(0, bloc.contenu.nombre || 999)
+                " />
+        </div>
+
+        <!-- BLOC CODE -->
+        <div v-if="bloc.type == 9" class="encart1" v-html="bloc.contenu" />
     </div>
 </template>
 
@@ -58,3 +71,10 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.isPC {
+    .encart1 {
+        padding: 20px 6% !important;
+    }
+}
+</style>

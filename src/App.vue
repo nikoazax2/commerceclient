@@ -29,6 +29,7 @@ import HeaderSite from '@/components/Header/HeaderSite.vue'
 import FooterSite from '@/components/Footer/FooterSite.vue'
 import Iframe from '@/components/Iframe.vue'
 import Loading from '@/components/Loading.vue'
+import PageSample from './views/PageSample.vue'
 
 export default {
     name: 'App',
@@ -42,16 +43,43 @@ export default {
     async created() {
         window.innerWidth > 640 ? (this.$r.isPhone = false) : (this.$r.isPhone = true)
 
-        await this.$r.getCategories()
-        await this.$r.getProducts()
-        await this.$r.getContenu()
-        
+        //Set pages in router
+
         this.$r.modeEdition = this.$route.query.edition == 'true' || false
 
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
             this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu || '#D1514A'
         this.$r.getCart(this.$r.userConnected ? true : false)
+        this.setSEO()
         this.load = false
+    },
+    mounted() {
+        this.setSEO()
+    },
+    methods: {
+        randomTags() {
+            //gerer les accents
+            let allTags = this.$r
+                .getItemContenu('tags')
+                .replace('<p>', '')
+                .replace('</p>', '')
+                .split(' ')
+                .map((tag) => tag.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
+            let tags = []
+            while (tags.length < 10) {
+                let tag = allTags[Math.floor(Math.random() * allTags.length)]
+                if (!tags.includes(tag)) tags.push(tag)
+            }
+            return tags.join(' ')
+        },
+        async setSEO() {
+            document.getElementsByTagName('meta')['description'].content = this.randomTags()
+
+            let images = document.getElementsByTagName('img')
+            for (let i = 0; i < images.length; i++) {
+                images[i].alt = this.randomTags()
+            }
+        }
     },
     data: () => ({ load: true })
 }
@@ -69,6 +97,12 @@ export default {
     font-weight: 600;
     border-radius: 5px;
     color: white;
+}
+.tdn {
+    text-decoration: none !important;
+}
+.cp {
+    cursor: pointer;
 }
 .jcc {
     display: flex !important;

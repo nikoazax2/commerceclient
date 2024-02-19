@@ -8,8 +8,7 @@ export const contenu = {
         logo: 'logo-website.png',
         logoBlack: 'logo-website-black.png',
         liens: [
-            { important: false, titre: 'Blog', url: 'blog' },
-            { important: false, titre: 'Guide des Tailles', url: 'guide-tailles' }
+
         ],
     },
     accueil: {

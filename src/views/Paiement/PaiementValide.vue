@@ -1,5 +1,8 @@
 <template>
-    <div>Paiement validé</div>
+    <div>
+        
+        
+    </div>
 </template>
 
 <script>

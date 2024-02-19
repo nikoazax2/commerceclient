@@ -27,7 +27,7 @@
                 </v-icon>
             </div>
             <!-- Blocs -->
-            <div>
+            <div class="bloc">
                 <!-- Titre -->
                 <div class="d-flex aic">
                     <h4>
@@ -53,9 +53,9 @@
 
                 <!-- Bloc Texte -->
                 <editor
-                    v-if="contenu.type == 1"
+                    v-if="contenu.type == 1 && contenu.contenu?.texte != undefined"
                     api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
-                    v-model="contenu.contenu"
+                    v-model="contenu.contenu.texte"
                     :init="{
                         menubar: false,
                         plugins: [
@@ -64,7 +64,21 @@
                             'insertdatetime media table paste code help wordcount'
                         ],
                         toolbar:
-                            'undo redo spellcheckdialog  | blocks fontfamily fontsize | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
+                            'undo redo spellcheckdialog  | blocks fontfamily fontsizeinput | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
+                    }" />
+                <editor
+                    v-else-if="contenu.type == 1 && contenu.contenu?.texte == undefined"
+                    api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
+                    v-model="contenu.contenu" 
+                    :init="{
+                        menubar: false,
+                        plugins: [
+                            'autoresize advlist autolink lists link charmap print preview anchor',
+                            'searchreplace visualblocks code fullscreen',
+                            'insertdatetime media table paste code help wordcount'
+                        ],
+                        toolbar:
+                            'undo redo spellcheckdialog  | blocks fontfamily fontsizeinput  | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
                     }" />
 
                 <!-- Bloc Image -->
@@ -91,7 +105,6 @@
                                     Supprimer
                                 </v-btn>
                             </div>
-                        
                         </div>
                         <div class="details" v-if="contenu?.contenu?.[index] && !contenu.contenu[index].unique">
                             <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
@@ -117,7 +130,12 @@
 
                 <!-- Bloc Couleur -->
                 <div v-else-if="contenu.type == 3">
-                    <v-color-picker :modes="['rgb', 'hexa']" v-model="contenu.contenu" show-swatches />
+                    <v-color-picker
+                        hide-canvas
+                        hide-inputs
+                        :modes="['rgb', 'hexa']"
+                        v-model="contenu.contenu"
+                        show-swatches />
                 </div>
 
                 <!-- Bloc Bouton -->
@@ -139,7 +157,11 @@
                         :items="$r.categories"
                         label="Catégorie">
                     </v-select>
-                    <v-text-field v-model="contenu.contenu.nombre" density="compact" label="Nombre de produits" />
+                    <v-text-field
+                        v-if="contenu?.contenu?.nombre"
+                        v-model="contenu.contenu.nombre"
+                        density="compact"
+                        label="Nombre de produits" />
                 </div>
 
                 <!-- Bloc Catégories -->
@@ -148,6 +170,112 @@
                 <!-- Bloc checkbox -->
                 <div v-else-if="contenu.type == 7">
                     <v-checkbox v-model="contenu.contenu" :label="contenu.name" />
+                </div>
+
+                <!-- Bloc pages -->
+                <div v-else-if="contenu.type == 8" class="">
+                    <div class="d-flex aic mt-6">
+                        <v-select
+                            :items="contenu.contenu"
+                            v-model="editPage"
+                            return-object="true"
+                            item-title="name"
+                            hide-details="true"
+                            class="mr-4"
+                            style="width: 200px"
+                            variant="outlined"
+                            no-data-text="Aucune page"
+                            label="Page">
+                        </v-select>
+
+                        <v-btn
+                            v-if="contenu.contenu"
+                            elevation="0"
+                            @click="newPagefct(contenu)"
+                            size="small"
+                            variant="outlined"
+                            color="blue">
+                            <v-icon>mdi-plus</v-icon>
+                            Nouvelle page
+                        </v-btn>
+                    </div>
+
+                    <v-dialog
+                        v-model="newPage.dialog"
+                        persistent
+                        max-width="290"
+                        hide-overlay
+                        transition="dialog-bottom-transition">
+                        <v-card>
+                            <v-card-title>
+                                <span class="headline">Nouvelle page</span>
+                            </v-card-title>
+                            <v-card-text>
+                                <v-text-field
+                                    v-model="contenu.contenu[contenu.contenu.length - 1].name"
+                                    label="Nom de la page" />
+                                <v-select
+                                    v-model="contenu.contenu[contenu.contenu.length - 1].groupes"
+                                    :items="groupesPages"
+                                    item-title="libelle"
+                                    item-value="value"
+                                    multiple="true"
+                                    label="Groupes de la page"
+                                    dense
+                                    hide-details
+                                    class="mt-4" />
+                            </v-card-text>
+                            <v-card-actions>
+                                <v-spacer></v-spacer>
+                                <v-btn text @click="contenu.contenu.pop(), (newPage.dialog = false)"> Annuler </v-btn>
+                                <v-btn color="blue" text @click="$r.saveContenu(contenu), (newPage.dialog = false)">
+                                    Enregistrer
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-dialog>
+
+                    <div v-if="editPage" class="mt-4">
+                        Editer {{ editPage?.name }}
+                        <v-text-field
+                            class="mt-4"
+                            v-model="contenu.contenu[contenu.contenu.length - 1].name"
+                            label="Nom de la page"
+                            hide-details="true"
+                            variant="outlined" />
+                        <v-select
+                            variant="outlined"
+                            hide-details="true"
+                            v-model="contenu.contenu[contenu.contenu.length - 1].groupes"
+                            :items="groupesPages"
+                            item-title="libelle"
+                            item-value="value"
+                            multiple="true"
+                            label="Groupes de la page"
+                            dense
+                            class="mt-4" />
+
+                        <v-btn
+                            elevation="0"
+                            color="red"
+                            @click="
+                                contenu.contenu.splice(editPage.index, 1), (editPage = null), $r.saveContenu(contenu)
+                            "
+                            class="mt-4"
+                            size="small"
+                            variant="outlined">
+                            Supprimer
+                        </v-btn>
+                    </div>
+                </div>
+
+                <!-- Bloc code -->
+                <div v-else-if="contenu.type == 9">
+                    <v-textarea v-model="contenu.contenu" label="Code" />
+                </div>
+
+                <div class="mt-4" v-if="contenu.contenu?.color != undefined">
+                    <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
                 </div>
             </div>
         </div>
@@ -174,7 +302,19 @@ export default {
     },
     data() {
         return {
-            contenuChange: null
+            contenuChange: null,
+            newPage: {
+                dialog: false,
+                name: '',
+                groupes: []
+            },
+            editPage: null,
+            groupesPages: [
+                { libelle: 'En-tête', value: 1 },
+                { libelle: 'Menu principal', value: 2 },
+                { libelle: 'Informations', value: 3 },
+                { libelle: "Besoin d'aide ?", value: 4 }
+            ]
         }
     },
     components: {
@@ -189,6 +329,11 @@ export default {
         }
     },
     methods: {
+        newPagefct(contenu) {
+            if (!contenu.contenu) contenu.contenu = []
+            contenu.contenu.push({ name: '', groupes: [] })
+            this.newPage.dialog = true
+        },
         async changeOrder(contenu, direction, baContenu) {
             this.$r.loading = true
             await this.$r.saveContenu({
@@ -205,7 +350,7 @@ export default {
         },
 
         async handleFileChange(event) {
-            this.$r.loading = true 
+            this.$r.loading = true
             this.contenuChange = this.contenu
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
@@ -237,7 +382,7 @@ export default {
             contenu.imagesBlob.splice(index, 1)
             this.$r.saveContenu(contenu)
         },
-        openFilePicker() { 
+        openFilePicker() {
             document.getElementById(`file-input-${this.index}`).click()
         }
     }
@@ -291,5 +436,8 @@ export default {
 }
 .articles {
     max-width: 400px;
+}
+.bloc {
+    width: 100%;
 }
 </style>

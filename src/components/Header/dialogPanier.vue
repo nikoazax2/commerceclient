@@ -38,12 +38,15 @@ export default {
     &.isPhone {
         top: 110px;
     }
-    &.isPC {    
+    &.isPC {
         top: 0;
-        width: 40%;
+        max-width: 40%;
+        min-width: 340px;
         margin-right: 20px;
-      :deep(  .v-overlay__content){
+        :deep(.v-overlay__content) {
             top: 75px;
+            width: 100%;
+            max-width: 100%;
         }
     }
 

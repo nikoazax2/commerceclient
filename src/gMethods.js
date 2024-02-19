@@ -88,7 +88,7 @@ export const gMethods = {
             for await (let contenu of response.data) {
                 if (contenu.image) {
                     contenu = await this.setImagesContenu(contenu)
-                } 
+                }
             }
             this.contenu = response.data
 
@@ -173,16 +173,11 @@ export const gMethods = {
     },
     async insertBloc(bloc, index, page) {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
-        if (bloc.type == 4) {
-            bloc.contenu = JSON.stringify({ url: '', titre: '', color: '' })
-        }
-        if (bloc.type == 2) {
-            bloc.contenu = "[]"
-        }
-        if (bloc.type == 5) {
-            bloc.contenu = JSON.stringify({ nombre: 5, categories: [] })
 
-        }
+        if (bloc.type == 4) bloc.contenu = { url: '', titre: '', color: '' }
+        if (bloc.type == 2) bloc.contenu = []
+        if (bloc.type == 5) bloc.contenu = { nombre: 5, categories: [] }
+
         delete bloc.uuid
 
         let header = {
@@ -199,9 +194,6 @@ export const gMethods = {
                 let i = 0
                 for await (let item of this.contenu.filter((item) => item.page == page)) {
                     item.order = i
-                    if ([2, 4, 5].includes(item.type)) {
-                        if (typeof item.contenu == 'object') item.contenu = JSON.stringify(item.contenu)
-                    }
                     await axios
                         .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
                         .then((response) => {
@@ -222,7 +214,7 @@ export const gMethods = {
         this.loading = true
 
         let body = contenu
-        if (contenu?.type == 4) body.contenu.url.replaceAll(document.location.origin, '') 
+        if (contenu?.type == 4) body.contenu.url.replaceAll(document.location.origin, '')
 
         let header = {
             headers: {
@@ -238,7 +230,7 @@ export const gMethods = {
                 text: 'Contenu enregistré',
                 color: 'success',
                 timeout: 5000
-            } 
+            }
             return response.data
         }
         catch (error) {
@@ -416,7 +408,7 @@ export const gMethods = {
 
     },
     formatPrix(prix, devise = false) {
-        return prix ? prix.toFixed(2).toString().replace('.', ',') + (devise ? ' €' : '') : ''
+        return prix ? prix?.toFixed(2).toString().replace('.', ',') + (devise ? ' €' : '') : ''
     },
 
     // --------- Methodes pour les commandes ---------
@@ -728,7 +720,7 @@ export const gMethods = {
                 }
                 localStorage.setItem('jwtToken', JSON.stringify({ access_token: response.data.access_token }))
                 this.getProfile(true)
-                this.goto('user/new-password')
+                if (!document.location.search.includes('fromRegister=true')) this.goto('user/new-password')
                 return
             })
             .catch((error) => {

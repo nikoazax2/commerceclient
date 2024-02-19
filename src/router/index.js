@@ -16,7 +16,7 @@ import AdminCommandes from "../views/Administration/AdminCommandes.vue";
 import PaiementValide from "../views/Paiement/PaiementValide.vue";
 import Commandes from "../views/User/Commandes"
 
-const pageSamplePaths = ["/", "/mentions-legales", "/politique-de-retour", "/guide-tailles", "/blog"]
+const pageSamplePaths = ["/"]
 
 
 const pageSampleRoutes = pageSamplePaths.map(path => ({

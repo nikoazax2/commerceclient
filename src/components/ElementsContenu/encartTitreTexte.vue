@@ -23,10 +23,3 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-.isPC {
-    .encart1 {
-        padding: 20px 6% !important;
-    }
-}
-</style>

@@ -109,6 +109,9 @@ export default {
         width: 100%;
         justify-content: space-between;
         display: flex;
+        .name{
+            min-width: 100px;
+        }
     }
 }
 .boutons {
