@@ -26,9 +26,10 @@
                     mdi-chevron-down
                 </v-icon>
             </div>
+
             <!-- Blocs -->
             <div class="bloc">
-                <!-- Titre -->
+                <!-- Titre / Description -->
                 <div class="d-flex aic">
                     <h4>
                         {{ contenu.name }}
@@ -52,34 +53,23 @@
                 </h5>
 
                 <!-- Bloc Texte -->
-                <editor
-                    v-if="contenu.type == 1 && contenu.contenu?.texte != undefined"
-                    api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
-                    v-model="contenu.contenu.texte"
-                    :init="{
-                        menubar: false,
-                        plugins: [
-                            'autoresize advlist autolink lists link charmap print preview anchor',
-                            'searchreplace visualblocks code fullscreen',
-                            'insertdatetime media table paste code help wordcount'
-                        ],
-                        toolbar:
-                            'undo redo spellcheckdialog  | blocks fontfamily fontsizeinput | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
-                    }" />
-                <editor
-                    v-else-if="contenu.type == 1 && contenu.contenu?.texte == undefined"
-                    api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
-                    v-model="contenu.contenu" 
-                    :init="{
-                        menubar: false,
-                        plugins: [
-                            'autoresize advlist autolink lists link charmap print preview anchor',
-                            'searchreplace visualblocks code fullscreen',
-                            'insertdatetime media table paste code help wordcount'
-                        ],
-                        toolbar:
-                            'undo redo spellcheckdialog  | blocks fontfamily fontsizeinput  | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
-                    }" />
+                <div class="d-flex" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
+                    <editor
+                        style="width: 50%"
+                        api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
+                        v-model="contenu.contenu.texte"
+                        :init="{
+                            menubar: false,
+                            plugins: [
+                                'autoresize advlist autolink lists link charmap print preview anchor',
+                                'searchreplace visualblocks code fullscreen',
+                                'insertdatetime media table paste code help wordcount'
+                            ],
+                            toolbar:
+                                'undo redo spellcheckdialog  | blocks fontfamily fontsizeinput | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
+                        }" />
+                    <textStyle class="pl-4" style="width: 50%" :contenuFull="contenu" :contenu="contenu.contenu" />
+                </div>
 
                 <!-- Bloc Image -->
                 <div v-else-if="contenu.type == 2" class="d-flex images">
@@ -108,10 +98,27 @@
                         </div>
                         <div class="details" v-if="contenu?.contenu?.[index] && !contenu.contenu[index].unique">
                             <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
-                            <v-text-field
-                                v-model="contenu.contenu[index].titre"
-                                density="compact"
-                                label="Titre centré" />
+                            <div class="encart" style="max-width: 500px">
+                                <!-- <v-text-field
+                                    v-model="contenu.contenu[index].titre"
+                                    density="compact"
+                                    label="Texte image" /> -->
+
+                                <editor
+                                    key=""
+                                    api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
+                                    v-model="contenu.contenu[index].titre"
+                                    :init="{
+                                        menubar: false,
+                                        plugins: 'textcolor',
+                                        toolbar: 'blocks fontfamily fontsize   ',
+                                        font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt'
+                                    }" />
+                                <div class="d-flex pa-2 jcsb">
+                                    <textStyle :contenuFull="contenu" :contenu="contenu.contenu[index]" />
+                                </div>
+                                <setPotisition :contenu="contenu" :index="index" />
+                            </div>
                         </div>
                     </div>
                     <v-btn
@@ -285,6 +292,8 @@
 <script>
 import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
+import setPotisition from '../ElementsContenu/setPotisition.vue'
+import textStyle from '../ElementsContenu/textStyle.vue'
 export default {
     props: {
         contenu: {
@@ -299,6 +308,11 @@ export default {
             type: Number,
             required: true
         }
+    },
+    components: {
+        Editor,
+        setPotisition,
+        textStyle
     },
     data() {
         return {
@@ -317,9 +331,7 @@ export default {
             ]
         }
     },
-    components: {
-        Editor
-    },
+
     created() {
         if (this.contenu.type == 4 && typeof this.contenu.contenu == 'string') {
             this.contenu.contenu = JSON.parse(this.contenu.contenu)

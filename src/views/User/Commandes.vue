@@ -11,7 +11,7 @@
                                 <v-col cols="6">
                                     <div class="date">{{ $r.dateFormat(commande?.date, 'DD/MM/YYYY') }}</div>
                                 </v-col>
-                                <v-col cols="6"  class="jce d-flex">
+                                <v-col cols="6" class="jce d-flex">
                                     <v-chip :color="$r.etats.find((e) => e.value === commande.etat)?.color">
                                         {{ $r.etats.find((etat) => etat.value === commande.etat)?.text }}
                                     </v-chip>
@@ -58,7 +58,7 @@
 </template>
 <script>
 export default {
-    name: 'AdminCommandes', 
+    name: 'AdminCommandes',
     async created() {
         await this.$r.getProfile()
         await this.$r.getCommandes()

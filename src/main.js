@@ -16,7 +16,8 @@ app.config.globalProperties.$c = contenu;
 
 await app.config.globalProperties.$r.getContenu()
 await app.config.globalProperties.$r.getCategories()
-await app.config.globalProperties.$r.getProducts()
+await app.config.globalProperties.$r.getProducts() 
+document.title = app.config.globalProperties.$r.getItemContenu('nom-site')
 
 app.config.globalProperties.$r.getItemContenu('pages')?.forEach((p) => {
     router.addRoute({

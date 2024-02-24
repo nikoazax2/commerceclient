@@ -61,12 +61,12 @@ export default {
             //gerer les accents
             let allTags = this.$r
                 .getItemContenu('tags')
-                .replace('<p>', '')
+                ?.replace('<p>', '')
                 .replace('</p>', '')
                 .split(' ')
                 .map((tag) => tag.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))
             let tags = []
-            while (tags.length < 10) {
+            while (tags.length < 10 && allTags?.length > 0) {
                 let tag = allTags[Math.floor(Math.random() * allTags.length)]
                 if (!tags.includes(tag)) tags.push(tag)
             }
@@ -92,6 +92,7 @@ export default {
 }
 .promo-etiquette {
     width: fit-content;
+    height: fit-content;
     padding: 3px 6px;
     font-size: 12px;
     font-weight: 600;
@@ -151,7 +152,10 @@ export default {
         font-family: $title-font, sans-serif !important;
     }
 }
-* {
+:deep(.encart) {
+    border-radius: 5px;
+    border: 1px solid #e0e0e0;
+    padding: 20px; 
 }
 :deep(.cursor-pointer) {
     cursor: pointer;

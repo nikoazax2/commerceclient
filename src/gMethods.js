@@ -71,6 +71,13 @@ export const gMethods = {
             return format.replace('YYYY', dateF.getFullYear()).replace('MM', ('0' + (dateF.getMonth() + 1)).slice(-2)).replace('DD', ('0' + dateF.getDate()).slice(-2))
         }
     },
+    getStyleText(style) {
+        if (!style) return ''
+        return `color: ${style?.color || 'black'}!important;
+                text-shadow: ${style?.shadow ? '2px 2px 4px #000000' : 'none'}!important;
+                font-weight: ${style?.bold ? 'bold!important' : 'normal'}!important;
+                font-size: ${style?.fontSize || '24px'}!important;`
+    },
 
     // --------- Methodes pour les administrations ---------
     contenu: null,
@@ -174,8 +181,9 @@ export const gMethods = {
     async insertBloc(bloc, index, page) {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
 
-        if (bloc.type == 4) bloc.contenu = { url: '', titre: '', color: '' }
+        if (bloc.type == 1) bloc.contenu = { texte: '' }
         if (bloc.type == 2) bloc.contenu = []
+        if (bloc.type == 4) bloc.contenu = { url: '', titre: '', color: '' }
         if (bloc.type == 5) bloc.contenu = { nombre: 5, categories: [] }
 
         delete bloc.uuid
@@ -531,7 +539,7 @@ export const gMethods = {
             if (response.data == "ERROR") {
                 this.message = {
                     show: true,
-                    text: 'Erreur lors de la validationde votre commande.',
+                    text: 'Erreur lors de la validation de votre commande.',
                     color: 'error',
                     timeout: 5000
                 }

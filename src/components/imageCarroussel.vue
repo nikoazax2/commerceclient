@@ -1,4 +1,4 @@
-<template> 
+<template>
     <div v-if="product.imagesBlob" class="d-flex container-carrousel aic">
         <div v-if="visuels" ref="visuels" class="visuels ml-4 mt-4">
             <img
@@ -22,9 +22,9 @@
             hide-delimiters="true"
             hide-delimiter-background>
             <v-carousel-item v-for="(slide, i) in product.imagesBlob" :key="i">
-                <img style="width: 100%" :src="`${slide}`" alt="Red dot" />
+                <img style="width: 100%; border-radius: 8px" :src="`${slide}`" alt="Red dot" />
                 <div
-                    v-if="product.ancienprixpromo&&displayPromo"
+                    v-if="product.ancienprixpromo && displayPromo"
                     class="promo-etiquette"
                     :style="`
             background-color:${$vuetify.theme.themes.myCustomLightTheme.colors.primary};
@@ -115,7 +115,7 @@ export default {
         }
     }
 }
-.promo-etiquette{
+.promo-etiquette {
     position: absolute;
     top: 40px;
     border-top-left-radius: 0px;
@@ -128,6 +128,7 @@ export default {
     max-height: 340px;
     overflow-y: scroll;
     overflow-x: unset;
+
     .visuel {
         cursor: pointer;
     }

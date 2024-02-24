@@ -1,5 +1,5 @@
 <template>
-    <div v-if="!load && product" class="ma-4 container-produit">
+    <div v-if="!load && product" class="container-produit" :class="{ 'ma-4': !$r.isPhone }">
         <v-breadcrumbs
             v-if="!$r.isPhone"
             divider=">"
@@ -22,13 +22,13 @@
                     <carrousel :visuels="true" :displayPromo="false" :product="product" />
                 </div>
                 <blocInfos v-if="$r.isPhone" :product="product" />
-                <div class="g-bloc paiement">
+                <!-- <div class="g-bloc paiement">
                     <div class="jcsb aic mb-4">
                         <h4 class="">PAIEMENTS 100% SÉCURISÉS</h4>
                         <v-icon>mdi-lock-outline</v-icon>
                     </div>
                     <img style="max-width: 100%" :src="require('@/assets/imgachanger/paiements.png')" alt="paiement" />
-                </div>
+                </div> -->
                 <div class="g-bloc">
                     <div class="pa-4" v-html="product.description" />
                 </div>
@@ -80,7 +80,7 @@ export default {
         this.product = await this.$r.products.filter((p) => p.uuid === this.$route.query.id)[0]
         //select variation of middle
         if (this.product?.variations?.length > 0) {
-            let middle = Math.floor(this.product.variations.length / 2) - 1 
+            let middle = Math.floor(this.product.variations.length / 2) - 1
             if (this.product.variations[middle]) {
                 this.product.variations[middle].selected = true
             } else {
@@ -100,7 +100,7 @@ export default {
 <style lang="scss" scoped>
 .isphone {
     .product-detail {
-        width: calc(100vw - 35px);
+        width: calc(100vw);
         flex-direction: column;
         .gauche {
             padding-bottom: 100px;
@@ -154,6 +154,7 @@ export default {
         }
     }
     :deep(.g-bloc) {
+        border-radius: 8px;
         overflow: scroll;
         border: 1px solid #e0e0e0;
         padding: 20px;

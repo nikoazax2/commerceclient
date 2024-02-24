@@ -4,7 +4,7 @@
         <Images :bloc="bloc" />
 
         <!-- BLOC TEXTE -->
-        <encartTitreTexte v-if="bloc.type == 1" :texte="bloc?.contenu" />
+        <encartTitreTexte v-if="bloc.type == 1" :style="bloc.contenu?.style" :texte="bloc?.contenu?.texte" />
 
         <!-- BLOC BOUTON -->
         <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">

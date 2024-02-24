@@ -265,6 +265,15 @@
                             density="compact"
                             class="ma-2"
                             v-model="variation.stock" />
+                        <v-btn
+                            elevation="0"
+                            variant="tonal"
+                            density="compact"
+                            color="red"
+                            class="ma-2"
+                            @click="product.variations.splice(index, 1)">
+                            Supprimer
+                        </v-btn>
                     </div>
                     <v-btn
                         size="small"

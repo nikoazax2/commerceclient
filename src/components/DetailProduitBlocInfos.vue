@@ -1,10 +1,12 @@
 <template>
     <div class="g-bloc bloc-infos">
-        <div class="name">
-            {{ product.name }}
+        <div class="name d-flex aic">
+            <div>
+                {{ product.name }}
+            </div>
             <div
                 v-if="product.ancienprixpromo"
-                class="promo-etiquette"
+                class="promo-etiquette ml-4"
                 :style="`
             background-color:${$vuetify.theme.themes.myCustomLightTheme.colors.primary};
             `">
@@ -93,7 +95,6 @@ export default {
         border-radius: 5px;
         padding: 10px;
         margin: 10px;
-        width: 50px;
         text-align: center;
         cursor: pointer;
     }
@@ -104,7 +105,6 @@ export default {
         top: 0;
     }
 }
-
 
 .bloc-infos {
     width: 100%;

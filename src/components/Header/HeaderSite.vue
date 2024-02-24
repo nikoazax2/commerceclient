@@ -17,12 +17,40 @@
             v-if="$r.getItemContenu('message-bandeau-haut')"
             v-html="$r.getItemContenu('message-bandeau-haut')?.texte || $r.getItemContenu('message-bandeau-haut')" />
 
-        <v-navigation-drawer
-            style="height: 100%; max-width: 300px"
-            :style="!$r.isPhone ? 'top:0; left:0;' : 'max-height: 400px; top:120px; left:20px;'"
-            v-model="navDrawer"
-            temporary>
+        <!-- Menu hamburger -->
+        <v-navigation-drawer style="height: 100%; max-width: 300px" location="right" v-model="navDrawer" temporary>
             <v-list>
+                <div  >
+                    <v-list-item
+                        v-if="$r.getItemContenu('page-meilleures-ventes')"
+                        @click="$r.goto('product/list')"
+                        :class="{ 'page-selected text-primary': $route.name == 'Produits' && !$route.query.categorie }"
+                        class="ma-4 text-subtitle-2">
+                        Meilleures Ventes
+                    </v-list-item>
+
+                    <v-list-item 
+                        v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))"
+                        @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))">
+                        <v-list-item-title class="text-subtitle-2">
+                            {{ page.name }}
+                        </v-list-item-title>
+                    </v-list-item>
+
+                    <v-list-item
+                        v-for="lien in $r.categories"
+                        @click="$r.goto(`product/list?categorie=${lien.uuid}`)"
+                        :class="{
+                            'font-weight-bold text-primary': lien.important,
+                            'page-selected text-primary': lien.uuid == $route.query.categorie
+                        }">
+                        <v-list-item-title class="text-subtitle-2">
+                            {{ lien.name }}
+                        </v-list-item-title>
+                    </v-list-item>
+                    <div style="border-top: 1px solid rgba(121, 121, 121, 0.3)"></div>
+                </div>
+
                 <span v-if="user">
                     <!-- MENU SI CONNECTE -->
                     <v-list-item @click="$r.goto('user/account')">
@@ -31,16 +59,6 @@
                     <v-list-item @click="$r.goto('user/commandes')">
                         <v-list-item-title class="text-subtitle-2">Mes commandes</v-list-item-title>
                     </v-list-item>
-
-                    <div v-if="$r.isPhone">
-                        <v-list-item v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
-                            <div
-                                @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))"
-                                class="ma-4 text-subtitle-2">
-                                {{ page.name }}
-                            </div>
-                        </v-list-item>
-                    </div>
 
                     <!-- Administation -->
                     <div>
@@ -77,42 +95,55 @@
                         <v-list-item-title class="text-subtitle-2">Inscription</v-list-item-title>
                     </v-list-item>
                 </span>
-
-                <div style="border-top: 1px solid rgba(121, 121, 121, 0.3)">
-                    <v-list>
-                        <v-list-item
-                            @click="$r.goto('product/list')"
-                            class="text-subtitle-2 font-weight-bold text-primary">
-                            Meilleures Ventes
-                        </v-list-item>
-                        <v-list-item
-                            v-for="lien in $r.categories"
-                            @click="$r.goto(`/product/list?categorie=${lien.uuid}`)"
-                            class="text-subtitle-2"
-                            :class="{ 'font-weight-bold text-primary': lien.important }">
-                            {{ lien.name }}
-                        </v-list-item>
-                        <v-list-item
-                            v-for="lien in $c.header.liens"
-                            @click="$r.goto(lien.url)"
-                            class="text-subtitle-2"
-                            :class="{ 'font-weight-bold text-primary': lien.important }">
-                            {{ lien.titre }}
-                        </v-list-item>
-                    </v-list>
-                </div>
             </v-list>
         </v-navigation-drawer>
 
+        <!-- Header Principal -->
         <div class="header-principal d-flex aic pt-4 pb-4">
             <div class="gauche aic">
-                <v-icon v-if="$r.isPhone" @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
                 <img
                     @click="$r.goto('')"
                     :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
                     class="logo-website ml-2 mr-4"
+                    :class="`${$r.isPhone ? 'ml-4' : 'ml-2'} `"
                     :style="`max-width: ${$r.isPhone ? '180px' : '250px'};max-height: ${$r.isPhone ? '55px' : '75px'};`"
                     alt="logo" />
+
+                <div v-if="!$r.isPhone" class="liens-ordi aic">
+                    <div
+                        v-if="$r.getItemContenu('page-meilleures-ventes')"
+                        @click="$r.goto('product/list')"
+                        :class="{ 'page-selected text-primary': $route.name == 'Produits' && !$route.query.categorie }"
+                        class="ma-4 text-subtitle-2">
+                        Meilleures Ventes
+                    </div>
+
+                    <div
+                        :class="{ 'page-selected text-primary': $route.name == page.name }"
+                        v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
+                        <div @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))" class="ma-4 text-subtitle-2">
+                            {{ page.name.toUpperCase() }}
+                        </div>
+                    </div>
+
+                    <div
+                        v-for="lien in $r.categories"
+                        @click="$r.goto(`product/list?categorie=${lien.uuid}`)"
+                        class="ma-4 text-subtitle-2"
+                        :class="{
+                            'font-weight-bold text-primary': lien.important,
+                            'page-selected text-primary': lien.uuid == $route.query.categorie
+                        }">
+                        {{ lien.name.toUpperCase() }}
+                    </div>
+                    <div
+                        v-for="lien in $c.header.liens"
+                        @click="$r.goto(lien.url)"
+                        class="ma-4 text-subtitle-2"
+                        :class="{ 'font-weight-bold text-primary': lien.important }">
+                        {{ lien.titre }}
+                    </div>
+                </div>
             </div>
 
             <div
@@ -136,7 +167,12 @@
                 <v-icon @click="recherche = !recherche" v-if="!$r.isPhone && !recherche" style="font-size: 30px">
                     mdi-magnify
                 </v-icon>
-                <v-btn text elevation="0" class="mr-6 aic text-none" @click="$r.menuCart = true">
+                <v-btn
+                    text
+                    :style="`${$r.isPhone ? 'margin-right: 10px;' : ''}`"
+                    elevation="0"
+                    class="aic text-none"
+                    @click="$r.menuCart = true">
                     <v-icon style="font-size: 30px">mdi-cart-outline</v-icon>
                     <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
                     <v-chip
@@ -149,46 +185,15 @@
                         {{ $r.productsOfCart($r.cart, $r.products).length }}
                     </v-chip>
                 </v-btn>
+                <v-icon
+                    @click="navDrawer = !navDrawer"
+                    :class="`text-h5 ${$r.isPhone ? 'mr-4' : 'ml-4'}`"
+                    class="text-h5 aic">
+                    mdi-menu
+                </v-icon>
             </div>
         </div>
 
-        <div v-if="!$r.isPhone" class="liens-ordi aic">
-            <v-icon @click="navDrawer = !navDrawer" class="ml-4 text-h5 aic"> mdi-menu </v-icon>
-
-            <div
-                v-if="$r.getItemContenu('page-meilleures-ventes')"
-                @click="$r.goto('product/list')"
-                :class="{ 'page-selected text-primary': $route.name == 'Produits' && !$route.query.categorie }"
-                class="ma-4 text-subtitle-2">
-                Meilleures Ventes
-            </div>
-
-            <div
-                :class="{ 'page-selected text-primary': $route.name == page.name }"
-                v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
-                <div @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))" class="ma-4 text-subtitle-2">
-                    {{ page.name }}
-                </div>
-            </div>
-
-            <div
-                v-for="lien in $r.categories"
-                @click="$r.goto(`product/list?categorie=${lien.uuid}`)"
-                class="ma-4 text-subtitle-2"
-                :class="{
-                    'font-weight-bold text-primary': lien.important,
-                    'page-selected text-primary': lien.uuid == $route.query.categorie
-                }">
-                {{ lien.name }}
-            </div>
-            <div
-                v-for="lien in $c.header.liens"
-                @click="$r.goto(lien.url)"
-                class="ma-4 text-subtitle-2"
-                :class="{ 'font-weight-bold text-primary': lien.important }">
-                {{ lien.titre }}
-            </div>
-        </div>
         <Panier />
     </div>
 </template>
@@ -234,8 +239,7 @@ export default {
 
 <style lang="scss" scoped>
 .isPC {
-    .header-principal,
-    .liens-ordi {
+    .header-principal {
         padding: 0 80px;
     }
 }
@@ -275,8 +279,7 @@ export default {
         }
     }
     .liens-ordi {
-        //border-bottom: 1px solid rgba(121, 121, 121, 0.3);
-        box-shadow: 0px 16px 10px -5px rgba(0, 0, 0, 0.05);
+        margin: 0 20px;
         div {
             cursor: pointer;
         }
