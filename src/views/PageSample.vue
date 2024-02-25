@@ -8,7 +8,7 @@
                     v-for="(bloc, index) in $r.contenu
                         .filter((page) => page.page == $r.getPage())
                         .sort((a, b) => a.order - b.order)">
-                    <Bloc v-if="!$r.modeEdition" :bloc="bloc" />
+                    <Bloc v-if="!$r.modeEdition" :bloc="bloc"  />
 
                     <div v-else class="contenu">
                         <div class="gauche" :style="` width:${$r.modeEdition ? '100%' : '100%'} `">
@@ -44,7 +44,7 @@ export default {
     },
     created() {
         if (this.$route.query.edition == 'true') this.$r.getProfile()
-    }
+    } 
 }
 </script> 
 <style lang="scss" scoped>

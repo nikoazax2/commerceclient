@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="color d-flex">
-            <v-color-picker
+            <!-- <v-color-picker
                 elevation="0"
                 class="mr-4"
                 hide-canvas
@@ -9,9 +9,9 @@
                 :modes="['']"
                 v-model="contenu.style.color"
                 @update:modelValue="updateContenu()"
-                show-swatches />
-            <div style="width: 50%">
-                <v-select
+                show-swatches /> -->
+            <div>
+                <!-- <v-select
                     v-if="contenu?.style?.fontSize"
                     class="mt-4"
                     :items="sizes"
@@ -20,7 +20,7 @@
                     item-value="value"
                     label="Taille du texte"
                     v-model="contenu.style.fontSize"
-                    @change="updateContenu()" />
+                    @change="updateContenu()" /> -->
                 <v-checkbox
                     density="dense"
                     class="mt-4"
@@ -28,13 +28,13 @@
                     label="Ombre du texte"
                     hide-details
                     v-model="contenu.style.shadow" />
-                <v-checkbox
+                <!-- <v-checkbox
                     density="dense"
                     class="mt-4 mb-4"
                     @change="updateContenu()"
                     label="Texte épais"
                     hide-details
-                    v-model="contenu.style.bold" />
+                    v-model="contenu.style.bold" /> -->
             </div>
         </div>
     </div>
@@ -83,7 +83,7 @@ export default {
             this.initialized = true
         },
 
-        updateContenu() { 
+        updateContenu() {
             this.$r.saveContenu(this.contenuFull)
         }
     }

@@ -36,6 +36,7 @@ export const gMethods = {
     },
     recherche: '',
     goto(url, newTab = false) {
+
         if (newTab) {
             window.open(url, '_blank');
         } else {
@@ -43,9 +44,9 @@ export const gMethods = {
                 url = url.replaceAll(document.location.origin, '')
                 router.push('' + url)
             } else {
-                router.push('/' + url)
-            }
-
+                router.push('/' + url) 
+                
+            } 
         }
 
     },
@@ -358,10 +359,17 @@ export const gMethods = {
             })
     },
 
-    async deleteProduct(uuid) {
+    async deleteProduct(product) {
         this.loading = true
+
+        product?.image?.forEach((img) => {
+            if (this.products.find((item) => item.image.includes(
+                img
+            )).length == 0) this.deleteImg(img)
+        })
+
         await axios
-            .delete(`${this.config.domain}/product/${uuid}`)
+            .delete(`${this.config.domain}/product/${product.uuid}`)
             .then((response) => {
                 this.loading = false
                 document.location.reload()

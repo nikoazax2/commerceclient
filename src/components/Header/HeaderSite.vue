@@ -20,7 +20,7 @@
         <!-- Menu hamburger -->
         <v-navigation-drawer style="height: 100%; max-width: 300px" location="right" v-model="navDrawer" temporary>
             <v-list>
-                <div  >
+                <div>
                     <v-list-item
                         v-if="$r.getItemContenu('page-meilleures-ventes')"
                         @click="$r.goto('product/list')"
@@ -29,7 +29,7 @@
                         Meilleures Ventes
                     </v-list-item>
 
-                    <v-list-item 
+                    <v-list-item
                         v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))"
                         @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))">
                         <v-list-item-title class="text-subtitle-2">
@@ -119,14 +119,6 @@
                     </div>
 
                     <div
-                        :class="{ 'page-selected text-primary': $route.name == page.name }"
-                        v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
-                        <div @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))" class="ma-4 text-subtitle-2">
-                            {{ page.name.toUpperCase() }}
-                        </div>
-                    </div>
-
-                    <div
                         v-for="lien in $r.categories"
                         @click="$r.goto(`product/list?categorie=${lien.uuid}`)"
                         class="ma-4 text-subtitle-2"
@@ -136,6 +128,15 @@
                         }">
                         {{ lien.name.toUpperCase() }}
                     </div>
+                    
+                    <div
+                        :class="{ 'page-selected text-primary': $route.name == page.name }"
+                        v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
+                        <div @click="$r.goto(page.name.toLowerCase().replace(/ /g, '-'))" class="ma-4 text-subtitle-2">
+                            {{ page.name.toUpperCase() }}
+                        </div>
+                    </div>
+
                     <div
                         v-for="lien in $c.header.liens"
                         @click="$r.goto(lien.url)"

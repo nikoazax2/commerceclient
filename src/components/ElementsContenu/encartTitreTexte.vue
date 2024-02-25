@@ -2,7 +2,7 @@
     <!-- ENCART 1 -->
     <div class="encart1 pt-2 pb-2">
         <h3 class="w100 jcc">{{ titre || null }}</h3>
-        <p class="text-caption ma-4" :style="$r.getStyleText(style)" v-html="texte" />
+        <p class="text-caption ml-4 mr-4" :style="$r.getStyleText(style)" v-html="texte" />
 
         <div class="jcc" v-if="bouton">
             <v-btn elevation="0" color="primary" class="text-subtitle-2 mt-4" @click="$r.goto(bouton.url)">

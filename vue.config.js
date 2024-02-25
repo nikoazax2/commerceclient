@@ -6,11 +6,9 @@ module.exports = defineConfig({
     transpileDependencies: ["vuetify"],
 
     pluginOptions: {
-        vuetify: {
-            // https://github.com/vuetifyjs/vuetify-loader/tree/next/packages/vuetify-loader
-        },
+        vuetify: {}
     },
     configureWebpack: {
         devtool: "source-map",
-    },
+    }
 });

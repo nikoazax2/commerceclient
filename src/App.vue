@@ -48,7 +48,7 @@ export default {
         this.$r.modeEdition = this.$route.query.edition == 'true' || false
 
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
-            this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu || '#D1514A'
+            this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu?.color || '#D1514A'
         this.$r.getCart(this.$r.userConnected ? true : false)
         this.setSEO()
         this.load = false
@@ -87,8 +87,7 @@ export default {
 
 <style lang="scss">
 * {
-    font-family: 'Jost', sans-serif !important;
-    font-weight: 500 !important;
+    font-family: 'Jost', sans-serif !important; 
 }
 .promo-etiquette {
     width: fit-content;
@@ -151,6 +150,12 @@ export default {
         // To pin point specific classes of some components
         font-family: $title-font, sans-serif !important;
     }
+}
+:deep(.text-caption){
+    line-height: unset;
+}
+:deep(strong){
+    font-weight: bolder!important;
 }
 :deep(.encart) {
     border-radius: 5px;

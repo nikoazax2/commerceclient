@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :style="setEspacement(bloc.espacement)">
         <!-- BLOC IMAGE -->
         <Images :bloc="bloc" />
 
@@ -67,6 +67,16 @@ export default {
             } catch (error) {
                 return null
             }
+        },
+        setEspacement(espacements) { 
+            let style = ''
+            if (espacements) {
+                if (espacements.top) style += `margin-top:${espacements.top}px;`
+                if (espacements.bottom) style += `margin-bottom:${espacements.bottom}px;`
+                if (espacements.left) style += `margin-left:${espacements.left}px;`
+                if (espacements.right) style += `margin-right:${espacements.right}px;`
+            }
+            return style
         }
     }
 }

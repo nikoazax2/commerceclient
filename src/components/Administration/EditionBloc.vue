@@ -53,86 +53,13 @@
                 </h5>
 
                 <!-- Bloc Texte -->
-                <div class="d-flex" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
-                    <editor
-                        style="width: 50%"
-                        api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
-                        v-model="contenu.contenu.texte"
-                        :init="{
-                            menubar: false,
-                            plugins: [
-                                'autoresize advlist autolink lists link charmap print preview anchor',
-                                'searchreplace visualblocks code fullscreen',
-                                'insertdatetime media table paste code help wordcount'
-                            ],
-                            toolbar:
-                                'undo redo spellcheckdialog  | blocks fontfamily fontsizeinput | bold italic underline forecolor backcolor | link image | align lineheight checklist bullist numlist | indent outdent | removeformat typography'
-                        }" />
-                    <textStyle class="pl-4" style="width: 50%" :contenuFull="contenu" :contenu="contenu.contenu" />
+                <div class="d-flex" style="width: 100%" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
+                    <tinyEditor :model="contenu.contenu" keyModel="texte" />
                 </div>
 
                 <!-- Bloc Image -->
                 <div v-else-if="contenu.type == 2" class="d-flex images">
-                    <div class="image-c mr-4" v-for="(image, index) in contenu.imagesBlob">
-                        <div class="image d-flex">
-                            <img class="mr-4 mb-4" :src="image" alt="Red dot" />
-                            <div class="btns-actions">
-                                <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
-                                    Agrandir
-                                </v-btn>
-                                <v-btn
-                                    v-if="contenu?.contenu && contenu?.contenu[index]?.unique"
-                                    elevation="0"
-                                    color="#C62828"
-                                    @click="deleteImage(contenu, index), openFilePicker()">
-                                    Remplacer
-                                </v-btn>
-                                <v-btn
-                                    v-if="contenu?.contenu && !contenu.contenu[index]?.unique"
-                                    elevation="0"
-                                    color="#C62828"
-                                    @click="deleteImage(contenu, index)">
-                                    Supprimer
-                                </v-btn>
-                            </div>
-                        </div>
-                        <div class="details" v-if="contenu?.contenu?.[index] && !contenu.contenu[index].unique">
-                            <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
-                            <div class="encart" style="max-width: 500px">
-                                <!-- <v-text-field
-                                    v-model="contenu.contenu[index].titre"
-                                    density="compact"
-                                    label="Texte image" /> -->
-
-                                <editor
-                                    key=""
-                                    api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
-                                    v-model="contenu.contenu[index].titre"
-                                    :init="{
-                                        menubar: false,
-                                        plugins: 'textcolor',
-                                        toolbar: 'blocks fontfamily fontsize   ',
-                                        font_size_formats: '8pt 10pt 12pt 14pt 16pt 18pt 24pt 36pt 48pt'
-                                    }" />
-                                <div class="d-flex pa-2 jcsb">
-                                    <textStyle :contenuFull="contenu" :contenu="contenu.contenu[index]" />
-                                </div>
-                                <setPotisition :contenu="contenu" :index="index" />
-                            </div>
-                        </div>
-                    </div>
-                    <v-btn
-                        v-if="
-                            !contenu.contenu?.[0]?.unique ||
-                            (contenu.contenu?.[0]?.unique && contenu.imagesBlob.length == 0)
-                        "
-                        size="small"
-                        color="primary"
-                        elevation="0"
-                        variant="tonal"
-                        @click="openFilePicker()">
-                        <v-icon>mdi-plus</v-icon> Ajouter une image
-                    </v-btn>
+                    <EditionImage :contenu="contenu" :index="index" />
                 </div>
 
                 <!-- Bloc Couleur -->
@@ -141,7 +68,7 @@
                         hide-canvas
                         hide-inputs
                         :modes="['rgb', 'hexa']"
-                        v-model="contenu.contenu"
+                        v-model="contenu.contenu.color"
                         show-swatches />
                 </div>
 
@@ -281,9 +208,59 @@
                     <v-textarea v-model="contenu.contenu" label="Code" />
                 </div>
 
-                <div class="mt-4" v-if="contenu.contenu?.color != undefined">
-                    <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
+                <div class="espacements mt-4" v-if="![3].includes(contenu.type)">
+                    <div>Espacements :</div>
+                    <div style="width: 200px" class="d-flex">
+                        <div style="width: 50px" />
+                        <v-text-field
+                            @change="$r.saveContenu(contenu)"
+                            suffix="px"
+                            v-model="contenu.espacement.top"
+                            density="compact"
+                            hide-details="true"
+                            class="mr-2 mt-2"
+                            label="Haut" />
+
+                        <div style="width: 50px" />
+                    </div>
+                    <div class="d-flex" style="width: 200px">
+                        <v-text-field
+                            @change="$r.saveContenu(contenu)"
+                            suffix="px"
+                            v-model="contenu.espacement.left"
+                            density="compact"
+                            class="mr-2 mt-2"
+                            style="width: 100px"
+                            hide-details="true"
+                            label="Gauche" />
+                        <v-text-field
+                            @change="$r.saveContenu(contenu)"
+                            suffix="px"
+                            v-model="contenu.espacement.right"
+                            density="compact"
+                            class="mr-2 mt-2"
+                            hide-details="true"
+                            style="width: 100px"
+                            label="Droite" />
+                    </div>
+                    <div style="width: 200px" class="d-flex">
+                        <div style="width: 50px" />
+                        <v-text-field
+                            @change="$r.saveContenu(contenu)"
+                            suffix="px"
+                            v-model="contenu.espacement.bottom"
+                            density="compact"
+                            hide-details="true"
+                            class="mr-2 mt-2"
+                            label="Bas" />
+
+                        <div style="width: 50px" />
+                    </div>
                 </div>
+
+                <!-- <div class="mt-4" v-if="contenu.contenu?.color != undefined">
+                    <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
+                </div> -->
             </div>
         </div>
     </div>
@@ -294,6 +271,9 @@ import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
 import setPotisition from '../ElementsContenu/setPotisition.vue'
 import textStyle from '../ElementsContenu/textStyle.vue'
+import EditionImage from './EditionImage.vue'
+import tinyEditor from '../Administration/tinyEditor.vue'
+
 export default {
     props: {
         contenu: {
@@ -312,7 +292,9 @@ export default {
     components: {
         Editor,
         setPotisition,
-        textStyle
+        textStyle,
+        tinyEditor,
+        EditionImage
     },
     data() {
         return {
@@ -324,8 +306,7 @@ export default {
             },
             editPage: null,
             groupesPages: [
-                { libelle: 'En-tête', value: 1 },
-                { libelle: 'Menu principal', value: 2 },
+                { libelle: 'Menu principal', value: 1 },
                 { libelle: 'Informations', value: 3 },
                 { libelle: "Besoin d'aide ?", value: 4 }
             ]
@@ -333,11 +314,8 @@ export default {
     },
 
     created() {
-        if (this.contenu.type == 4 && typeof this.contenu.contenu == 'string') {
-            this.contenu.contenu = JSON.parse(this.contenu.contenu)
-        }
-        if (this.contenu.type == 2 && typeof this.contenu.contenu == 'string') {
-            this.contenu.contenu = JSON.parse(this.contenu.contenu)
+        if (this.contenu.espacement == null) {
+            this.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
         }
     },
     methods: {
@@ -385,17 +363,6 @@ export default {
                     this.$r.loading = false
                 }
             })
-        },
-
-        async deleteImage(contenu, index) {
-            await this.$r.deleteImgContenu(contenu.image[index])
-            if (!contenu.contenu[index].unique) contenu.contenu.splice(index, 1)
-            contenu.image.splice(index, 1)
-            contenu.imagesBlob.splice(index, 1)
-            this.$r.saveContenu(contenu)
-        },
-        openFilePicker() {
-            document.getElementById(`file-input-${this.index}`).click()
         }
     }
 }
@@ -411,41 +378,7 @@ export default {
         cursor: pointer;
     }
 }
-.images {
-    width: 100vw;
-    overflow-x: auto;
-    .image-c {
-        .image {
-            min-width: 200px;
-            min-height: 100px;
-            width: fit-content;
-            position: relative;
-            max-height: 200px;
-            img {
-                max-height: inherit;
-            }
-            .btns-actions {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-                -ms-transform: translate(-50%, -50%);
-                cursor: pointer;
-                opacity: 0;
-                display: flex;
-                flex-direction: column;
-                .v-btn {
-                    margin-bottom: 10px;
-                }
-            }
-            &:hover {
-                .btns-actions {
-                    opacity: 1;
-                }
-            }
-        }
-    }
-}
+
 .articles {
     max-width: 400px;
 }

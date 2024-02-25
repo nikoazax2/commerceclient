@@ -1,5 +1,5 @@
 <template>
-    <div class="administration" v-if="!$r.loading">
+    <div class="administration">
         <input
             type="file"
             id="file-input"
@@ -15,12 +15,12 @@
             style="display: none"
             @change="handleFileChange($event, true)" />
 
-        <v-dialog v-model="sureProduct.display">
+        <v-dialog v-model="sureProduct.display" style="width: 400px">
             <div class="bg-white pa-6">
                 Etes vous sur de vouloir supprimer ce produit ?
                 <div class="d-flex mt-4 jcc w100">
-                    <v-btn elevation="0" @click="sureProduct = false">Annuler</v-btn>
-                    <v-btn elevation="0" color="primary" @click="$r.deleteProduct(sureProduct.uuid)">Supprimer</v-btn>
+                    <v-btn elevation="0" @click="sureProduct.display = false">Annuler</v-btn>
+                    <v-btn elevation="0" color="primary" @click="$r.deleteProduct(sureProduct)">Supprimer</v-btn>
                 </div>
             </div>
         </v-dialog>
@@ -47,7 +47,7 @@
             </v-btn>
         </div>
         <div class="categories">
-            <div class="categorie" v-for="(categorie, index) in $r.categories">
+            <div class="categorie mt-2 mb-2" v-for="(categorie, index) in $r.categories">
                 <div class="name-cat d-flex aic">
                     <v-text-field
                         hide-details="true"
@@ -91,7 +91,7 @@
                                 </div>
                             </div>
 
-                            <v-btn
+                            <!-- <v-btn
                                 size="small"
                                 color="primary"
                                 v-if="!categorie.image"
@@ -100,7 +100,7 @@
                                 class="mr-4"
                                 @click=";(categorieAddImgj = categorie), openFilePicker('file-input-cat')">
                                 <v-icon>mdi-plus</v-icon> Ajouter une image
-                            </v-btn>
+                            </v-btn> -->
                         </div>
                     </div>
 
@@ -133,27 +133,56 @@
         </div>
         <div class="products mb-6" v-for="(product, index) in $r.products">
             <div class="name-cat" v-if="product.categorie.name" @click="product.deplie = !product.deplie">
-                <b class="d-flex">
-                    <div>{{ product.categorie.name }} - {{ product.name }}</div>
-                    <v-icon @click="$r.goto(`/product/detail?id=${product.uuid}`, true)" class="ml-2">
-                        mdi-open-in-new
-                    </v-icon>
-                    <v-icon>
-                        {{ product.deplie ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
-                    </v-icon>
-                </b>
+                <div class="d-flex jcsb">
+                    <div class="d-flex aic">
+                        <img
+                            style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px"
+                            class="mr-4"
+                            :src="product.imagesBlob[0]"
+                            alt="Red dot" />
+                        <div>{{ product.categorie.name }} - {{ product.name }}</div>
+                        <v-icon @click="$r.goto(`/product/detail?id=${product.uuid}`, true)" class="ml-2">
+                            mdi-open-in-new
+                        </v-icon>
+                    </div>
+                    <div class="aic">
+                        <v-btn  class="mr-4 ml-4" variant="tonal" @click="dupliquer(product)">
+                            Dupliquer
+                        </v-btn>
+                        <v-btn 
+                            class="mr-4"
+                            variant="tonal"
+                            @click=";(sureProduct = product), (sureProduct.display = true)">
+                            Supprimer
+                        </v-btn>
+                        <v-btn class="mr-4"  color="blue" elevation="0" @click="$r.editProduct(product)">
+                            Sauvegarder
+                        </v-btn>
+                        <v-icon>
+                            {{ product.deplie ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+                        </v-icon>
+                    </div>
+                </div>
             </div>
             <div v-if="product.deplie" class="product">
-                <div class="images mb-4 aic">
+                <div class="images mb-4 mt-4 aic">
                     <div class="image d-flex" v-for="(image, index) in product.imagesBlob">
                         <img class="mr-4" :src="image" alt="Red dot" />
                         <div class="btns-actions">
                             <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                                 Agrandir
                             </v-btn>
-                            <v-btn elevation="0" color="#C62828" @click="deleteImage('product', product, index)"
-                                >Supprimer</v-btn
-                            >
+                            <v-btn elevation="0" color="#C62828" @click="deleteImage('product', product, index)">
+                                Supprimer
+                            </v-btn>
+                            <div class="d-flex arrows-order">
+                                <v-icon color="white" @click="changeOrderImage(product, index, true)">
+                                    mdi-arrow-left
+                                </v-icon>
+                                <v-icon color="white" @click="changeOrderImage(product, index, false)">
+                                    mdi-arrow-right
+                                </v-icon>
+                            </div>
                         </div>
                     </div>
 
@@ -162,7 +191,6 @@
                         color="primary"
                         elevation="0"
                         variant="tonal"
-                        class="mb-4"
                         @click=";(productAddImg = product), openFilePicker('file-input')">
                         <v-icon>mdi-plus</v-icon> Ajouter une image
                     </v-btn>
@@ -183,7 +211,6 @@
                             api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
                             v-model="product.description"
                             :init="{
-                                height: 500,
                                 menubar: false,
                                 plugins: [
                                     'advlist autolink lists link image charmap print preview anchor',
@@ -285,16 +312,6 @@
                         <v-icon>mdi-plus</v-icon> Ajouter une variation
                     </v-btn>
                 </div>
-                <div class="product-actions mt-4">
-                    <v-btn class="mr-4" variant="tonal" @click="dupliquer(product)"> Dupliquer </v-btn>
-                    <v-btn
-                        class="mr-4"
-                        variant="tonal"
-                        @click=";(sureProduct.uuid = product.uuid), (sureProduct.display = true)">
-                        Supprimer
-                    </v-btn>
-                    <v-btn color="blue" elevation="0" @click="$r.editProduct(product)"> Sauvegarder </v-btn>
-                </div>
             </div>
         </div>
     </div>
@@ -308,11 +325,7 @@ export default {
     },
     data() {
         return {
-            sureProduct: {
-                uuid: null,
-                display: false,
-                productAddImg: null
-            },
+            sureProduct: {},
             categorieAddImg: null,
             sureCategorie: {
                 uuid: null,
@@ -332,6 +345,18 @@ export default {
         }
     },
     methods: {
+        changeOrderImage(product, index, up) {
+            let image = product.image[index]
+            product.image.splice(index, 1)
+            product.image.splice(up ? index - 1 : index + 1, 0, image)
+
+            this.$r.editProduct(product)
+            this.$r.setImagesProduct(product)
+        },
+        drag(event, categorie) {
+            debugger
+            event.dataTransfer.setData('text', JSON.stringify(categorie))
+        },
         changeOrderVariation(product, index, up) {
             let variation = product.variations[index]
             product.variations.splice(index, 1)
@@ -378,7 +403,7 @@ export default {
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
-                reader.onload = () => {
+                reader.onload = async () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
                     if (categorie) {
@@ -388,8 +413,9 @@ export default {
                     } else {
                         this.productAddImg.image = this.productAddImg.image ? this.productAddImg.image : []
                         this.productAddImg.image.push(uuid)
-                        this.$r.uploadImg(uuid, base64)
+                        await this.$r.uploadImg(uuid, base64)
                         this.$r.editProduct(this.productAddImg)
+                        if (index === event.target.files.length - 1) this.$r.setImagesProduct(this.productAddImg)
                     }
                 }
             })
@@ -401,7 +427,8 @@ export default {
                 obj.image = null
                 this.$r.editCategorie(obj)
             } else {
-                await this.$r.deleteImg(obj.image[index])
+                if (this.$r.products.filter((product) => product.image.includes(obj.image[index])).length == 0)
+                    await this.$r.deleteImg(obj.image[index])
                 obj.image.splice(index, 1)
                 obj.imagesBlob.splice(index, 1)
                 this.$r.editProduct(obj)
@@ -454,6 +481,12 @@ export default {
                 flex-direction: column;
                 .v-btn {
                     margin-bottom: 10px;
+                }
+                .arrows-order {
+                    justify-content: space-between;
+                    :deep(i) {
+                        text-shadow: 0 0 10px rgba(0, 0, 0, 0.544);
+                    }
                 }
             }
             &:hover {

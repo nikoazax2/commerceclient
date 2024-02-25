@@ -37,14 +37,14 @@ export default {
 
 <style lang="scss" scoped>
 .articles {
-    margin: 20px 0;
+    margin: 20px 10px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    .bloc-article {
-        min-width: 200px;
+    .bloc-article { 
         cursor: pointer;
-        width: 50%;
+        margin: 10px;
+        width: calc(50% - 20px);
         display: flex;
         flex-direction: column;
         align-items: center;
