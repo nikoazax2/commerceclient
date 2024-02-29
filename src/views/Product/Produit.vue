@@ -19,7 +19,7 @@
         <div class="product-detail">
             <div class="gauche">
                 <div class="g-bloc bloc-image">
-                    <carrousel :visuels="true" :displayPromo="false" :product="product" />
+                    <carrousel :fullradius="true" :visuels="true" :displayPromo="false" :product="product" />
                 </div>
                 <blocInfos v-if="$r.isPhone" :product="product" />
                 <!-- <div class="g-bloc paiement">

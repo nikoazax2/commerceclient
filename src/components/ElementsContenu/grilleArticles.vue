@@ -42,6 +42,10 @@ export default {
     justify-content: center;
     flex-wrap: wrap;
     .bloc-article { 
+        &:hover {
+            transform: scale(1.05);
+            transition: 0.3s ease-in-out;
+        }
         cursor: pointer;
         margin: 10px;
         width: calc(50% - 20px);
@@ -49,6 +53,7 @@ export default {
         flex-direction: column;
         align-items: center;
         border: 1px solid rgb(230, 230, 230);
+        border-radius: 8px;
     }
 }
 </style>

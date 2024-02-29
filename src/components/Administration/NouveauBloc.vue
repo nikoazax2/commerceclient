@@ -63,7 +63,7 @@ export default {
     }
 }
 .blocs { 
-    background-color: #cccccc6e;  
+    background-color: rgba(0, 0, 0, 0.02);  
     .bloc-container {
         overflow-x: auto;
         white-space: nowrap;
@@ -80,7 +80,9 @@ export default {
             background-color: white;
             &:hover {
                 cursor: pointer;
-                background-color: #cccccc6e;
+                background-color: rgba(0, 0, 0, 0.02);
+                transform: scale(1.05);
+                transition: 0.3s ease-in-out;
             }
             .title {
                 width: 100%;
@@ -94,7 +96,7 @@ export default {
             }
             i {
                 font-size: 150px;
-                opacity: 0.08;
+                opacity: 0.05;
                 position: relative;
                 height: 0;
                 transform: translateY(62px);

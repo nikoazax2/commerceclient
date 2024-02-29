@@ -74,10 +74,14 @@ export default {
         },
         async setSEO() {
             document.getElementsByTagName('meta')['description'].content = this.randomTags()
-
             let images = document.getElementsByTagName('img')
+            let images2 = document.getElementsByClassName('img')
+
             for (let i = 0; i < images.length; i++) {
                 images[i].alt = this.randomTags()
+            }
+            for (let i = 0; i < images2.length; i++) {
+                images2[i].alt = this.randomTags()
             }
         }
     },
@@ -87,7 +91,7 @@ export default {
 
 <style lang="scss">
 * {
-    font-family: 'Jost', sans-serif !important; 
+    font-family: 'Jost', sans-serif !important;
 }
 .promo-etiquette {
     width: fit-content;
@@ -151,16 +155,16 @@ export default {
         font-family: $title-font, sans-serif !important;
     }
 }
-:deep(.text-caption){
+:deep(.text-caption) {
     line-height: unset;
 }
-:deep(strong){
-    font-weight: bolder!important;
+:deep(strong) {
+    font-weight: bolder !important;
 }
 :deep(.encart) {
     border-radius: 5px;
     border: 1px solid #e0e0e0;
-    padding: 20px; 
+    padding: 20px;
 }
 :deep(.cursor-pointer) {
     cursor: pointer;

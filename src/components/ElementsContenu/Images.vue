@@ -14,22 +14,11 @@
         </div>
 
         <!-- TEXTE IMAGE TEL -->
-        <div class="rows" v-else>
-            <div v-for="n in 3" :key="n" class="row">
-                <div
-                    style="transform: scale(0.6)"
-                    v-for="m in 3"
-                    :key="m"
-                    :style="`width: unset;`"
-                    class="bloc"
-                    :class="'position' + ((n - 1) * 3 + m)">
-                    <div
-                        class="titre"
-                        v-if="bloc?.contenu[0]?.position == (n - 1) * 3 + m"
-                        :style="$r.getStyleText(bloc.contenu[0]?.style)"
-                        v-html="bloc.contenu[0]?.titre" />
-                </div>
-            </div>
+        <div class="rows" style="padding: 0px" v-else>
+            <div
+                class="titre"
+                :style="$r.getStyleText(bloc.contenu[0]?.style) + getPosition(bloc.contenu[0]?.position)"
+                v-html="bloc.contenu[0]?.titre" />
         </div>
 
         <!-- IMAGE (SEULE) -->
@@ -88,6 +77,31 @@ export default {
         }
     },
     methods: {
+        getPosition(pos) {  
+            switch (pos) {
+                case (pos = 1):
+                    return 'top: 0; left: 0;'
+                case (pos = 2):
+                    return 'top: 0; left: 33%;'
+                case (pos = 3):
+                    return 'top: 0; left: 66%;'
+                case (pos = 4):
+                    return 'top: 33%; left: 0;'
+                case (pos = 5):
+                    return 'top: 33%; left: 33%;'
+                case (pos = 6):
+                    return 'top: 33%; left: 66%;'
+                case (pos = 7):
+                    return 'top: 66%; left: 0;'
+                case (pos = 8):
+                    return 'top: 66%; left: 33%;'
+                case (pos = 9):
+                    return 'top: 66%; left: 66%;'
+
+                default:
+                    break
+            }
+        },
         getStyleImg(bloc) {
             let style = ''
             if (bloc?.opacity) {
@@ -110,6 +124,7 @@ export default {
     }
 }
 .container-image {
+    width: 100%;
     position: relative;
     display: inline-block;
 }
@@ -131,6 +146,10 @@ export default {
             z-index: 2;
             width: 33%;
         }
+    }
+    .titre {
+        transform: scale(0.5);
+        position: absolute !important;
     }
 }
 .titre.pc {

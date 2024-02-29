@@ -7,7 +7,7 @@
                 v-for="(slide, i) in product.imagesBlob"
                 :style="`border-color: ${
                     i == imageDisplay ? $vuetify.theme.themes.myCustomLightTheme.colors.primary : 'transparent'
-                }`"
+                };`"
                 :src="`${slide}`"
                 @click=";(imageDisplay = i), setScroll(i)"
                 style="width: 70px"
@@ -22,7 +22,11 @@
             hide-delimiters="true"
             hide-delimiter-background>
             <v-carousel-item v-for="(slide, i) in product.imagesBlob" :key="i">
-                <img style="width: 100%; border-radius: 8px" :src="`${slide}`" alt="Red dot" />
+                <img
+                    class="image-product"
+                    :src="`${slide}`"
+                    alt="Red dot"
+                    :style="`${fullradius ? 'border-radius: 8px;' : ''}`" />
                 <div
                     v-if="product.ancienprixpromo && displayPromo"
                     class="promo-etiquette"
@@ -68,6 +72,10 @@ export default {
         displayPromo: {
             type: Boolean,
             default: () => true
+        },
+        fullradius: {
+            type: Boolean,
+            default: () => false
         }
     },
     data() {
@@ -108,11 +116,20 @@ export default {
     :deep(.v-window__controls) {
         opacity: 0;
         transition: opacity 0.2s ease-in-out;
+
+        button {
+            transform: scale(0.8) !important;
+        }
     }
     &:hover {
         :deep(.v-window__controls) {
             opacity: 1;
         }
+    }
+    .image-product {
+        width: 100%;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
     }
 }
 .promo-etiquette {
@@ -128,8 +145,7 @@ export default {
     max-height: 340px;
     overflow-y: scroll;
     overflow-x: unset;
-
-    .visuel {
+    .visuel { 
         cursor: pointer;
     }
 }
@@ -163,7 +179,7 @@ export default {
 .carousel:hover {
     img {
         cursor: pointer;
-        transform: scale(1.1);
+        //transform: scale(1.1);
         transition: transform 0.2s ease-in-out;
     }
 }

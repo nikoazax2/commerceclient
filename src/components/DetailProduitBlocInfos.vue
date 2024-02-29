@@ -33,14 +33,14 @@
             </div>
         </div>
 
-        <div class="bloc prix">
+        <div class="bloc prix mt-4 mb-4">
             Prix :
             <div class="price text-primary">{{ $r.formatPrix(product.prix, true) }}</div>
             <div class="price text-primary ancien">{{ $r.formatPrix(product.ancienprixpromo, true) }}</div>
         </div>
 
-        <div class="quantite">
-            <div class="bloc d-flex">
+        <div class="quantite mt-4 mb-6">
+            <div class="bloc d-flex aic">
                 <label class="mr-4">Quantité :</label>
                 <plusmoins :number="numberValue" :product="product" />
             </div>
@@ -48,7 +48,7 @@
 
         <v-btn
             @click="$r.addInCart(product, $r.userConnected, numberValue), ($r.menuCart = true)"
-            class="rounded-sm pl-16 pr-16"
+            class="rounded-sm pl-16 pr-16 mt-4 mb-4"
             color="primary"
             elevation="0"
             size="large">
@@ -112,13 +112,11 @@ export default {
     top: 200px;
     padding: 20px;
     .bloc {
-        margin: 20px 0;
+        margin: 10px 0;
     }
     .name {
         font-size: 1.5em;
-        font-weight: bold;
-        padding-bottom: 10px;
-        border-bottom: 1px solid #e0e0e0;
+        font-weight: bold; 
     }
     .prix {
         align-items: center;

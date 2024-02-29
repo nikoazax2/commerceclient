@@ -2,9 +2,9 @@
     <div v-if="!load">
         <div class="produits-container">
             <div class="titre">
-                <h3 class="pa-6" v-if="categorie">
+                <h2 class="ml-6 mb-2 ma-2" v-if="categorie">
                     {{ categorie.name.toUpperCase() }}
-                </h3>
+                </h2>
                 <div class="ligne2">{{ products.length }} Produit{{ products.length > 1 ? 's' : '' }}</div>
             </div>
             <div class="produits">
@@ -37,16 +37,30 @@ export default {
     },
     async created() {
         this.load = true
-        this.products = this.$r.products
-        if (this.$route.query.categorie) {
-            this.products = this.products.filter((p) => p.categorie.uuid === this.$route.query.categorie)
-            this.categorie = this.$r.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
-        } else if (this.$route.query.recherche) {
-            this.products = this.products.filter((p) =>
-                p.name.toLowerCase().includes(this.$route.query.recherche.toLowerCase())
-            )
+        this.loadProducts()
+    },
+    methods: {
+        loadProducts() {
+            this.products = this.$r.products
+            if (this.$route.query.categorie) {
+                this.products = this.products.filter((p) => p.categorie.uuid === this.$route.query.categorie)
+                this.categorie = this.$r.categories.filter((c) => c.uuid === this.$route.query.categorie)[0]
+            } else if (this.$route.query.recherche) {
+                this.products = this.products.filter((p) =>
+                    p.name.toLowerCase().includes(this.$route.query.recherche.toLowerCase())
+                )
+            }
+            this.load = false
         }
-        this.load = false
+    },
+    //watch query categorie
+    watch: {
+        '$route.query.categorie': function () {
+            this.loadProducts()
+        },
+        '$route.query.recherche': function () {
+            this.loadProducts()
+        }
     }
 }
 </script>
@@ -55,24 +69,20 @@ h2 {
     font-family: 'Montserrat', sans-serif;
 }
 .produits-container {
-    border: 1px solid #e0e0e0;
     margin: 20px 10% 20px 10%;
-    .titre {
-        border-bottom: 1px solid #e0e0e0;
-        h3 {
-            border-bottom: 1px solid #e0e0e0;
-        }
-    }
     .ligne2 {
-        padding: 20px;
+        padding: 10px 25px;
     }
     .produits {
         display: flex;
         flex-wrap: wrap;
 
         .produit {
-            cursor: pointer; 
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
             width: calc(100% / 3);
+            margin: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;

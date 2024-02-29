@@ -5,6 +5,7 @@
         api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
         v-model="model[keyModel]"
         :init="{
+            paste_block_drop: false,
             menubar: false,
             plugins: ['textcolor autoresize'],
             toolbar:

@@ -1,8 +1,16 @@
 <template>
     <v-card elevation="0" class="products-cart">
         <div v-if="$r.productsOfCart($r.cart, $r.products).length > 0">
-            <div class="pa-4 product-cart d-flex jcsb" v-for="productCart in $r.productsOfCart($r.cart, $r.products)">
-                <img v-if="productCart&&productCart.imagesBlob.length>0" style="width: 100px" :src="productCart.imagesBlob[0]" alt="" />
+            <div
+                @click="$r.goto(`product/detail?id=${productCart.uuid}`)"
+                class="pa-4 product-cart d-flex jcsb"
+                v-for="productCart in $r.productsOfCart($r.cart, $r.products)">
+                <img
+                    class="mr-4"
+                    v-if="productCart && productCart.imagesBlob.length > 0"
+                    style="width: 100px"
+                    :src="productCart.imagesBlob[0]"
+                    alt="" />
                 <div class="infos-droite d-flex">
                     <div class="ml-2 mr-6">
                         <div class="name">
@@ -25,7 +33,7 @@
                 <div class="g">Total</div>
                 <div class="d">€{{ $r.formatPrix(getTot()) }} EUR</div>
             </div>
-            <div class="boutons d-flex  jcc">
+            <div class="boutons d-flex jcc">
                 <v-btn
                     v-if="dialog"
                     @click="$r.goto('panier')"
@@ -102,21 +110,29 @@ export default {
     top: 110px;
 }
 .product-cart {
+    &:hover{
+        transform: scale(1.02);
+        transition: 0.3s ease-in-out;
+    }
     border: none;
     border-bottom: 1px solid #e0e0e0;
     width: 100%;
+    cursor: pointer;
+    img {
+        border-radius: 4px;
+    }
     .infos-droite {
         width: 100%;
         justify-content: space-between;
         display: flex;
-        .name{
+        .name {
             min-width: 100px;
         }
     }
 }
 .boutons {
     margin: 0 0px;
-    width: 100%; 
+    width: 100%;
     button {
         width: calc(50% - 20px);
     }
