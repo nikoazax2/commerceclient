@@ -29,10 +29,9 @@ export const gMethods = {
         }
     ],
     getPage() {
+        let page = this.reroot.find((page) => page.url == document.location.pathname)?.page || document.location.pathname.replace('/', '')
+        return page == 'administration-site' ? 'Général' : page
 
-        return (
-            this.reroot.find((page) => page.url == document.location.pathname)?.page || document.location.pathname.replace('/', '')
-        )
     },
     recherche: '',
     goto(url, newTab = false) {
@@ -44,9 +43,9 @@ export const gMethods = {
                 url = url.replaceAll(document.location.origin, '')
                 router.push('' + url)
             } else {
-                router.push('/' + url) 
-                
-            } 
+                router.push('/' + url)
+
+            }
         }
 
     },

@@ -131,7 +131,7 @@
                 <v-icon>mdi-plus</v-icon> Nouveau produit
             </v-btn>
         </div>
-        <div class="products mb-6" v-for="(product, index) in $r.products">
+        <div class="products mb-2" v-for="(product, index) in $r.products">
             <div class="name-cat" v-if="product.categorie.name" @click="product.deplie = !product.deplie">
                 <div class="d-flex jcsb">
                     <div class="d-flex aic">
@@ -146,16 +146,23 @@
                         </v-icon>
                     </div>
                     <div class="aic">
-                        <v-btn  class="mr-4 ml-4" variant="tonal" @click="dupliquer(product)">
+                        <v-btn size="small" class="mr-4 ml-4" variant="tonal" @click="dupliquer(product)">
                             Dupliquer
                         </v-btn>
-                        <v-btn 
+                        <v-btn
+                            size="small"
                             class="mr-4"
                             variant="tonal"
                             @click=";(sureProduct = product), (sureProduct.display = true)">
                             Supprimer
                         </v-btn>
-                        <v-btn class="mr-4"  color="blue" elevation="0" @click="$r.editProduct(product)">
+                        <v-btn
+                            variant="tonal"
+                            size="small"
+                            class="mr-4"
+                            color="blue"
+                            elevation="0"
+                            @click="$r.editProduct(product)">
                             Sauvegarder
                         </v-btn>
                         <v-icon>
@@ -441,7 +448,7 @@ export default {
 .administration {
     margin-left: 20px;
     .categories {
-        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+        border: 1px solid #e0e0e0;
         border-radius: 5px;
         min-width: 50vw;
         padding: 10px;
@@ -449,11 +456,14 @@ export default {
         margin-bottom: 20px;
     }
     .products {
-        box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.4);
+        border: 1px solid #e0e0e0;
         border-radius: 5px;
         min-width: 50vw;
         width: calc(100vw - 40px);
         padding: 10px;
+        .name-cat {
+            cursor: pointer; 
+        }
     }
     .chevrons {
         width: 30px;

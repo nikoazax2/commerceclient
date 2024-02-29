@@ -2,11 +2,11 @@
     <div class="header">
         <div
             class="switch-edition"
-            v-if="user && user.role == 1"
+            v-if="$r.pages?.includes($r.getPage()) && user && user.role == 1"
             @click=";($r.modeEdition = !$r.modeEdition), $router.push({ query: { edition: this.$r.modeEdition } })"
             :style="$r.modeEdition ? 'background-color: #4CAF50;' : 'background-color: #2196f3;'">
             <v-icon v-if="$r.modeEdition" class="mr-4">mdi-check</v-icon>
-            Mode édition
+            Mode édition 
         </div>
 
         <div
@@ -25,7 +25,7 @@
                         v-if="$r.getItemContenu('page-meilleures-ventes')"
                         @click="$r.goto('product/list')"
                         :class="{ 'page-selected text-primary': $route.name == 'Produits' && !$route.query.categorie }"
-                        class="ma-4 text-subtitle-2">
+                        class="  text-subtitle-2">
                         Meilleures Ventes
                     </v-list-item>
 
@@ -128,7 +128,7 @@
                         }">
                         {{ lien.name.toUpperCase() }}
                     </div>
-                    
+
                     <div
                         :class="{ 'page-selected text-primary': $route.name == page.name }"
                         v-for="page in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(1))">
@@ -242,6 +242,12 @@ export default {
 .isPC {
     .header-principal {
         padding: 0 80px;
+    }
+}
+:deep(.bandeau) {
+    a {
+        color: inherit; /* blue colors for links too */
+        text-decoration: none !important; /* no underline */
     }
 }
 .switch-edition {

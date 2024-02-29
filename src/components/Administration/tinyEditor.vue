@@ -7,9 +7,9 @@
         :init="{
             paste_block_drop: false,
             menubar: false,
-            plugins: ['textcolor autoresize'],
+            plugins: ['textcolor autoresize link'],
             toolbar:
-                'fontselect fontsizeselect textShadow | bold italic underline forecolor backcolor | align spellcheckdialog ',
+                'fontselect fontsizeselect textShadow link | bold italic underline forecolor backcolor | align spellcheckdialog ',
             fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt 48pt 56pt 72pt 96pt 120pt 144pt',
             setup: function (editor) {
                 setShadowTinyMCE(editor)

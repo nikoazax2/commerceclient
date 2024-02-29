@@ -85,7 +85,7 @@ export default {
             })
             variation.selected = true
         }
-    }
+    } 
 }
 </script>
 <style lang="scss" scoped>

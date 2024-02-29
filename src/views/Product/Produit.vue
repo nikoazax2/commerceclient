@@ -93,6 +93,11 @@ export default {
         isInCart(product) {
             return this.$r.cart && this.$r.cart.filter((p) => p.product == product.uuid).length > 0
         }
+    },
+    watch: {
+        '$route.query.id': function () {
+            document.location.reload()
+        }
     }
 }
 </script>

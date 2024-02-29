@@ -4,7 +4,7 @@
             @click="$r.goto(`product/detail?id=${product.uuid}`)"
             :style="!$r.isPhone ? 'width:22%' : ''"
             v-for="product in products.slice(0, nb)"
-            class="bloc-article"> 
+            class="bloc-article">
             <carroussel :product="product" />
             <h4 class="pl-2 pr-2">{{ product.name }}</h4>
             <div>
@@ -36,12 +36,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.isphone {
+    .articles {
+        .bloc-article {
+            width: 170px !important;
+        }
+    }
+}
 .articles {
     margin: 20px 10px;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    .bloc-article { 
+    .bloc-article {
         &:hover {
             transform: scale(1.05);
             transition: 0.3s ease-in-out;

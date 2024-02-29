@@ -53,12 +53,8 @@ export default {
             this.load = false
         }
     },
-    //watch query categorie
     watch: {
         '$route.query.categorie': function () {
-            this.loadProducts()
-        },
-        '$route.query.recherche': function () {
             this.loadProducts()
         }
     }
@@ -81,7 +77,7 @@ h2 {
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             cursor: pointer;
-            width: calc(100% / 3);
+            width: calc(100% / 3 - 20px);
             margin: 10px;
             display: flex;
             flex-direction: column;
@@ -108,7 +104,7 @@ h2 {
 }
 .isphone {
     .produit {
-        width: 50% !important;
+        width: calc(50% - 20px) !important;
     }
     .produits-container {
         margin: 0;
