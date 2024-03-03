@@ -1,6 +1,6 @@
 <template>
     <div v-if="product.imagesBlob" class="d-flex container-carrousel aic">
-        <div v-if="visuels" ref="visuels" class="visuels ml-4 mt-4">
+        <div v-if="visuels" ref="visuels" class="visuels ml-4">
             <img
                 class="visuel"
                 :class="{ 'image-selected': i == imageDisplay }"

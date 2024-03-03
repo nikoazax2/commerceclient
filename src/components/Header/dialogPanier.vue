@@ -40,7 +40,7 @@ export default {
     }
     &.isPC {
         top: 0;
-        max-width: 40%;
+        width: 500px;
         min-width: 340px;
         margin-right: 20px;
         :deep(.v-overlay__content) {

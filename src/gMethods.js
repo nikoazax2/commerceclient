@@ -441,13 +441,13 @@ export const gMethods = {
         cart?.forEach((productCart) => {
             products.forEach((product) => {
                 if (productCart.product == product.uuid) {
-                    cartDetails.push({ ...product, ...productCart })
+                    cartDetails.push({ ...product, ...productCart, variation: product?.variations?.find((item) => item.uuid == productCart.variation) || null })
                 }
             })
         })
         return cartDetails
     },
-    addInCart(product, user, quantity = 1) {
+    addInCart(product, user, quantity = 1, variation = null) {
         this.loading = true
         if (user) {
             let cart = {
@@ -465,20 +465,22 @@ export const gMethods = {
                 })
         } else {
             let cart = JSON.parse(localStorage.getItem(this.nameInCookie()))
-            if (cart) {
-                let index = cart.findIndex((item) => item.product === product.uuid)
+            if (cart) { 
+                let index = cart.findIndex((item) => item.product === product.uuid && (!item.variation || item.variation == variation?.uuid))
                 if (index !== -1) {
                     cart[index].quantity += parseInt(quantity)
                 } else {
                     cart.push({
                         product: product.uuid,
-                        quantity: quantity
+                        quantity: quantity,
+                        variation: variation?.uuid || null
                     })
                 }
             } else {
                 cart = [{
                     product: product.uuid,
-                    quantity: quantity
+                    quantity: quantity,
+                    variation: variation?.uuid || null
                 }]
             }
             this.cart = cart
@@ -533,7 +535,6 @@ export const gMethods = {
 
     },
     async confirmationPaiement(CHECKOUT_SESSION_ID) {
-
         try {
             let header = {
                 headers: {

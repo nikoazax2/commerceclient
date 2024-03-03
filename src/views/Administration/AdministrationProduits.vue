@@ -174,7 +174,7 @@
             <div v-if="product.deplie" class="product">
                 <div class="images mb-4 mt-4 aic">
                     <div class="image d-flex" v-for="(image, index) in product.imagesBlob">
-                        <img class="mr-4" :src="image" alt="Red dot" />
+                        <img class="mr-4" :src="image" alt="Red dot" style="border-radius: 10px" />
                         <div class="btns-actions">
                             <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                                 Agrandir
@@ -237,7 +237,8 @@
                             style="max-width: 300px"
                             density="compact"
                             class="ml-2"
-                            v-model="product.prix" />
+                            v-model="product.prix"
+                            suffix="€" />
                     </div>
                     <div class="product-price mt-2">
                         <b>Ancien prix avant promo : </b>
@@ -247,6 +248,7 @@
                             style="max-width: 300px"
                             density="compact"
                             class="ml-2"
+                            suffix="€"
                             v-model="product.ancienprixpromo" />
                     </div>
                     <!-- <div class="product-api-stripe">
@@ -462,7 +464,7 @@ export default {
         width: calc(100vw - 40px);
         padding: 10px;
         .name-cat {
-            cursor: pointer; 
+            cursor: pointer;
         }
     }
     .chevrons {
@@ -473,6 +475,8 @@ export default {
     }
     .images {
         max-height: 200px;
+        overflow-y: hidden;
+        overflow-x: auto;
         .image {
             position: relative;
             max-height: 200px;

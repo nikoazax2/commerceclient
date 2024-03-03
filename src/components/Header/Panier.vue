@@ -13,16 +13,19 @@
                     alt="" />
                 <div class="infos-droite d-flex">
                     <div class="ml-2 mr-6">
-                        <div class="name">
+                        <b class="name">
                             {{ productCart.name }}
+                        </b>
+                        <div>
+                            {{ productCart.variation?.name }}
                         </div>
                         <div class="prix">{{ $r.formatPrix(productCart.prix) }} €</div>
                     </div>
-                    <div class="quantite" style="align-items: center">
+                    <div class="quantite" style="align-items: end">
                         <plusmoins :number="productCart.quantity" :product="productCart" />
                         <v-btn
                             variant="text"
-                            class="ma-2 text-none"
+                            class="mt-2 text-none"
                             @click="$r.deleteInCart(productCart, $r.userConnected)">
                             Supprimer
                         </v-btn>
@@ -110,7 +113,7 @@ export default {
     top: 110px;
 }
 .product-cart {
-    &:hover{
+    &:hover {
         transform: scale(1.02);
         transition: 0.3s ease-in-out;
     }
@@ -149,7 +152,7 @@ export default {
     }
 }
 .total {
-    padding: 5px 20px;
+    padding: 10px 20px;
     font-weight: bold;
     width: 100%;
     display: inline-flex;

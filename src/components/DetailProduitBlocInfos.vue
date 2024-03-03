@@ -47,7 +47,15 @@
         </div>
 
         <v-btn
-            @click="$r.addInCart(product, $r.userConnected, numberValue), ($r.menuCart = true)"
+            @click="
+                $r.addInCart(
+                    product,
+                    null,
+                    numberValue,
+                    product?.variations?.find((v) => v.selected)
+                ),
+                    ($r.menuCart = true)
+            "
             class="rounded-sm pl-16 pr-16 mt-4 mb-4"
             color="primary"
             elevation="0"
@@ -85,7 +93,7 @@ export default {
             })
             variation.selected = true
         }
-    } 
+    }
 }
 </script>
 <style lang="scss" scoped>
@@ -116,7 +124,7 @@ export default {
     }
     .name {
         font-size: 1.5em;
-        font-weight: bold; 
+        font-weight: bold;
     }
     .prix {
         align-items: center;

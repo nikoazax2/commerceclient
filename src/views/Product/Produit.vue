@@ -21,14 +21,7 @@
                 <div class="g-bloc bloc-image">
                     <carrousel :fullradius="true" :visuels="true" :displayPromo="false" :product="product" />
                 </div>
-                <blocInfos v-if="$r.isPhone" :product="product" />
-                <!-- <div class="g-bloc paiement">
-                    <div class="jcsb aic mb-4">
-                        <h4 class="">PAIEMENTS 100% SÉCURISÉS</h4>
-                        <v-icon>mdi-lock-outline</v-icon>
-                    </div>
-                    <img style="max-width: 100%" :src="require('@/assets/imgachanger/paiements.png')" alt="paiement" />
-                </div> -->
+                <blocInfos v-if="$r.isPhone" :product="product" /> 
                 <div class="g-bloc">
                     <div class="pa-4" v-html="product.description" />
                 </div>

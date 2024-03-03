@@ -6,6 +6,7 @@
             :pk="stripeAPIKEY"
             :line-items="lineItems"
             :customerEmail="user?.email"
+            :metadata="$r.productsOfCart()"
             :successUrl="getUrls().successUrl"
             :cancel-url="getUrls().cancelUrl"
             :shippingAddressCollection="{
