@@ -1,72 +1,70 @@
 <template>
-    <div>
-        <div style="max-width: 100vw" class="d-flex">
-            <div class="image-c mr-4" v-for="(image, index) in contenu.imagesBlob">
-                <div class="image d-flex">
-                    <img class="mr-4 mb-4" :src="image" alt="Red dot" />
-                    <div class="btns-actions">
-                        <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
-                            Agrandir
-                        </v-btn>
-                        <v-btn
-                            v-if="contenu?.contenu && contenu?.contenu[index]?.unique"
-                            elevation="0"
-                            color="#C62828"
-                            @click="deleteImage(contenu, index), openFilePicker()">
-                            Remplacer
-                        </v-btn>
-                        <v-btn
-                            v-if="contenu?.contenu && !contenu.contenu[index]?.unique"
-                            elevation="0"
-                            color="#C62828"
-                            @click="deleteImage(contenu, index)">
-                            Supprimer
-                        </v-btn>
-                    </div>
-                </div>
-                <div class="details" v-if="contenu?.contenu?.[index] && !contenu.contenu[index].unique">
-                    <div style="max-width: 300px">
-                        <v-checkbox density="compact" label="Parallax" v-model="contenu.contenu[index].parallax" />
-                        <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
-
-                        <v-text-field
-                            :rules="[
-                                (v) => !isNaN(Number(v)) || 'L\'entrée doit être un nombre',
-                                (v) => v >= 0 || 'Le pourcentage doit être positif',
-                                (v) => v <= 100 || 'Le pourcentage ne peut pas dépasser 100'
-                            ]"
-                            type="number"
-                            density="compact"
-                            label="Opacité (%)"
-                            v-model="contenu.contenu[index].opacity"
-                            suffix="%" />
-                        <v-text-field
-                            :rules="[
-                                (v) => !isNaN(Number(v)) || 'L\'entrée doit être un nombre',
-                                (v) => v >= 0 || 'Le pourcentage doit être positif',
-                                (v) => v <= 100 || 'Le pourcentage ne peut pas dépasser 100'
-                            ]"
-                            density="compact"
-                            label="Luminosité (%)"
-                            v-model="contenu.contenu[index].darker"
-                            suffix="%" />
-                    </div>
-                    <div class="encart d-flex">
-                        <tinyEditor :model="contenu.contenu[index]" keyModel="titre" />
-                        <setPotisition class="ml-4" :contenu="contenu" :index="index" />
-                    </div>
+    <div  class="d-flex images">
+        <div class="image-c mr-4" v-for="(image, index) in contenu.imagesBlob">
+            <div class="image d-flex">
+                <img class="mr-4 mb-4" :src="image" alt="Red dot" />
+                <div class="btns-actions">
+                    <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
+                        Agrandir
+                    </v-btn>
+                    <v-btn
+                        v-if="contenu?.contenu && contenu?.contenu[index]?.unique"
+                        elevation="0"
+                        color="#C62828"
+                        @click="deleteImage(contenu, index), openFilePicker()">
+                        Remplacer
+                    </v-btn>
+                    <v-btn
+                        v-if="contenu?.contenu && !contenu.contenu[index]?.unique"
+                        elevation="0"
+                        color="#C62828"
+                        @click="deleteImage(contenu, index)">
+                        Supprimer
+                    </v-btn>
                 </div>
             </div>
-            <v-btn
-                v-if="!contenu.contenu?.[0]?.unique || (contenu.contenu?.[0]?.unique && contenu.imagesBlob.length == 0)"
-                size="small"
-                color="blue"
-                elevation="0"
-                variant="tonal"
-                @click="openFilePicker()">
-                <v-icon>mdi-plus</v-icon> Ajouter une image
-            </v-btn>
+            <div class="details" v-if="contenu?.contenu?.[index] && !contenu.contenu[index].unique">
+                <div style="max-width: 300px">
+                    <v-checkbox density="compact" label="Parallax" v-model="contenu.contenu[index].parallax" />
+                    <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
+
+                    <v-text-field
+                        :rules="[
+                            (v) => !isNaN(Number(v)) || 'L\'entrée doit être un nombre',
+                            (v) => v >= 0 || 'Le pourcentage doit être positif',
+                            (v) => v <= 100 || 'Le pourcentage ne peut pas dépasser 100'
+                        ]"
+                        type="number"
+                        density="compact"
+                        label="Opacité (%)"
+                        v-model="contenu.contenu[index].opacity"
+                        suffix="%" />
+                    <v-text-field
+                        :rules="[
+                            (v) => !isNaN(Number(v)) || 'L\'entrée doit être un nombre',
+                            (v) => v >= 0 || 'Le pourcentage doit être positif',
+                            (v) => v <= 100 || 'Le pourcentage ne peut pas dépasser 100'
+                        ]"
+                        density="compact"
+                        label="Luminosité (%)"
+                        v-model="contenu.contenu[index].darker"
+                        suffix="%" />
+                </div>
+                <div class="d-flex">
+                    <tinyEditor :model="contenu.contenu[index]" keyModel="titre" />
+                    <!-- <setPotisition class="ml-4" :contenu="contenu" :index="index" /> -->
+                </div>
+            </div>
         </div>
+        <v-btn
+            v-if="!contenu.contenu?.[0]?.unique || (contenu.contenu?.[0]?.unique && contenu.imagesBlob.length == 0)"
+            size="small"
+            color="blue"
+            elevation="0"
+            variant="tonal"
+            @click="openFilePicker()">
+            <v-icon>mdi-plus</v-icon> Ajouter une image
+        </v-btn>
     </div>
 </template>
 <script>
@@ -98,9 +96,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .images {
-    width: 100vw;
+    width: calc(100vw - 140px);
     overflow-x: auto;
     .image-c {
+        min-width: 400px;
         .image {
             min-width: 200px;
             min-height: 100px;

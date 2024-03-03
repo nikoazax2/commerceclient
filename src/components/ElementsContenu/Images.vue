@@ -1,27 +1,9 @@
 <template>
     <div v-if="bloc?.imagesBlob?.length == 1" class="container-image">
-        <!-- TEXTE IMAGE PC -->
-        <div class="rows" v-if="!$r.isPhone" @click="$r.goto(bloc.contenu[0].url, false)">
-            <div v-for="n in 3" :key="n" class="row">
-                <div v-for="m in 3" :key="m" class="bloc" :class="'position' + ((n - 1) * 3 + m)">
-                    <div
-                        class="titre"
-                        v-if="bloc?.contenu[0]?.position == (n - 1) * 3 + m"
-                        :style="$r.getStyleText(bloc.contenu[0]?.style)"
-                        v-html="bloc.contenu[0]?.titre" />
-                </div>
-            </div>
-        </div>
-
-        <!-- TEXTE IMAGE TEL -->
-        <div class="rows" style="padding: 0px" v-else>
-            <div
-                class="titre"
-                :style="$r.getStyleText(bloc.contenu[0]?.style) + getPosition(bloc.contenu[0]?.position)"
-                v-html="bloc.contenu[0]?.titre" />
-        </div>
-
         <!-- IMAGE (SEULE) -->
+        <div class="image-titre">
+            <div class="titre" v-html="bloc.contenu[0].titre"></div>
+        </div>
         <div
             class="images image-simple"
             @click="$r.goto(bloc.contenu[0].url, true)"
@@ -32,32 +14,19 @@
                 ${bloc?.contenu?.[0].parallax ? `background-attachment: fixed;` : ''}
                 ${bloc?.contenu?.[0].darker ? `filter: brightness(${bloc?.contenu?.[0].darker}%);` : ''}
                  padding-top: 50%;   height: 0;width:100vw; height:fit-content; 
-                 background-size: cover; background-position: center;`"></div>
+                 background-size: cover; background-position: center;`" />
         </div>
     </div>
-    <div v-else>
+    <div class="images aic" v-else>
         <!-- IMAGES -->
-        <div class="images">
+        <div v-for="(image, index) in bloc.imagesBlob">
+            <div class="image-titre">
+                <div class="titre" v-html="bloc.contenu[index].titre"></div>
+            </div>
             <div
-                v-for="(image, index) in bloc.imagesBlob"
                 @click="$r.goto(bloc.contenu[index].url, true)"
+                class="aic"
                 :style="bloc.contenu[index]?.url ? 'cursor: pointer' : ''">
-                <div class="rows" v-if="!$r.isPhone" @click="$r.goto(bloc.contenu[0].url, false)">
-                    <div v-for="n in 3" :key="n" class="row">
-                        <div v-for="m in 3" :key="m" class="bloc" :class="'position' + ((n - 1) * 3 + m)">
-                            <div
-                                class="titre"
-                                v-if="bloc?.contenu[index]?.position == (n - 1) * 3 + m"
-                                :style="$r.getStyleText(bloc.contenu[indec]?.style)"
-                                v-html="bloc.contenu[index]?.titre" />
-                        </div>
-                    </div>
-                </div>
-                <div v-else>
-                    <div class="bloc">
-                        <div class="titre pc" v-html="bloc.contenu[index]?.titre" />
-                    </div>
-                </div>
                 <img
                     :style="`width: calc(100vw / ${bloc.imagesBlob.length});${getStyleImg(bloc?.contenu?.[index])}`"
                     v-if="bloc.type == 2 && bloc?.imagesBlob?.length > 0"
@@ -77,7 +46,7 @@ export default {
         }
     },
     methods: {
-        getPosition(pos) {  
+        getPosition(pos) {
             switch (pos) {
                 case (pos = 1):
                     return 'top: 0; left: 0;'
@@ -123,10 +92,25 @@ export default {
         padding: 20px 3%;
     }
 }
+.isphone{
+    .image-titre{
+        transform: scale(0.7);
+    }
+}
 .container-image {
     width: 100%;
     position: relative;
     display: inline-block;
+    .image-titre {
+        padding: 10%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        z-index: 2;
+    }
 }
 .rows {
     width: 100%;

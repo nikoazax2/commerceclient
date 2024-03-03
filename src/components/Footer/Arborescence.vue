@@ -18,11 +18,12 @@
         </v-expansion-panels>
 
         <div v-else class="d-flex w100 jcsb footer-pc">
-            <div
-                v-if="$r.getItemContenu('pages')?.filter((p) => p.groupes.includes(group?.value)).length > 0"
-                v-for="group in groupes"
-                class="ma-4">
-                <h4 class="mb-4">{{ group.titre }}</h4>
+            <div v-for="group in groupes" class="ma-4">
+                <h4
+                    v-if="$r.getItemContenu('pages')?.filter((p) => p.groupes.includes(group?.value)).length > 0"
+                    class="mb-4">
+                    {{ group.titre }}
+                </h4>
                 <div
                     v-for="lien in $r.getItemContenu('pages')?.filter((p) => p.groupes.includes(group?.value))"
                     @click="$r.goto(lien.name.toLowerCase().replace(/ /g, '-'))"

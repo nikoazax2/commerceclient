@@ -6,7 +6,7 @@
             @click=";($r.modeEdition = !$r.modeEdition), $router.push({ query: { edition: this.$r.modeEdition } })"
             :style="$r.modeEdition ? 'background-color: #4CAF50;' : 'background-color: #2196f3;'">
             <v-icon v-if="$r.modeEdition" class="mr-4">mdi-check</v-icon>
-            Mode édition 
+            Mode édition
         </div>
 
         <div
@@ -25,7 +25,7 @@
                         v-if="$r.getItemContenu('page-meilleures-ventes')"
                         @click="$r.goto('product/list')"
                         :class="{ 'page-selected text-primary': $route.name == 'Produits' && !$route.query.categorie }"
-                        class="  text-subtitle-2">
+                        class="text-subtitle-2">
                         Meilleures Ventes
                     </v-list-item>
 
@@ -99,15 +99,13 @@
         </v-navigation-drawer>
 
         <!-- Header Principal -->
-        <div class="header-principal d-flex aic pt-4 pb-4">
+        <div class="header-principal d-flex aic pt-4 pb-4" :style="heightH">
             <div class="gauche aic">
                 <img
                     @click="$r.goto('')"
                     :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
                     class="logo-website ml-2 mr-4"
-                    :class="`${$r.isPhone ? 'ml-4' : 'ml-2'} `"
-                    :style="`max-width: ${$r.isPhone ? '180px' : '250px'};max-height: ${$r.isPhone ? '55px' : '75px'};`"
-                    alt="logo" />
+                    :class="`${$r.isPhone ? 'ml-4' : 'ml-2'}`" />
 
                 <div v-if="!$r.isPhone" class="liens-ordi aic">
                     <div
@@ -211,14 +209,26 @@ export default {
             user: null,
             panier: false,
             navDrawer: false,
-            recherche: false
+            recherche: false,
+            heightH: ''
         }
     },
     created() {
         this.$r.recherche = this.$route.query.recherche || ''
         this.user = this.$r.getProfileConnected()
+        this.heightHeader()
     },
     methods: {
+        heightHeader() {
+            this.heightH = this.$r.isPhone ? 'height: 70px;' : 'height: 90px;'
+            window.onscroll = () => {
+                if (window.scrollY > 50) {
+                    this.heightH = this.$r.isPhone ? 'height: 50px;' : 'height: 70px;'
+                } else {
+                    this.heightH = this.$r.isPhone ? 'height: 70px;' : 'height: 90px;'
+                }
+            }
+        },
         getContrast(hexColor) {
             let r = parseInt(hexColor.substr(1, 2), 16)
             let g = parseInt(hexColor.substr(3, 2), 16)
@@ -279,10 +289,17 @@ export default {
     }
     .header-principal {
         justify-content: space-between;
+        transition: height 0.5s;
         .pastille {
             position: absolute;
             margin-top: -20px;
             color: white;
+        }
+        .gauche {
+            height: inherit;
+        }
+        .logo-website {
+            height: calc(100% - 18px);
         }
     }
     .liens-ordi {

@@ -68,13 +68,13 @@ export default {
                 return null
             }
         },
-        setEspacement(espacements) { 
+        setEspacement(espacements) {
             let style = ''
             if (espacements) {
                 if (espacements.top) style += `margin-top:${espacements.top}px;`
                 if (espacements.bottom) style += `margin-bottom:${espacements.bottom}px;`
-                if (espacements.left) style += `margin-left:${espacements.left}px;`
-                if (espacements.right) style += `margin-right:${espacements.right}px;`
+                if (espacements.left) style += `margin-left:${espacements.left}%;`
+                if (espacements.right) style += `margin-right:${espacements.right}%;`
             }
             return style
         }
@@ -86,5 +86,5 @@ export default {
     .encart1 {
         padding: 20px 6% !important;
     }
-}
+} 
 </style>

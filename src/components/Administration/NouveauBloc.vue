@@ -50,11 +50,16 @@ export default {
 .container {
 }
 .button-activate {
+    &:hover {
+     opacity: 1;
+     transition: 0.3s ease-in-out;
+    }
+    opacity: 0;
     padding: 0 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
+    margin: 10px 0;
     .line {
         padding: 0 10px;
         width: calc(50% - 80px);

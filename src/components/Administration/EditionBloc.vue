@@ -24,10 +24,12 @@
                     <div class="d-flex aic jcsb">
                         <div class="d-flex aic">
                             <img
-                                v-if="contenu.type == 2"
-                                :src="contenu.imagesBlob[0]"
-                                style="width: 40px; height: 40px; border-radius: 10px"
-                                class="mr-4" />
+                                v-if="contenu.type == 2 && contenu.imagesBlob?.[0]"
+                                :src="contenu.imagesBlob?.[0]"
+                                class="icone-head mr-4" />
+                            <div v-else class="mr-4 icone-head text">
+                                {{ contenu.name?.[0] }}
+                            </div>
 
                             <div class="">
                                 <h4>
@@ -230,55 +232,7 @@
                             <v-textarea v-model="contenu.contenu" label="Code" />
                         </div>
 
-                        <div class="espacements mt-4" v-if="![3].includes(contenu.type) && page != 'Général'">
-                            <div>Espacements :</div>
-                            <div style="width: 200px" class="d-flex">
-                                <div style="width: 50px" />
-                                <v-text-field
-                                    @change="$r.saveContenu(contenu)"
-                                    suffix="px"
-                                    v-model="contenu.espacement.top"
-                                    density="compact"
-                                    hide-details="true"
-                                    class="mr-2 mt-2"
-                                    label="Haut" />
-
-                                <div style="width: 50px" />
-                            </div>
-                            <div class="d-flex" style="width: 200px">
-                                <v-text-field
-                                    @change="$r.saveContenu(contenu)"
-                                    suffix="px"
-                                    v-model="contenu.espacement.left"
-                                    density="compact"
-                                    class="mr-2 mt-2"
-                                    style="width: 100px"
-                                    hide-details="true"
-                                    label="Gauche" />
-                                <v-text-field
-                                    @change="$r.saveContenu(contenu)"
-                                    suffix="px"
-                                    v-model="contenu.espacement.right"
-                                    density="compact"
-                                    class="mr-2 mt-2"
-                                    hide-details="true"
-                                    style="width: 100px"
-                                    label="Droite" />
-                            </div>
-                            <div style="width: 200px" class="d-flex">
-                                <div style="width: 50px" />
-                                <v-text-field
-                                    @change="$r.saveContenu(contenu)"
-                                    suffix="px"
-                                    v-model="contenu.espacement.bottom"
-                                    density="compact"
-                                    hide-details="true"
-                                    class="mr-2 mt-2"
-                                    label="Bas" />
-
-                                <div style="width: 50px" />
-                            </div>
-                        </div>
+                        <Espacement :contenu="contenu" :page="page" />
 
                         <!-- <div class="mt-4" v-if="contenu.contenu?.color != undefined">
                     <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
@@ -297,7 +251,7 @@ import setPotisition from '../ElementsContenu/setPotisition.vue'
 import textStyle from '../ElementsContenu/textStyle.vue'
 import EditionImage from './EditionImage.vue'
 import tinyEditor from '../Administration/tinyEditor.vue'
-
+import Espacement from '../Administration/Espacement.vue'
 export default {
     props: {
         contenu: {
@@ -318,7 +272,8 @@ export default {
         setPotisition,
         textStyle,
         tinyEditor,
-        EditionImage
+        EditionImage,
+        Espacement
     },
     data() {
         return {
@@ -331,9 +286,9 @@ export default {
             plie: true,
             editPage: null,
             groupesPages: [
-                { libelle: 'Menu principal', value: 1 },
-                { libelle: 'Informations', value: 3 },
-                { libelle: "Besoin d'aide ?", value: 4 }
+                { value: 1, libelle: 'En tête > Menu principal' },
+                { value: 3, libelle: 'Pied de page > Informations' },
+                { value: 4, libelle: "Pied de page > Besoin d'aide ?" }
             ]
         }
     },
@@ -422,6 +377,20 @@ export default {
     align-items: center;
     .body-line {
         padding-top: 10px;
+    }
+    .icone-head {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+    }
+    .icone-head.text {
+        background-color: #e0e0e0;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
     }
 }
 </style>
