@@ -1,32 +1,28 @@
 <template>
-    <div  class="d-flex images">
-        <div class="image-c mr-4" v-for="(image, index) in contenu.imagesBlob">
+    <div class="d-flex images">
+        <div class="image-c mr-4" v-for="(image, indexi) in contenu.contenu.images">
             <div class="image d-flex">
-                <img class="mr-4 mb-4" :src="image" alt="Red dot" />
+                <img class="mr-4 mb-4" :src="image.blob" alt="Red dot" />
                 <div class="btns-actions">
                     <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: image }">
                         Agrandir
                     </v-btn>
                     <v-btn
-                        v-if="contenu?.contenu && contenu?.contenu[index]?.unique"
+                        v-if="image.unique"
                         elevation="0"
                         color="#C62828"
-                        @click="deleteImage(contenu, index), openFilePicker()">
+                        @click="deleteImage(contenu, indexi), openFilePicker()">
                         Remplacer
                     </v-btn>
-                    <v-btn
-                        v-if="contenu?.contenu && !contenu.contenu[index]?.unique"
-                        elevation="0"
-                        color="#C62828"
-                        @click="deleteImage(contenu, index)">
+                    <v-btn v-if="!image.unique" elevation="0" color="#C62828" @click="deleteImage(contenu, indexi)">
                         Supprimer
                     </v-btn>
                 </div>
             </div>
-            <div class="details" v-if="contenu?.contenu?.[index] && !contenu.contenu[index].unique">
+            <div class="details" v-if="!image.unique">
                 <div style="max-width: 300px">
-                    <v-checkbox density="compact" label="Parallax" v-model="contenu.contenu[index].parallax" />
-                    <v-text-field v-model="contenu.contenu[index].url" density="compact" label="Url au clic" />
+                    <v-checkbox density="compact" label="Parallax" v-if="image.parallax" v-model="image.parallax" />
+                    <v-text-field v-if="image.url" v-model="image.url" density="compact" label="Url au clic" />
 
                     <v-text-field
                         :rules="[
@@ -37,7 +33,7 @@
                         type="number"
                         density="compact"
                         label="Opacité (%)"
-                        v-model="contenu.contenu[index].opacity"
+                        v-model="image.opacity"
                         suffix="%" />
                     <v-text-field
                         :rules="[
@@ -47,17 +43,19 @@
                         ]"
                         density="compact"
                         label="Luminosité (%)"
-                        v-model="contenu.contenu[index].darker"
+                        v-model="image.darker"
                         suffix="%" />
                 </div>
                 <div class="d-flex">
-                    <tinyEditor :model="contenu.contenu[index]" keyModel="titre" />
-                    <!-- <setPotisition class="ml-4" :contenu="contenu" :index="index" /> -->
+                    <tinyEditor :index="index+indexi" :model="image" keyModel="texte" />
                 </div>
             </div>
         </div>
         <v-btn
-            v-if="!contenu.contenu?.[0]?.unique || (contenu.contenu?.[0]?.unique && contenu.imagesBlob.length == 0)"
+            v-if="
+                !contenu.contenu.images?.[0]?.unique ||
+                (contenu.contenu.images?.[0]?.unique && contenu.contenu.images?.length == 0)
+            "
             size="small"
             color="blue"
             elevation="0"
@@ -78,10 +76,8 @@ export default {
     props: { contenu: Object, index: Number },
     methods: {
         async deleteImage(contenu, index) {
-            await this.$r.deleteImgContenu(contenu.image[index])
-            if (!contenu.contenu[index].unique) contenu.contenu.splice(index, 1)
-            contenu.image.splice(index, 1)
-            contenu.imagesBlob.splice(index, 1)
+            await this.$r.deleteImgContenu(contenu.contenu.images[index])
+            contenu.contenu.images.splice(index, 1)
             this.$r.saveContenu(contenu)
         },
         openFilePicker() {

@@ -138,7 +138,7 @@
                         <img
                             style="width: 50px; height: 50px; object-fit: cover; border-radius: 10px"
                             class="mr-4"
-                            :src="product.imagesBlob[0]"
+                            :src="product.imagesBlob?.[0]"
                             alt="Red dot" />
                         <div>{{ product.categorie.name }} - {{ product.name }}</div>
                         <v-icon @click="$r.goto(`/product/detail?id=${product.uuid}`, true)" class="ml-2">
@@ -363,7 +363,7 @@ export default {
             this.$r.setImagesProduct(product)
         },
         drag(event, categorie) {
-            debugger
+            
             event.dataTransfer.setData('text', JSON.stringify(categorie))
         },
         changeOrderVariation(product, index, up) {

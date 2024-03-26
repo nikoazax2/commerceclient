@@ -66,11 +66,9 @@
                     <!-- Blocs -->
                     <div class="bloc">
                         <!-- Bloc Texte -->
-                        <div
-                            class="d-flex"
-                            style="width: 100%"
-                            v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
-                            <tinyEditor :model="contenu.contenu" keyModel="texte" />
+                        <div style="width: 100%" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
+                            <tinyEditor :index="index" :model="contenu.contenu" keyModel="texte" />
+                            <EditionImage class="mt-6" :contenu="contenu" :index="index" />
                         </div>
 
                         <!-- Bloc Image -->
@@ -82,7 +80,6 @@
                         <div v-else-if="contenu.type == 3">
                             <v-color-picker
                                 hide-canvas
-                                hide-inputs
                                 elevation="0"
                                 :modes="['rgb', 'hexa']"
                                 v-model="contenu.contenu.color"
@@ -232,7 +229,10 @@
                             <v-textarea v-model="contenu.contenu" label="Code" />
                         </div>
 
-                        <Espacement :contenu="contenu" :page="page" />
+                        <div class="d-flex mt-4">
+                            <Espacement :contenu="contenu" :page="page" />
+                            <BackgroundColor :contenu="contenu" />
+                        </div>
 
                         <!-- <div class="mt-4" v-if="contenu.contenu?.color != undefined">
                     <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
@@ -252,6 +252,7 @@ import textStyle from '../ElementsContenu/textStyle.vue'
 import EditionImage from './EditionImage.vue'
 import tinyEditor from '../Administration/tinyEditor.vue'
 import Espacement from '../Administration/Espacement.vue'
+import BackgroundColor from '../Administration/BackgroundColor.vue'
 export default {
     props: {
         contenu: {
@@ -273,7 +274,8 @@ export default {
         textStyle,
         tinyEditor,
         EditionImage,
-        Espacement
+        Espacement,
+        BackgroundColor
     },
     data() {
         return {
@@ -296,7 +298,7 @@ export default {
     created() {
         if (this.contenu.espacement == null) {
             this.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
-        }
+        } 
     },
     methods: {
         newPagefct(contenu) {
@@ -332,14 +334,7 @@ export default {
                 reader.onload = async () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
-                    this.contenuChange.image = this.contenuChange?.image || []
-                    this.contenuChange.image.push(uuid)
-                    if (typeof this.contenuChange.contenu == 'object') {
-                        this.contenuChange.contenu.push({ url: '', titre: '' })
-                    } else {
-                        this.contenuChange.contenu = [{ url: '', titre: '' }]
-                    }
-                    this.contenuChange.contenu = this.contenuChange?.contenu || []
+                    this.contenuChange.contenu.images.push({ uuid: uuid })
                     await this.$r.uploadImgContenu(uuid, base64)
                     await this.$r.saveContenu(this.contenuChange)
                     await this.$r.getContenu()

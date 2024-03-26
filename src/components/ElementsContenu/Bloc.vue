@@ -1,10 +1,14 @@
 <template>
     <div :style="setEspacement(bloc.espacement)">
         <!-- BLOC IMAGE -->
-        <Images :bloc="bloc" />
-
+        <Images :bloc="bloc" /> 
+        
         <!-- BLOC TEXTE -->
-        <encartTitreTexte v-if="bloc.type == 1" :style="bloc.contenu?.style" :texte="bloc?.contenu?.texte" />
+        <encartTitreTexte
+            v-if="bloc.type == 1"
+            :style="bloc.contenu?.style"
+            :texte="bloc?.contenu?.texte"
+            :bloc="bloc" />
 
         <!-- BLOC BOUTON -->
         <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
@@ -86,5 +90,5 @@ export default {
     .encart1 {
         padding: 20px 6% !important;
     }
-} 
+}
 </style>

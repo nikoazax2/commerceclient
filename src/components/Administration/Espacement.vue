@@ -1,5 +1,5 @@
 <template>
-    <div class="espacements mt-4" v-if="![3].includes(contenu.type) && page != 'Général'">
+    <div class="espacements" v-if="![3].includes(contenu.type) && page != 'Général'">
         <div>Espacements :</div>
         <div style="width: 200px" class="d-flex">
             <div style="width: 50px" />

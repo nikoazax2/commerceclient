@@ -91,17 +91,17 @@ export const gMethods = {
         try {
             const response = await axios.get(`${this.config.domain}/contenu`,)
 
-            //load contenu website
+            //récupérer les images des contenus
             for await (let contenu of response.data) {
-                if (contenu.image) {
-                    contenu = await this.setImagesContenu(contenu)
-                }
+                contenu.contenu?.images?.forEach(async item => {
+                    item = await this.setImagesContenu(item)
+                })
             }
-            this.contenu = response.data
+            this.contenu = response.data 
+            this.pages = response.data.find((item) => item.name == 'Pages').contenu.map((item) => { return item.name.toLowerCase() })
+            this.pages.push('accueil')
 
-
-            //set pages of website
-            this.pages = [...new Set(response.data.map((item) => { return item.page }))]
+            //            this.pages = [...new Set(response.data.map((item) => { return item.page }))]
             this.loading = false
 
             return response.data
@@ -127,25 +127,22 @@ export const gMethods = {
         }
         return img
     },
-    async setImagesContenu(contenu) {
-        this.loading = true
-        contenu.imagesBlob = []
-        if (!contenu.image) return contenu
-        for await (let image of contenu.image) {
-            let img = await axios
-                .get(`${this.config.domain}/contenu/image/${image}`)
-                .then((response) => {
-                    this.loading = false
-                    return response.data
+    async setImagesContenu(image) {
+        if (!image.uuid) return contenu
 
-                })
-                .catch((error) => {
-                    console.error("Error fetching contenus data:", error);
-                })
+        let img = await axios
+            .get(`${this.config.domain}/contenu/image/${image.uuid}`)
+            .then((response) => {
+                this.loading = false
+                return response.data
 
-            contenu.imagesBlob.push(img)
-        }
-        return contenu
+            })
+            .catch((error) => {
+                console.error("Error fetching contenus data:", error);
+            })
+
+        image.blob = img
+        return image
     },
     deleteImgContenu(uuid) {
         let header = {
@@ -182,7 +179,7 @@ export const gMethods = {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
 
         if (bloc.type == 1) bloc.contenu = { texte: '' }
-        if (bloc.type == 2) bloc.contenu = []
+        if (bloc.type == 2) bloc.contenu = { images: [] }
         if (bloc.type == 4) bloc.contenu = { url: '', titre: '', color: '' }
         if (bloc.type == 5) bloc.contenu = { nombre: 5, categories: [] }
 
@@ -223,7 +220,11 @@ export const gMethods = {
 
         let body = contenu
         if (contenu?.type == 4) body.contenu.url.replaceAll(document.location.origin, '')
-
+        if (contenu?.images?.map((item) => item.blob).length > 0) {
+            contenu.images.forEach(element => {
+                delete element.blob
+            });
+        }
         let header = {
             headers: {
                 'Content-Type': 'application/json',
@@ -465,7 +466,7 @@ export const gMethods = {
                 })
         } else {
             let cart = JSON.parse(localStorage.getItem(this.nameInCookie()))
-            if (cart) { 
+            if (cart) {
                 let index = cart.findIndex((item) => item.product === product.uuid && (!item.variation || item.variation == variation?.uuid))
                 if (index !== -1) {
                     cart[index].quantity += parseInt(quantity)

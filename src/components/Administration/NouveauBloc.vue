@@ -46,15 +46,12 @@ export default {
     }
 }
 </script>
-<style lang="scss" scoped>
-.container {
-}
+<style lang="scss" scoped> 
 .button-activate {
     &:hover {
      opacity: 1;
      transition: 0.3s ease-in-out;
-    }
-    opacity: 0;
+    } 
     padding: 0 20px;
     display: flex;
     justify-content: space-between;

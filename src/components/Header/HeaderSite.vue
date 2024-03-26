@@ -14,7 +14,7 @@
                 $r.getItemContenu('message-bandeau-haut').color || 'black'
             }; color: ${getContrast($r.getItemContenu('message-bandeau-haut').color || 'black')}`"
             class="bandeau jcc font-weight-bold text-caption pa-2 text-center"
-            v-if="$r.getItemContenu('message-bandeau-haut')"
+            v-if="$r.getItemContenu('message-bandeau-haut')?.texte"
             v-html="$r.getItemContenu('message-bandeau-haut')?.texte || $r.getItemContenu('message-bandeau-haut')" />
 
         <!-- Menu hamburger -->
@@ -103,7 +103,7 @@
             <div class="gauche aic">
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.imagesBlob[0]"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.contenu?.images?.[0]?.blob"
                     class="logo-website ml-2 mr-4"
                     :class="`${$r.isPhone ? 'ml-4' : 'ml-2'}`" />
 
@@ -186,9 +186,10 @@
                 </v-btn>
                 <v-icon
                     @click="navDrawer = !navDrawer"
+                     color="primary"
                     :class="`text-h5 ${$r.isPhone ? 'mr-4' : 'ml-4'}`"
-                    class="text-h5 aic">
-                    mdi-menu
+                    class="text-h5 aic icon-account">
+                    mdi-account-circle
                 </v-icon>
             </div>
         </div>
@@ -286,6 +287,9 @@ export default {
     }
     .logo-website {
         cursor: pointer;
+    }
+    :deep(.icon-account) {
+        font-size: 35px !important;
     }
     .header-principal {
         justify-content: space-between;

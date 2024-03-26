@@ -1,37 +1,19 @@
 <template>
-    <div v-if="bloc?.imagesBlob?.length == 1" class="container-image">
-        <!-- IMAGE (SEULE) -->
-        <div class="image-titre">
-            <div class="titre" v-html="bloc.contenu[0].titre"></div>
-        </div>
-        <div
-            class="images image-simple"
-            @click="$r.goto(bloc.contenu[0].url, true)"
-            :style="bloc.contenu[0].url ? 'cursor: pointer' : ''">
-            <div
-                class="logo-website img"
-                :style="`background-image: url(${bloc?.imagesBlob[0]});  
-                ${bloc?.contenu?.[0].parallax ? `background-attachment: fixed;` : ''}
-                ${bloc?.contenu?.[0].darker ? `filter: brightness(${bloc?.contenu?.[0].darker}%);` : ''}
-                 padding-top: 50%;   height: 0;width:100vw; height:fit-content; 
-                 background-size: cover; background-position: center;`" />
-        </div>
-    </div>
-    <div class="images aic" v-else>
-        <!-- IMAGES -->
-        <div v-for="(image, index) in bloc.imagesBlob">
+    <div class="container-image">
+        <div v-for="(image, index) in bloc.contenu.images" class="image"
+        :style="`width:${100 / bloc.contenu.images.length + 'vw'}; `"
+        >
             <div class="image-titre">
-                <div class="titre" v-html="bloc.contenu[index].titre"></div>
+                <div class="titre" v-html="image?.texte" />
             </div>
-            <div
-                @click="$r.goto(bloc.contenu[index].url, true)"
-                class="aic"
-                :style="bloc.contenu[index]?.url ? 'cursor: pointer' : ''">
-                <img
-                    :style="`width: calc(100vw / ${bloc.imagesBlob.length});${getStyleImg(bloc?.contenu?.[index])}`"
-                    v-if="bloc.type == 2 && bloc?.imagesBlob?.length > 0"
-                    :src="image"
-                    alt="logo" />
+            <div class="images" @click="$r.goto(image.url, true)" :style="image?.url ? 'cursor: pointer' : ''"> 
+                <div
+                    class="logo-website img"
+                    :style="`background-image: url(${image?.blob});  
+                ${image?.parallax ? `background-attachment: fixed;` : ''}
+                ${image?.darker ? `filter: brightness(${image.darker}%);` : ''} ${getStyleImg(image)}
+                 padding-top: 50%;   height: 0; height:fit-content; 
+                 background-size: cover; background-position: center;`" />
             </div>
         </div>
     </div>
@@ -86,60 +68,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.images {
-    display: flex;
-    .img {
-        padding: 20px 3%;
-    }
-}
-.isphone{
-    .image-titre{
-        transform: scale(0.7);
-    }
-}
 .container-image {
-    width: 100%;
-    position: relative;
-    display: inline-block;
-    .image-titre {
-        padding: 10%;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        position: absolute;
-        height: 100%;
-        width: 100%;
-        z-index: 2;
-    }
-}
-.rows {
-    width: 100%;
-    height: 100%;
-    padding: 100px;
-    position: absolute;
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    .row {
-        height: 33%;
+    justify-content: center;
+    .image { 
+        position: relative;
+        color: white;
+    }
+    .image-titre {
+        z-index: 2;
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 10px;
         width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        .bloc {
-            z-index: 2;
-            width: 33%;
-        }
+        height: 100%;
     }
-    .titre {
-        transform: scale(0.5);
-        position: absolute !important;
-    }
-}
-.titre.pc {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 </style>

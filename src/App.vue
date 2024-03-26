@@ -61,7 +61,7 @@ export default {
             //gerer les accents
             let allTags = this.$r
                 .getItemContenu('tags')
-                ?.replace('<p>', '')
+                ?.replace?.('<p>', '')
                 .replace('</p>', '')
                 .split(' ')
                 .map((tag) => tag.normalize('NFD').replace(/[\u0300-\u036f]/g, ''))

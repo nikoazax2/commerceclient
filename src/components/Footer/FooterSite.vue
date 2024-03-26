@@ -5,7 +5,7 @@
             <div class="aic w100 jcc pt-4 pb-4">
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site-footer')?.imagesBlob[0]"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site-footer')?.contenu?.images?.[0]?.blob"
                     class="ml-2"
                     style="max-width: 30%"
                     :style="`${!$r.isPhone ? 'max-height: 92px;' : ''}`"
@@ -17,7 +17,7 @@
             <div class="w100 d-flex jcsb aic">
                 <nousAcceptons />
 
-                <h5 class="pa-4 cp" @click="$r.goto('https://portefolio.sagenicolas.fr/', true)">@2024 Sage Nicolas</h5>
+                <h5 class="pa-4 cp" @click="$r.goto('https://netguest.fr/', true)">@2024 NetGuest</h5>
             </div>
         </div>
     </div>

@@ -7,9 +7,9 @@
                 v-for="productCart in $r.productsOfCart($r.cart, $r.products)">
                 <img
                     class="mr-4"
-                    v-if="productCart && productCart.imagesBlob.length > 0"
+                    v-if="productCart && productCart.imagesBlob?.length > 0"
                     style="width: 100px"
-                    :src="productCart.imagesBlob[0]"
+                    :src="productCart.imagesBlob?.[0]"
                     alt="" />
                 <div class="infos-droite d-flex">
                     <div class="ml-2 mr-6">
