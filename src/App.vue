@@ -50,6 +50,7 @@ export default {
         this.$vuetify.theme.themes.myCustomLightTheme.colors.primary =
             this.$r.contenu?.find((c) => c.valeur == 'couleur-site')?.contenu?.color || '#D1514A'
         this.$r.getCart(this.$r.userConnected ? true : false)
+        this.$r.getBlocs()
         this.setSEO()
         this.load = false
     },
@@ -198,6 +199,47 @@ export default {
 }
 :deep(.v-overlay__content) {
     width: auto !important;
+}
+:deep(.blocs) { 
+    .bloc-container {
+        overflow-x: auto;
+        white-space: nowrap;
+        display: inline-flex;
+        justify-content: center;
+        width: 100%;
+        .bloc {
+            margin: 10px;
+            height: 150px;
+            width: 150px;
+            white-space: nowrap;
+            border-radius: 5px;
+            box-shadow: 0px 0px 5px 0px #00000041;
+            background-color: white;
+            &:hover {
+                cursor: pointer;
+                background-color: rgba(0, 0, 0, 0.02);
+                transform: scale(1.05);
+                transition: 0.3s ease-in-out;
+            }
+            .title {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                font-size: 21px;
+                font-weight: 500;
+                transform: translateY(-20px);
+            }
+            i {
+                font-size: 150px;
+                opacity: 0.05;
+                position: relative;
+                height: 0;
+                transform: translateY(62px);
+            }
+        }
+    }
 }
 </style>
 <style lang="scss">

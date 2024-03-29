@@ -1,48 +1,52 @@
 <template>
-    <div :style="setEspacement(bloc.espacement)">
-        <!-- BLOC IMAGE -->
-        <Images :bloc="bloc" /> 
-        
-        <!-- BLOC TEXTE -->
-        <encartTitreTexte
-            v-if="bloc.type == 1"
-            :style="bloc.contenu?.style"
-            :texte="bloc?.contenu?.texte"
-            :bloc="bloc" />
+    <div class="blocs d-flex">
+        <div v-for="(bloc, index) in blocs" :style="`width:${100 / blocs.length}%`">
+            <div :style="setEspacement(bloc.espacement)">
+                <!-- BLOC IMAGE -->
+                <Images :bloc="bloc" />
 
-        <!-- BLOC BOUTON -->
-        <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
-            <v-btn
-                @click="$r.goto(bloc.contenu?.url)"
-                :color="bloc.contenu?.color || 'primary'"
-                class="mr-4"
-                elevation="0">
-                {{ bloc.contenu?.titre }}
-            </v-btn>
+                <!-- BLOC TEXTE -->
+                <encartTitreTexte
+                    v-if="bloc.type == 1"
+                    :style="bloc.contenu?.style"
+                    :texte="bloc?.contenu?.texte"
+                    :bloc="bloc" />
+
+                <!-- BLOC BOUTON -->
+                <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
+                    <v-btn
+                        @click="$r.goto(bloc.contenu?.url)"
+                        :color="bloc.contenu?.color || 'primary'"
+                        class="mr-4"
+                        elevation="0">
+                        {{ bloc.contenu?.titre }}
+                    </v-btn>
+                </div>
+
+                <!-- BLOC ARTICLES -->
+                <div v-if="bloc.type == 5" class="articles">
+                    <grilleArticles
+                        :products="
+                            $r.products
+                                .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
+                                .slice(0, bloc.contenu.nombre || 999)
+                        " />
+                </div>
+
+                <!-- BLOC CATEGORIES-->
+                <div v-if="bloc.type == 6" class="articles">
+                    <grilleArticles
+                        :products="
+                            $r.products
+                                .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
+                                .slice(0, bloc.contenu.nombre || 999)
+                        " />
+                </div>
+
+                <!-- BLOC CODE -->
+                <div v-if="bloc.type == 9" class="encart1" v-html="bloc.contenu" />
+            </div>
         </div>
-
-        <!-- BLOC ARTICLES -->
-        <div v-if="bloc.type == 5" class="articles">
-            <grilleArticles
-                :products="
-                    $r.products
-                        .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
-                        .slice(0, bloc.contenu.nombre || 999)
-                " />
-        </div>
-
-        <!-- BLOC CATEGORIES-->
-        <div v-if="bloc.type == 6" class="articles">
-            <grilleArticles
-                :products="
-                    $r.products
-                        .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
-                        .slice(0, bloc.contenu.nombre || 999)
-                " />
-        </div>
-
-        <!-- BLOC CODE -->
-        <div v-if="bloc.type == 9" class="encart1" v-html="bloc.contenu" />
     </div>
 </template>
 
@@ -54,7 +58,7 @@ import grilleArticles from './grilleArticles.vue'
 export default {
     name: 'Bloc',
     props: {
-        bloc: {
+        blocs: {
             type: Object,
             required: true
         }
@@ -90,5 +94,8 @@ export default {
     .encart1 {
         padding: 20px 6% !important;
     }
+}
+.blocs {
+    width: 100%;
 }
 </style>

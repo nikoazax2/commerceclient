@@ -60,6 +60,9 @@ export default {
             type: String,
             required: true
         }
+    },
+    created() {
+        if (!this.contenu.espacement) this.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
     }
 }
 </script>

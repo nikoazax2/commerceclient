@@ -47,7 +47,7 @@
                         suffix="%" />
                 </div>
                 <div class="d-flex">
-                    <tinyEditor :index="index+indexi" :model="image" keyModel="texte" />
+                    <tinyEditor :index="index + indexi" :model="image" keyModel="texte" />
                 </div>
             </div>
         </div>
@@ -73,7 +73,7 @@ export default {
         tinyEditor,
         setPotisition
     },
-    props: { contenu: Object, index: Number },
+    props: { contenu: Object, index: Number, contenuChange: Object },
     methods: {
         async deleteImage(contenu, index) {
             await this.$r.deleteImgContenu(contenu.contenu.images[index])
@@ -81,10 +81,7 @@ export default {
             this.$r.saveContenu(contenu)
         },
         openFilePicker() {
-            this.$r.iframeImg = { show: true, url: null }
-            this.$r.filePicker = true
-        },
-        openFilePicker() {
+            this.contenuChange.contenu = this.contenu
             document.getElementById(`file-input-${this.index}`).click()
         }
     }

@@ -13,7 +13,7 @@
                 ${image?.parallax ? `background-attachment: fixed;` : ''}
                 ${image?.darker ? `filter: brightness(${image.darker}%);` : ''} ${getStyleImg(image)}
                  padding-top: 50%;   height: 0; height:fit-content; 
-                 background-size: cover; background-position: center;`" />
+                 background-size: contain; `" />
             </div>
         </div>
     </div>

@@ -97,7 +97,7 @@ export const gMethods = {
                     item = await this.setImagesContenu(item)
                 })
             }
-            this.contenu = response.data 
+            this.contenu = response.data
             this.pages = response.data.find((item) => item.name == 'Pages').contenu.map((item) => { return item.name.toLowerCase() })
             this.pages.push('accueil')
 
@@ -175,7 +175,7 @@ export const gMethods = {
         return
 
     },
-    async insertBloc(bloc, index, page) {
+    async insertBloc(bloc, index, page, leftOrRight) {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
 
         if (bloc.type == 1) bloc.contenu = { texte: '' }
@@ -196,19 +196,19 @@ export const gMethods = {
             .post(`${this.config.domain}/contenu`, bloc, header)
             .then(async (response) => {
                 this.contenu.splice(index, 0, response.data)
-                let i = 0
-                for await (let item of this.contenu.filter((item) => item.page == page)) {
-                    item.order = i
-                    await axios
-                        .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
-                        .then((response) => {
-                            console.log(response.data)
-                        })
-                        .catch((error) => {
-                            console.error('Error fetching products data:', error)
-                        })
-                    i++
-                }
+                // let i = 0
+                // for await (let item of this.contenu.filter((item) => item.page == page)) {
+                //     item.order = i
+                //     await axios
+                //         .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
+                //         .then((response) => {
+                //             console.log(response.data)
+                //         })
+                //         .catch((error) => {
+                //             console.error('Error fetching products data:', error)
+                //         })
+                //     i++
+                // }
                 return
             })
             .catch((error) => {

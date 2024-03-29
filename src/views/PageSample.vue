@@ -5,14 +5,19 @@
         <div>
             <div>
                 <div
-                    v-for="(bloc, index) in $r.contenu
+                    v-for="(bloc, index) in contenuWithoutOrderDuplicate()
                         .filter((page) => page.page == $r.getPage())
                         .sort((a, b) => a.order - b.order)">
-                    <Bloc v-if="!$r.modeEdition" :bloc="bloc"  />
+                    <Bloc
+                        v-if="!$r.modeEdition"
+                        :blocs="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)" />
 
                     <div v-else class="contenu">
                         <div class="gauche" :style="` width:${$r.modeEdition ? '100%' : '100%'} `">
-                            <EditionBloc :index="index" :contenu="bloc" :page="$r.getPage()" />
+                            <EditionBloc
+                                :index="index"
+                                :contenus="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)"
+                                :page="$r.getPage()" />
                             <NouveauBloc :index="index + 2" :page="$r.getPage()" />
                         </div>
                         <!-- <div class="droite">
@@ -42,9 +47,16 @@ export default {
             this.$r.modeEdition = to.query.edition == 'true'
         }
     },
+    methods: {
+        contenuWithoutOrderDuplicate() {
+            return this.$r.contenu.filter(
+                (contenu, index, self) => self.findIndex((t) => t.order === contenu.order) === index
+            )
+        }
+    },
     created() {
         if (this.$route.query.edition == 'true') this.$r.getProfile()
-    } 
+    }
 }
 </script> 
 <style lang="scss" scoped>
