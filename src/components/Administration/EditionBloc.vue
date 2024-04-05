@@ -10,19 +10,8 @@
 
         <div class="d-flex aic">
             <!-- Change order -->
-            <div>
+            <!-- <div>
                 <div class="change-order mr-4" v-if="$r.getPage() != 'Général'">
-                    <!-- <v-btn
-                        v-if="index != 0"
-                        @click="changeOrder(contenu, 'up')"
-                        elevation="0"
-                        size="x-small"
-                        variant="outlined"
-                        color="grey"
-                        class="mr-4 mb-4">
-                        <v-icon> mdi-chevron-up</v-icon>
-                        Monter
-                    </v-btn> -->
                     <v-btn
                         @click="insertblocl = true"
                         elevation="0"
@@ -45,7 +34,7 @@
                             </div>
                         </div>
                     </div>
-                    <!-- <v-btn
+                    <v-btn
                         v-if="index != $r.contenu.filter((page) => page.page == $r.getPage()).length - 1"
                         @click="changeOrder(contenu, 'down')"
                         elevation="0"
@@ -55,236 +44,230 @@
                         class="mr-4">
                         <v-icon> mdi-chevron-down</v-icon>
                         Descendre
-                    </v-btn> -->
+                    </v-btn>
                 </div>
-            </div>
+            </div> -->
 
-            <div v-for="contenu in contenus" class="mr-4" :style="`width:calc(${100 / contenus.length}% - 140px)`">
-                <div class="line">
-                    <div class="head-line w100" @click="contenu.plie = !contenu.plie">
-                        <div class="d-flex aic jcsb">
-                            <div class="d-flex aic">
-                                <img
-                                    v-if="contenu.type == 2 && contenu.imagesBlob?.[0]"
-                                    :src="contenu.imagesBlob?.[0]"
-                                    class="icone-head mr-4" />
-                                <div v-else class="mr-4 icone-head text">
-                                    {{ contenu.name?.[0] }}
-                                </div>
+            <div class="bloc" v-if="contenu">
+                <div class="d-flex aic jcsb header">
+                    <div class="d-flex aic">
+                        <img
+                            v-if="contenu.type == 2 && contenu.imagesBlob?.[0]"
+                            :src="contenu.imagesBlob?.[0]"
+                            class="icone-head mr-4" />
+                        <div v-else class="mr-4 icone-head text">
+                            {{ contenu.name?.[0] }}
+                        </div>
 
-                                <div class="">
-                                    <h4>
-                                        {{ contenu.name }}
-                                    </h4>
-                                    <p class="">
-                                        {{ contenu.description }}
-                                    </p>
-                                </div>
-                            </div>
-                            <div>
+                        <div class="">
+                            <h4>
+                                {{ contenu.name }}
+                            </h4>
+                            <p class="">
+                                {{ contenu.description }}
+                            </p>
+                        </div>
+                    </div>
+                    <div>
+                        <v-btn
+                            v-if="contenu.removable"
+                            variant="text"
+                            @click="$r.deleteContenu(contenu, page)"
+                            elevation="0"
+                            class="ml-4"
+                            size="small"
+                            color="red">
+                            Supprimer
+                        </v-btn>
+                        <v-btn @click="$r.saveContenu(contenu)" elevation="0" class="ml-4" size="small" color="blue">
+                            Enregistrer
+                        </v-btn>
+                    </div>
+                </div>
+                <div class="body-line">
+                    <!-- Blocs -->
+                    <div class="bloc">
+                        <!-- Bloc Texte -->
+                        <div style="width: 100%" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
+                            <tinyEditor :index="index" 
+                            :contenu="contenu"
+                            :model="contenu.contenu" keyModel="texte" />
+                            <EditionImage class="mt-6" :contenu="contenu" :index="index" />
+                        </div>
+
+                        <!-- Bloc Image -->
+                        <div v-else-if="contenu.type == 2" class="d-flex images">
+                            <EditionImage :contenu="contenu" :index="index" :contenuChange="contenuChange" />
+                        </div>
+
+                        <!-- Bloc Couleur -->
+                        <div v-else-if="contenu.type == 3">
+                            <v-color-picker
+                                hide-canvas
+                                elevation="0"
+                                :modes="['rgb', 'hexa']"
+                                v-model="contenu.contenu.color"
+                                show-swatches />
+                        </div>
+
+                        <!-- Bloc Bouton -->
+                        <div v-else-if="contenu.type == 4">
+                            <v-text-field density="compact" v-model="contenu.contenu.titre" label="Texte" />
+                            <v-text-field density="compact" v-model="contenu.contenu.url" label="URL" />
+                            <v-color-picker hide-canvas hide-inputs show-swatches v-model="contenu.contenu.color" />
+                        </div>
+
+                        <!-- Bloc Articles -->
+                        <div v-else-if="contenu.type == 5" class="articles">
+                            <v-select
+                                v-if="$r.categories && contenu.contenu.categories"
+                                v-model="contenu.contenu.categories"
+                                multiple
+                                item-value="uuid"
+                                item-title="name"
+                                density="compact"
+                                :items="$r.categories"
+                                label="Catégorie">
+                            </v-select>
+                            <v-text-field
+                                v-if="contenu?.contenu?.nombre"
+                                v-model="contenu.contenu.nombre"
+                                density="compact"
+                                label="Nombre de produits" />
+                        </div>
+
+                        <!-- Bloc Catégories -->
+                        <div v-else-if="contenu.type == 6" class="articles"></div>
+
+                        <!-- Bloc checkbox -->
+                        <div v-else-if="contenu.type == 7">
+                            <v-checkbox hide-details="true" v-model="contenu.contenu" :label="contenu.name" />
+                        </div>
+
+                        <!-- Bloc pages -->
+                        <div v-else-if="contenu.type == 8" class="">
+                            <div class="d-flex aic mt-6">
+                                <v-select
+                                    :items="contenu.contenu"
+                                    v-model="editPage"
+                                    return-object="true"
+                                    item-title="name"
+                                    hide-details="true"
+                                    class="mr-4"
+                                    style="width: 200px"
+                                    variant="outlined"
+                                    no-data-text="Aucune page"
+                                    label="Page">
+                                </v-select>
+
                                 <v-btn
-                                    v-if="contenu.removable && !contenu.plie"
-                                    variant="text"
-                                    @click="$r.deleteContenu(contenu, page)"
+                                    v-if="contenu.contenu"
                                     elevation="0"
-                                    class="ml-4"
+                                    @click="newPagefct(contenu)"
                                     size="small"
-                                    color="red">
+                                    variant="outlined"
+                                    color="blue">
+                                    <v-icon>mdi-plus</v-icon>
+                                    Nouvelle page
+                                </v-btn>
+                            </div>
+
+                            <v-dialog
+                                v-model="newPage.dialog"
+                                persistent
+                                max-width="290"
+                                hide-overlay
+                                transition="dialog-bottom-transition">
+                                <v-card>
+                                    <v-card-title>
+                                        <span class="headline">Nouvelle page</span>
+                                    </v-card-title>
+                                    <v-card-text>
+                                        <v-text-field
+                                            v-model="contenu.contenu[contenu.contenu.length - 1].name"
+                                            label="Nom de la page" />
+                                        <v-select
+                                            v-model="contenu.contenu[contenu.contenu.length - 1].groupes"
+                                            :items="groupesPages"
+                                            item-title="libelle"
+                                            item-value="value"
+                                            multiple="true"
+                                            label="Groupes de la page"
+                                            dense
+                                            hide-details
+                                            class="mt-4" />
+                                    </v-card-text>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text @click="contenu.contenu.pop(), (newPage.dialog = false)">
+                                            Annuler
+                                        </v-btn>
+                                        <v-btn
+                                            color="blue"
+                                            text
+                                            @click="$r.saveContenu(contenu), (newPage.dialog = false)">
+                                            Enregistrer
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+
+                            <div v-if="editPage" class="mt-4">
+                                Editer {{ editPage?.name }}
+                                <v-text-field
+                                    class="mt-4"
+                                    v-model="contenu.contenu[contenu.contenu.length - 1].name"
+                                    label="Nom de la page"
+                                    hide-details="true"
+                                    variant="outlined" />
+                                <v-select
+                                    variant="outlined"
+                                    hide-details="true"
+                                    v-model="contenu.contenu[contenu.contenu.length - 1].groupes"
+                                    :items="groupesPages"
+                                    item-title="libelle"
+                                    item-value="value"
+                                    multiple="true"
+                                    label="Groupes de la page"
+                                    dense
+                                    class="mt-4" />
+
+                                <v-btn
+                                    elevation="0"
+                                    color="red"
+                                    @click="
+                                        contenu.contenu.splice(editPage.index, 1),
+                                            (editPage = null),
+                                            $r.saveContenu(contenu)
+                                    "
+                                    class="mt-4"
+                                    size="small"
+                                    variant="outlined">
                                     Supprimer
                                 </v-btn>
-                                <v-btn
-                                    @click="$r.saveContenu(contenu)"
-                                    elevation="0"
-                                    class="ml-4"
-                                    size="small"
-                                    color="blue">
-                                    Enregistrer
-                                </v-btn>
                             </div>
                         </div>
-                    </div>
-                    <div v-if="!contenu.plie" class="body-line">
-                        <!-- Blocs -->
-                        <div class="bloc">
-                            <!-- Bloc Texte -->
-                            <div style="width: 100%" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
-                                <tinyEditor :index="index" :model="contenu.contenu" keyModel="texte" />
-                                <EditionImage class="mt-6" :contenu="contenu" :index="index" />
-                            </div>
 
-                            <!-- Bloc Image -->
-                            <div v-else-if="contenu.type == 2" class="d-flex images">
-                                <EditionImage :contenu="contenu" :index="index"
-                                :contenuChange="contenuChange"
-                                 />
-                            </div>
+                        <!-- Bloc code -->
+                        <div v-else-if="contenu.type == 9">
+                            <v-textarea v-model="contenu.contenu" label="Code" />
+                        </div>
 
-                            <!-- Bloc Couleur -->
-                            <div v-else-if="contenu.type == 3">
-                                <v-color-picker
-                                    hide-canvas
-                                    elevation="0"
-                                    :modes="['rgb', 'hexa']"
-                                    v-model="contenu.contenu.color"
-                                    show-swatches />
-                            </div>
+                        <div class="mt-4">
+                            <Espacement class="mb-4" :contenu="contenu" :page="page" />
+                            <BackgroundColor :contenu="contenu" />
+                        </div>
 
-                            <!-- Bloc Bouton -->
-                            <div v-else-if="contenu.type == 4">
-                                <v-text-field density="compact" v-model="contenu.contenu.titre" label="Texte" />
-                                <v-text-field density="compact" v-model="contenu.contenu.url" label="URL" />
-                                <v-color-picker hide-canvas hide-inputs show-swatches v-model="contenu.contenu.color" />
-                            </div>
-
-                            <!-- Bloc Articles -->
-                            <div v-else-if="contenu.type == 5" class="articles">
-                                <v-select
-                                    v-if="$r.categories && contenu.contenu.categories"
-                                    v-model="contenu.contenu.categories"
-                                    multiple
-                                    item-value="uuid"
-                                    item-title="name"
-                                    density="compact"
-                                    :items="$r.categories"
-                                    label="Catégorie">
-                                </v-select>
-                                <v-text-field
-                                    v-if="contenu?.contenu?.nombre"
-                                    v-model="contenu.contenu.nombre"
-                                    density="compact"
-                                    label="Nombre de produits" />
-                            </div>
-
-                            <!-- Bloc Catégories -->
-                            <div v-else-if="contenu.type == 6" class="articles"></div>
-
-                            <!-- Bloc checkbox -->
-                            <div v-else-if="contenu.type == 7">
-                                <v-checkbox hide-details="true" v-model="contenu.contenu" :label="contenu.name" />
-                            </div>
-
-                            <!-- Bloc pages -->
-                            <div v-else-if="contenu.type == 8" class="">
-                                <div class="d-flex aic mt-6">
-                                    <v-select
-                                        :items="contenu.contenu"
-                                        v-model="editPage"
-                                        return-object="true"
-                                        item-title="name"
-                                        hide-details="true"
-                                        class="mr-4"
-                                        style="width: 200px"
-                                        variant="outlined"
-                                        no-data-text="Aucune page"
-                                        label="Page">
-                                    </v-select>
-
-                                    <v-btn
-                                        v-if="contenu.contenu"
-                                        elevation="0"
-                                        @click="newPagefct(contenu)"
-                                        size="small"
-                                        variant="outlined"
-                                        color="blue">
-                                        <v-icon>mdi-plus</v-icon>
-                                        Nouvelle page
-                                    </v-btn>
-                                </div>
-
-                                <v-dialog
-                                    v-model="newPage.dialog"
-                                    persistent
-                                    max-width="290"
-                                    hide-overlay
-                                    transition="dialog-bottom-transition">
-                                    <v-card>
-                                        <v-card-title>
-                                            <span class="headline">Nouvelle page</span>
-                                        </v-card-title>
-                                        <v-card-text>
-                                            <v-text-field
-                                                v-model="contenu.contenu[contenu.contenu.length - 1].name"
-                                                label="Nom de la page" />
-                                            <v-select
-                                                v-model="contenu.contenu[contenu.contenu.length - 1].groupes"
-                                                :items="groupesPages"
-                                                item-title="libelle"
-                                                item-value="value"
-                                                multiple="true"
-                                                label="Groupes de la page"
-                                                dense
-                                                hide-details
-                                                class="mt-4" />
-                                        </v-card-text>
-                                        <v-card-actions>
-                                            <v-spacer></v-spacer>
-                                            <v-btn text @click="contenu.contenu.pop(), (newPage.dialog = false)">
-                                                Annuler
-                                            </v-btn>
-                                            <v-btn
-                                                color="blue"
-                                                text
-                                                @click="$r.saveContenu(contenu), (newPage.dialog = false)">
-                                                Enregistrer
-                                            </v-btn>
-                                        </v-card-actions>
-                                    </v-card>
-                                </v-dialog>
-
-                                <div v-if="editPage" class="mt-4">
-                                    Editer {{ editPage?.name }}
-                                    <v-text-field
-                                        class="mt-4"
-                                        v-model="contenu.contenu[contenu.contenu.length - 1].name"
-                                        label="Nom de la page"
-                                        hide-details="true"
-                                        variant="outlined" />
-                                    <v-select
-                                        variant="outlined"
-                                        hide-details="true"
-                                        v-model="contenu.contenu[contenu.contenu.length - 1].groupes"
-                                        :items="groupesPages"
-                                        item-title="libelle"
-                                        item-value="value"
-                                        multiple="true"
-                                        label="Groupes de la page"
-                                        dense
-                                        class="mt-4" />
-
-                                    <v-btn
-                                        elevation="0"
-                                        color="red"
-                                        @click="
-                                            contenu.contenu.splice(editPage.index, 1),
-                                                (editPage = null),
-                                                $r.saveContenu(contenu)
-                                        "
-                                        class="mt-4"
-                                        size="small"
-                                        variant="outlined">
-                                        Supprimer
-                                    </v-btn>
-                                </div>
-                            </div>
-
-                            <!-- Bloc code -->
-                            <div v-else-if="contenu.type == 9">
-                                <v-textarea v-model="contenu.contenu" label="Code" />
-                            </div>
-
-                            <div class="d-flex mt-4">
-                                <Espacement :contenu="contenu" :page="page" />
-                                <BackgroundColor :contenu="contenu" />
-                            </div>
-
-                            <!-- <div class="mt-4" v-if="contenu.contenu?.color != undefined">
+                        <!-- <div class="mt-4" v-if="contenu.contenu?.color != undefined">
                     <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
                 </div> -->
-                        </div>
                     </div>
                 </div>
             </div>
-
+            <div class="no-selected w100 d-flex aic jcc mt-16 tac" v-else>
+                <h4>Sélectionnez un bloc à droite</h4>
+            </div>
+            <!-- 
             <v-btn
                 @click="insertblocr = true"
                 elevation="0"
@@ -306,7 +289,7 @@
                         <div class="title">{{ bloc.name }}</div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </template>
@@ -322,7 +305,7 @@ import Espacement from '../Administration/Espacement.vue'
 import BackgroundColor from '../Administration/BackgroundColor.vue'
 export default {
     props: {
-        contenus: {
+        contenu: {
             type: Array,
             required: true
         },
@@ -346,6 +329,7 @@ export default {
     },
     data() {
         return {
+            blocEdition: null,
             contenuChange: {},
             newPage: {
                 dialog: false,
@@ -354,7 +338,7 @@ export default {
             },
             insertblocl: false,
             insertblocr: false,
- 
+
             editPage: null,
             groupesPages: [
                 { value: 1, libelle: 'En tête > Menu principal' },
@@ -365,10 +349,9 @@ export default {
     },
 
     created() {
-        this.contenus.forEach((contenu) => {
-            contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
-            contenu.plie = true
-        })
+        if (this.contenu) {
+            this.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
+        }
     },
     methods: {
         newPagefct(contenu) {
@@ -397,7 +380,7 @@ export default {
 
         async handleFileChange(event) {
             this.contenuChange = this.contenuChange.contenu
-            this.$r.loading = true 
+            this.$r.loading = true
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
                 reader.readAsDataURL(file)
@@ -433,29 +416,8 @@ export default {
 }
 .bloc {
     width: 100%;
-}
-.line {
-    border-radius: 5px;
-    width: 100%;
-    border: 1px solid #e0e0e0;
-    padding: 15px;
-    align-items: center;
-    .body-line {
-        padding-top: 10px;
-    }
-    .icone-head {
-        width: 40px;
-        height: 40px;
-        border-radius: 10px;
-    }
-    .icone-head.text {
-        background-color: #e0e0e0;
-        color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        font-size: 20px;
-        font-weight: bold;
+    .header {
+        height: 70px;
     }
 }
 </style>

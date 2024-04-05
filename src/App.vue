@@ -204,8 +204,7 @@ export default {
     .bloc-container {
         overflow-x: auto;
         white-space: nowrap;
-        display: inline-flex;
-        justify-content: center;
+        display: inline-flex; 
         width: 100%;
         .bloc {
             margin: 10px;

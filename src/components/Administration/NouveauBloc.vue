@@ -1,11 +1,8 @@
 <template>
     <div class="container">
         <div v-if="active == false" class="button-activate">
-            <div class="line" />
-            <v-btn @click="active = true" elevation="0" size="x-small" variant="outlined" color="blue">
-                <v-icon>mdi-plus</v-icon>
-                Insérer un bloc
-            </v-btn>
+            <div class="line" /> 
+            <v-icon @click="active = true" color="#2196f3">mdi-plus-circle-outline</v-icon>
             <div class="line" />
         </div>
 
@@ -29,6 +26,10 @@ export default {
         page: {
             type: String,
             default: null
+        },
+        setBlocEdition: {
+            type: Function,
+            default: null
         }
     },
     data() {
@@ -51,10 +52,9 @@ export default {
     margin: 10px 0;
     .line {
         padding: 0 10px;
-        width: calc(50% - 80px);
+        width: calc(50% - 30px);
         height: 1px;
         border-bottom: 1px dashed #2196f3;
     }
 }
-
 </style>

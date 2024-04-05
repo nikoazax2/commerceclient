@@ -4,6 +4,7 @@
         <div style="width: 200px" class="d-flex">
             <div style="width: 50px" />
             <v-text-field
+                v-if="contenu.espacement.top"
                 @change="$r.saveContenu(contenu)"
                 suffix="px"
                 v-model="contenu.espacement.top"
@@ -16,6 +17,7 @@
         </div>
         <div class="d-flex" style="width: 200px">
             <v-text-field
+                v-if="contenu.espacement.left"
                 @change="$r.saveContenu(contenu)"
                 suffix="%"
                 v-model="contenu.espacement.left"
@@ -25,6 +27,7 @@
                 hide-details="true"
                 label="Gauche" />
             <v-text-field
+                v-if="contenu.espacement.right"
                 @change="$r.saveContenu(contenu)"
                 suffix="%"
                 v-model="contenu.espacement.right"
@@ -37,6 +40,7 @@
         <div style="width: 200px" class="d-flex">
             <div style="width: 50px" />
             <v-text-field
+                v-if="contenu.espacement.bottom"
                 @change="$r.saveContenu(contenu)"
                 suffix="px"
                 v-model="contenu.espacement.bottom"

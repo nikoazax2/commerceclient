@@ -182,6 +182,11 @@ export const gMethods = {
         if (bloc.type == 2) bloc.contenu = { images: [] }
         if (bloc.type == 4) bloc.contenu = { url: '', titre: '', color: '' }
         if (bloc.type == 5) bloc.contenu = { nombre: 5, categories: [] }
+        bloc.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
+
+        if (leftOrRight == 'left') bloc.orderHorizontal = 0
+        else if (leftOrRight == 'right') bloc.orderHorizontal = 2
+        else bloc.orderHorizontal = 1
 
         delete bloc.uuid
 
@@ -260,21 +265,6 @@ export const gMethods = {
             .delete(`${this.config.domain}/contenu/${contenu.uuid}`, header)
             .then(async (response) => {
                 this.contenu.splice(this.contenu.indexOf(contenu), 1)
-                let i = 0
-
-                for await (let item of this.contenu.filter((item) => item.page == page)) {
-                    item.order = i
-                    await axios
-                        .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
-                        .then((response) => {
-                            console.log(response.data)
-                        })
-                        .catch((error) => {
-                            console.error('Error fetching products data:', error)
-                        })
-                    i++
-                }
-
                 this.loading = false
             })
             .catch((error) => {

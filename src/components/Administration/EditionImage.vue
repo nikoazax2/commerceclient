@@ -47,15 +47,12 @@
                         suffix="%" />
                 </div>
                 <div class="d-flex">
-                    <tinyEditor :index="index + indexi" :model="image" keyModel="texte" />
+                    <tinyEditor  :contenu="contenu" :index="index + indexi" :model="image" keyModel="texte" />
                 </div>
             </div>
         </div>
         <v-btn
-            v-if="
-                !contenu.contenu.images?.[0]?.unique ||
-                (contenu.contenu.images?.[0]?.unique && contenu.contenu.images?.length == 0)
-            "
+            v-if="!contenu.contenu.images?.[0]"
             size="small"
             color="blue"
             elevation="0"
