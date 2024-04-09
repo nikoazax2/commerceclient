@@ -363,7 +363,6 @@ export default {
             this.$r.setImagesProduct(product)
         },
         drag(event, categorie) {
-            
             event.dataTransfer.setData('text', JSON.stringify(categorie))
         },
         changeOrderVariation(product, index, up) {

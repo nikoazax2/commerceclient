@@ -100,10 +100,10 @@
 
         <!-- Header Principal -->
         <div class="header-principal d-flex aic pt-4 pb-4" :style="heightH">
-            <div class="gauche aic">
+            <div class="gauche aic"> 
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.contenu?.images?.[0]?.blob"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.contenu?.image?.blob"
                     class="logo-website ml-2 mr-4"
                     :class="`${$r.isPhone ? 'ml-4' : 'ml-2'}`" />
 

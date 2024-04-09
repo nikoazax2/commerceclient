@@ -5,7 +5,7 @@
             <div class="aic w100 jcc pt-4 pb-4">
                 <img
                     @click="$r.goto('')"
-                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site-footer')?.contenu?.images?.[0]?.blob"
+                    :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site-footer')?.contenu?.image?.blob"
                     class="ml-2"
                     style="max-width: 30%"
                     :style="`${!$r.isPhone ? 'max-height: 92px;' : ''}`"

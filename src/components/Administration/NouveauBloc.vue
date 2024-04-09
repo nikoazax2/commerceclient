@@ -1,14 +1,17 @@
 <template>
     <div class="container">
         <div v-if="active == false" class="button-activate">
-            <div class="line" /> 
+            <div class="line" v-if="!position" />
             <v-icon @click="active = true" color="#2196f3">mdi-plus-circle-outline</v-icon>
-            <div class="line" />
+            <div class="line" v-if="!position" />
         </div>
 
         <div v-else-if="$r.blocs" class="blocs mb-4">
             <div class="bloc-container">
-                <div v-for="bloc in $r.blocs" class="bloc" @click="$r.insertBloc(bloc, index, page), (active = false)">
+                <div
+                    v-for="bloc in $r.blocs"
+                    class="bloc"
+                    @click="$r.insertBloc(bloc, index, page, position), (active = false)">
                     <v-icon>{{ bloc.logo }}</v-icon>
                     <div class="title">{{ bloc.name }}</div>
                 </div>
@@ -29,6 +32,10 @@ export default {
         },
         setBlocEdition: {
             type: Function,
+            default: null
+        },
+        position: {
+            type: String,
             default: null
         }
     },

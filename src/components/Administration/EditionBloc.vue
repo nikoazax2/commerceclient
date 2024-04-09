@@ -4,50 +4,10 @@
             type="file"
             :id="`file-input-${index}`"
             ref="fileInput"
-            multiple
             style="display: none"
             @change="handleFileChange" />
 
         <div class="d-flex aic">
-            <!-- Change order -->
-            <!-- <div>
-                <div class="change-order mr-4" v-if="$r.getPage() != 'Général'">
-                    <v-btn
-                        @click="insertblocl = true"
-                        elevation="0"
-                        size="x-small"
-                        variant="outlined"
-                        v-if="!insertblocl"
-                        color="blue"
-                        class="mr-4 mb-4">
-                        <v-icon>mdi-plus</v-icon>
-                        Inérer bloc
-                    </v-btn>
-                    <div v-if="insertblocl" class="blocs mb-4">
-                        <div class="bloc-container">
-                            <div
-                                v-for="bloc in $r.blocs"
-                                class="bloc"
-                                @click="$r.insertBloc(bloc, index, page, 'left'), (insertblocl = false)">
-                                <v-icon>{{ bloc.logo }}</v-icon>
-                                <div class="title">{{ bloc.name }}</div>
-                            </div>
-                        </div>
-                    </div>
-                    <v-btn
-                        v-if="index != $r.contenu.filter((page) => page.page == $r.getPage()).length - 1"
-                        @click="changeOrder(contenu, 'down')"
-                        elevation="0"
-                        size="x-small"
-                        variant="outlined"
-                        color="grey"
-                        class="mr-4">
-                        <v-icon> mdi-chevron-down</v-icon>
-                        Descendre
-                    </v-btn>
-                </div>
-            </div> -->
-
             <div class="bloc" v-if="contenu">
                 <div class="d-flex aic jcsb header">
                     <div class="d-flex aic">
@@ -72,7 +32,7 @@
                         <v-btn
                             v-if="contenu.removable"
                             variant="text"
-                            @click="$r.deleteContenu(contenu, page)"
+                            @click="$r.deleteContenu(contenu, page), (blocEdition = null), (contenu = null)"
                             elevation="0"
                             class="ml-4"
                             size="small"
@@ -89,15 +49,22 @@
                     <div class="bloc">
                         <!-- Bloc Texte -->
                         <div style="width: 100%" v-if="contenu.type == 1 && contenu.contenu?.texte != undefined">
-                            <tinyEditor :index="index" 
-                            :contenu="contenu"
-                            :model="contenu.contenu" keyModel="texte" />
-                            <EditionImage class="mt-6" :contenu="contenu" :index="index" />
+                            <tinyEditor
+                                :save="save"
+                                :index="index"
+                                :contenu="contenu"
+                                :model="contenu.contenu"
+                                keyModel="texte" />
+                            <EditionImage class="mt-6" :save="save" :contenu="contenu" :index="index" />
                         </div>
 
                         <!-- Bloc Image -->
                         <div v-else-if="contenu.type == 2" class="d-flex images">
-                            <EditionImage :contenu="contenu" :index="index" :contenuChange="contenuChange" />
+                            <EditionImage
+                                :contenu="contenu"
+                                :save="save"
+                                :index="index"
+                                :contenuChange="contenuChange" />
                         </div>
 
                         <!-- Bloc Couleur -->
@@ -254,47 +221,21 @@
                         </div>
 
                         <div class="mt-4">
-                            <Espacement class="mb-4" :contenu="contenu" :page="page" />
+                            <Espacement class="mb-4" :contenu="contenu.contenu" :page="page" />
                             <BackgroundColor :contenu="contenu" />
                         </div>
-
-                        <!-- <div class="mt-4" v-if="contenu.contenu?.color != undefined">
-                    <v-color-picker hide-canvas hide-inputs v-model="contenu.contenu.color" show-swatches />
-                </div> -->
                     </div>
                 </div>
             </div>
             <div class="no-selected w100 d-flex aic jcc mt-16 tac" v-else>
                 <h4>Sélectionnez un bloc à droite</h4>
             </div>
-            <!-- 
-            <v-btn
-                @click="insertblocr = true"
-                elevation="0"
-                size="x-small"
-                variant="outlined"
-                v-if="!insertblocr"
-                color="blue"
-                class="mr-4 mb-4">
-                <v-icon>mdi-plus</v-icon>
-                Inérer bloc
-            </v-btn>
-            <div v-if="insertblocr" class="blocs mb-4">
-                <div class="bloc-container">
-                    <div
-                        v-for="bloc in $r.blocs"
-                        class="bloc"
-                        @click="$r.insertBloc(bloc, index, page, 'right'), (insertblocr = false)">
-                        <v-icon>{{ bloc.logo }}</v-icon>
-                        <div class="title">{{ bloc.name }}</div>
-                    </div>
-                </div>
-            </div> -->
         </div>
     </div>
 </template>
 
 <script>
+import { debounce } from '../../common/utils.js'
 import Editor from '@tinymce/tinymce-vue'
 import axios from 'axios'
 import setPotisition from '../ElementsContenu/setPotisition.vue'
@@ -348,12 +289,10 @@ export default {
         }
     },
 
-    created() {
-        if (this.contenu) {
-            this.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
-        }
-    },
     methods: {
+        save: debounce(function (contenu) {
+            this.$r.saveContenu(contenu)
+        }, 1000),
         newPagefct(contenu) {
             if (!contenu.contenu) contenu.contenu = []
             contenu.contenu.push({ name: '', groupes: [] })
@@ -379,7 +318,6 @@ export default {
         },
 
         async handleFileChange(event) {
-            this.contenuChange = this.contenuChange.contenu
             this.$r.loading = true
             await Array.from(event.target.files).forEach(async (file, index) => {
                 let reader = new FileReader()
@@ -387,9 +325,9 @@ export default {
                 reader.onload = async () => {
                     let base64 = reader.result
                     let uuid = this.$r.uuidv4()
-                    this.contenuChange.contenu.images.push({ uuid: uuid })
+                    this.contenu.contenu.image = { uuid: uuid }
                     await this.$r.uploadImgContenu(uuid, base64)
-                    await this.$r.saveContenu(this.contenuChange)
+                    await this.$r.saveContenu(this.contenu)
                     await this.$r.getContenu()
 
                     this.$r.loading = false

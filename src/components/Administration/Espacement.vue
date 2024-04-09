@@ -1,10 +1,9 @@
 <template>
-    <div class="espacements" v-if="![3].includes(contenu.type) && page != 'Général'">
+    <div class="espacements" v-if="page != 'Général'">
         <div>Espacements :</div>
         <div style="width: 200px" class="d-flex">
             <div style="width: 50px" />
             <v-text-field
-                v-if="contenu.espacement.top"
                 @change="$r.saveContenu(contenu)"
                 suffix="px"
                 v-model="contenu.espacement.top"
@@ -16,8 +15,7 @@
             <div style="width: 50px" />
         </div>
         <div class="d-flex" style="width: 200px">
-            <v-text-field
-                v-if="contenu.espacement.left"
+            <v-text-field 
                 @change="$r.saveContenu(contenu)"
                 suffix="%"
                 v-model="contenu.espacement.left"
@@ -26,8 +24,7 @@
                 style="width: 100px"
                 hide-details="true"
                 label="Gauche" />
-            <v-text-field
-                v-if="contenu.espacement.right"
+            <v-text-field 
                 @change="$r.saveContenu(contenu)"
                 suffix="%"
                 v-model="contenu.espacement.right"
@@ -39,8 +36,7 @@
         </div>
         <div style="width: 200px" class="d-flex">
             <div style="width: 50px" />
-            <v-text-field
-                v-if="contenu.espacement.bottom"
+            <v-text-field 
                 @change="$r.saveContenu(contenu)"
                 suffix="px"
                 v-model="contenu.espacement.bottom"
@@ -64,9 +60,6 @@ export default {
             type: String,
             required: true
         }
-    },
-    created() {
-        if (!this.contenu.espacement) this.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
     }
 }
 </script>

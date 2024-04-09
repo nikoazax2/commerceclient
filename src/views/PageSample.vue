@@ -18,48 +18,25 @@
                         <NouveauBloc :index="0" :page="$r.getPage()" :setBlocEdition="setBlocEdition" />
                         <div v-for="(bloc, index) in contenuWithoutOrderDuplicate(index)">
                             <div class="d-flex aic">
-                                <v-icon
-                                    color="#2196f3"
-                                    class="ml-4 mr-4"
-                                    @click="$r.insertBloc(bloc, index, $r.getPage(), 'left')"
-                                    >mdi-plus-circle-outline</v-icon
-                                >
-
+                                <NouveauBloc
+                                    :position="'left'"
+                                    :index="index"
+                                    :page="$r.getPage()"
+                                    :setBlocEdition="setBlocEdition" />
                                 <Bloc
                                     :setBlocEdition="setBlocEdition"
                                     :blocEdition="blocEdition"
                                     :blocs="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)" />
-
-                                <v-icon
-                                    @click="$r.insertBloc(bloc, index, $r.getPage(), 'right')"
-                                    color="#2196f3"
-                                    class="ml-4 mr-4"
-                                    >mdi-plus-circle-outline</v-icon
-                                >
+                                <NouveauBloc
+                                    :position="'right'"
+                                    :index="index"
+                                    :page="$r.getPage()"
+                                    :setBlocEdition="setBlocEdition" />
                             </div>
                             <NouveauBloc :index="index + 1" :page="$r.getPage()" :setBlocEdition="setBlocEdition" />
                         </div>
                     </div>
                 </div>
-
-                <!-- <div
-                    v-for="(bloc, index) in contenuWithoutOrderDuplicate()
-                        .filter((page) => page.page == $r.getPage())
-                        .sort((a, b) => a.order - b.order)">
-                    <Bloc
-                        v-if="!$r.modeEdition"
-                        :blocs="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)" />
-
-                    <div v-else class="contenu">
-                        <div class="gauche" :style="` width:${$r.modeEdition ? '100%' : '100%'} `">
-                            <EditionBloc
-                                :index="index"
-                                :contenus="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)"
-                                :page="$r.getPage()" />
-                            <NouveauBloc :index="index + 2" :page="$r.getPage()" />
-                        </div> 
-                    </div>
-                </div> -->
             </div>
         </div>
     </div>
@@ -109,7 +86,7 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     .gauche {
-        width: 400px;
+        width: 800px;
         overflow-y: auto;
         border-right: 1px solid #ccc;
         height: calc(100vh - 150px);
@@ -119,7 +96,7 @@ export default {
         border: 3px solid #ccc;
         margin: 20px;
         border-radius: 5px;
-        width: calc(100% - 400px);
+        width: calc(100% - 800px);
         overflow: hidden;
         :deep(.bloc) {
             &:hover {

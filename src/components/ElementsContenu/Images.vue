@@ -1,18 +1,15 @@
 <template>
-    <div class="container-image">
-        <div
-            v-for="(image, index) in bloc.contenu.images"
-            class="image"
-            :style="`width:${100 / bloc.contenu.images.length + '%'}; `">
+    <div class="container-image"> 
+        <div class="image" :style="`width:100%;`">
             <div class="image-titre">
-                <div class="titre" v-html="image?.texte" />
-            </div>
-            <div class="images" @click="$r.goto(image.url, true)" :style="image?.url ? 'cursor: pointer' : ''">
+                <div class="titre" v-html="bloc.contenu?.texte" />
+            </div> 
+            <div class="images" @click="$r.goto(bloc.contenu.url, true)" :style="bloc.contenu?.url ? 'cursor: pointer' : ''">
                 <div
                     class="logo-website img"
-                    :style="`background-image: url(${image?.blob});  
-                ${image?.parallax ? `background-attachment: fixed;` : ''}
-                ${image?.darker ? `filter: brightness(${image.darker}%);` : ''} ${getStyleImg(image)}
+                    :style="`background-image: url(${bloc.contenu?.image?.blob});  
+                ${bloc.contenu?.parallax ? `background-attachment: fixed;` : ''}
+                ${bloc.contenu?.darker ? `filter: brightness(${bloc.contenu.darker}%);` : ''} ${getStyleImg(image)}
                  padding-top: 50%;   height: 0; height:fit-content; 
                  background-position: center; background-size: contain; `" />
             </div>

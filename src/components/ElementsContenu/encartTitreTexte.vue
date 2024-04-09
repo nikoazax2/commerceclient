@@ -1,6 +1,8 @@
 <template>
     <!-- ENCART 1 -->
-    <div class="encart1 pt-2 pb-2" :style="getStyleBloc(bloc.contenu)"> 
+    <div
+        class="encart1 pt-2 pb-2"
+        :style="getStyleBloc(bloc.contenu)" > 
         <h3 class="w100 jcc">{{ titre || null }}</h3>
         <p class="text-caption ml-4 mr-4" :style="$r.getStyleText(style)" v-html="texte" />
 
@@ -39,7 +41,8 @@ export default {
                 style += `margin-left: ${bloc.espacement.left}%;`
                 style += `margin-right: ${bloc.espacement.right}%;`
                 style += `margin-bottom: ${bloc.espacement.bottom}px;`
-            }
+            } 
+            style += `${bloc?.images?.[0].blob ? `background-image: url(${bloc?.images?.[0].blob})` : ''}`
             return style
         }
     }

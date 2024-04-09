@@ -1,8 +1,9 @@
 <template>
     <div
-        class="bloc"
+        class="bloc ml-4 mr-4"
         v-for="(bloc, index) in blocs.sort((a, b) => a.orderHorizontal - b.orderHorizontal)"
-        @click="setBlocEdition(bloc)"
+        @click="setBlocEdition?.(bloc)"
+        :class="{ 'bloc-edition': blocEdition?.uuid == bloc.uuid, 'ml-4 mr-4': $r.modeEdition }"
         :style="`width:${100 / blocs.length}%`">
         <div :style="setEspacement(bloc.espacement)">
             <!-- BLOC IMAGE -->
@@ -16,7 +17,7 @@
                 :bloc="bloc" />
 
             <!-- BLOC BOUTON -->
-            <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
+            <!-- <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
                 <v-btn
                     @click="$r.goto(bloc.contenu?.url)"
                     :color="bloc.contenu?.color || 'primary'"
@@ -24,30 +25,30 @@
                     elevation="0">
                     {{ bloc.contenu?.titre }}
                 </v-btn>
-            </div>
+            </div> -->
 
             <!-- BLOC ARTICLES -->
-            <div v-if="bloc.type == 5" class="articles">
+            <!-- <div v-if="bloc.type == 5" class="articles">
                 <grilleArticles
                     :products="
                         $r.products
                             .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
                             .slice(0, bloc.contenu.nombre || 999)
                     " />
-            </div>
+            </div> -->
 
             <!-- BLOC CATEGORIES-->
-            <div v-if="bloc.type == 6" class="articles">
+            <!-- <div v-if="bloc.type == 6" class="articles">
                 <grilleArticles
                     :products="
                         $r.products
                             .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
                             .slice(0, bloc.contenu.nombre || 999)
                     " />
-            </div>
+            </div> -->
 
             <!-- BLOC CODE -->
-            <div v-if="bloc.type == 9" class="encart1" v-html="bloc.contenu" />
+            <!-- <div v-if="bloc.type == 9" class="encart1" v-html="bloc.contenu" /> -->
         </div>
     </div>
 </template>
@@ -70,7 +71,7 @@ export default {
         },
         setBlocEdition: {
             type: Function,
-            required: false
+            required: true
         }
     },
     components: {
@@ -107,5 +108,8 @@ export default {
 }
 .bloc {
     min-height: 50px;
+}
+.bloc-edition {
+    border: 2px solid #2196f3 !important;
 }
 </style>

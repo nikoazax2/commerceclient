@@ -4,7 +4,7 @@
         key=""
         api-key="tnp1345mze01agjkea6zoe8ugpvdxp14v82885fu61rj4ys3"
         v-model="model[keyModel]"
-        @keyup="$r.saveContenu(contenu)"
+        @keyup="save(contenu)"
         :init="{
             paste_block_drop: false,
             menubar: false,
@@ -36,6 +36,10 @@ export default {
         contenu: {
             type: Object,
             required: false
+        },
+        save:{
+            type: Function,
+            required: true
         }
     },
     methods: {

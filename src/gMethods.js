@@ -88,20 +88,19 @@ export const gMethods = {
     async getContenu() {
         this.loading = true
 
+
         try {
             const response = await axios.get(`${this.config.domain}/contenu`,)
-
             //récupérer les images des contenus
             for await (let contenu of response.data) {
-                contenu.contenu?.images?.forEach(async item => {
-                    item = await this.setImagesContenu(item)
-                })
+                if (contenu.contenu?.image?.uuid) { 
+                    contenu.contenu.image.blob = await this.setImagesContenu(contenu.contenu?.image)
+                }
             }
             this.contenu = response.data
             this.pages = response.data.find((item) => item.name == 'Pages').contenu.map((item) => { return item.name.toLowerCase() })
             this.pages.push('accueil')
-
-            //            this.pages = [...new Set(response.data.map((item) => { return item.page }))]
+ 
             this.loading = false
 
             return response.data
@@ -139,10 +138,8 @@ export const gMethods = {
             })
             .catch((error) => {
                 console.error("Error fetching contenus data:", error);
-            })
-
-        image.blob = img
-        return image
+            })  
+        return img
     },
     deleteImgContenu(uuid) {
         let header = {
@@ -178,10 +175,7 @@ export const gMethods = {
     async insertBloc(bloc, index, page, leftOrRight) {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
 
-        if (bloc.type == 1) bloc.contenu = { texte: '' }
-        if (bloc.type == 2) bloc.contenu = { images: [] }
-        if (bloc.type == 4) bloc.contenu = { url: '', titre: '', color: '' }
-        if (bloc.type == 5) bloc.contenu = { nombre: 5, categories: [] }
+        bloc.contenu = { texte: "", image: null, url: null, color: null, style: null }
         bloc.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
 
         if (leftOrRight == 'left') bloc.orderHorizontal = 0
@@ -201,19 +195,6 @@ export const gMethods = {
             .post(`${this.config.domain}/contenu`, bloc, header)
             .then(async (response) => {
                 this.contenu.splice(index, 0, response.data)
-                // let i = 0
-                // for await (let item of this.contenu.filter((item) => item.page == page)) {
-                //     item.order = i
-                //     await axios
-                //         .patch(`${this.config.domain}/contenu/${item.uuid}`, item, header)
-                //         .then((response) => {
-                //             console.log(response.data)
-                //         })
-                //         .catch((error) => {
-                //             console.error('Error fetching products data:', error)
-                //         })
-                //     i++
-                // }
                 return
             })
             .catch((error) => {
@@ -243,7 +224,7 @@ export const gMethods = {
                 show: true,
                 text: 'Contenu enregistré',
                 color: 'success',
-                timeout: 5000
+                timeout: 1000
             }
             return response.data
         }
