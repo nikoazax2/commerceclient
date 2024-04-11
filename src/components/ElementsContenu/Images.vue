@@ -9,7 +9,7 @@
                     class="logo-website img"
                     :style="`background-image: url(${bloc.contenu?.image?.blob});  
                 ${bloc.contenu?.parallax ? `background-attachment: fixed;` : ''}
-                ${bloc.contenu?.darker ? `filter: brightness(${bloc.contenu.darker}%);` : ''} ${getStyleImg(image)}
+                ${bloc.contenu?.darker ? `filter: brightness(${bloc.contenu.darker}%);` : ''} ${getStyleImg(bloc.contenu)}
                  padding-top: 50%;   height: 0; height:fit-content; 
                  background-position: center; background-size: contain; `" />
             </div>
@@ -52,7 +52,13 @@ export default {
             }
         },
         getStyleImg(bloc) {
-            let style = ''
+            let style = '' 
+            if(bloc.height) {
+                style += `height: ${bloc.height}px!important; padding-top: 0 !important;`
+            }
+            if(bloc.width) {
+                style += `width: ${bloc.width}px !important ;`
+            }
             if (bloc?.opacity) {
                 style += `opacity: ${bloc?.opacity}%;`
             }

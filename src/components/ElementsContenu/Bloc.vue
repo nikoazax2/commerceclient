@@ -5,7 +5,7 @@
         @click="setBlocEdition?.(bloc)"
         :class="{ 'bloc-edition': blocEdition?.uuid == bloc.uuid, 'ml-4 mr-4': $r.modeEdition }"
         :style="`width:${100 / blocs.length}%`">
-        <div :style="setEspacement(bloc.espacement)">
+        <div :style="setEspacement(bloc.contenu.espacement)">
             <!-- BLOC IMAGE -->
             <Images :bloc="bloc" v-if="bloc.type == 2" />
 
@@ -88,7 +88,7 @@ export default {
             }
         },
         setEspacement(espacements) {
-            let style = ''
+            let style = '' 
             if (espacements) {
                 if (espacements.top) style += `margin-top:${espacements.top}px;`
                 if (espacements.bottom) style += `margin-bottom:${espacements.bottom}px;`

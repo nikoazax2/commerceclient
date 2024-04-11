@@ -6,7 +6,7 @@
             <v-text-field
                 @change="$r.saveContenu(contenu)"
                 suffix="px"
-                v-model="contenu.espacement.top"
+                v-model="contenu.contenu.espacement.top"
                 density="compact"
                 hide-details="true"
                 class="mr-2 mt-2"
@@ -18,7 +18,7 @@
             <v-text-field 
                 @change="$r.saveContenu(contenu)"
                 suffix="%"
-                v-model="contenu.espacement.left"
+                v-model="contenu.contenu.espacement.left"
                 density="compact"
                 class="mr-2 mt-2"
                 style="width: 100px"
@@ -27,7 +27,7 @@
             <v-text-field 
                 @change="$r.saveContenu(contenu)"
                 suffix="%"
-                v-model="contenu.espacement.right"
+                v-model="contenu.contenu.espacement.right"
                 density="compact"
                 class="mr-2 mt-2"
                 hide-details="true"
@@ -39,7 +39,7 @@
             <v-text-field 
                 @change="$r.saveContenu(contenu)"
                 suffix="px"
-                v-model="contenu.espacement.bottom"
+                v-model="contenu.contenu.espacement.bottom"
                 density="compact"
                 hide-details="true"
                 class="mr-2 mt-2"

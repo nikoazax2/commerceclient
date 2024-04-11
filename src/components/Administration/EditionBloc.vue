@@ -221,7 +221,7 @@
                         </div>
 
                         <div class="mt-4">
-                            <Espacement class="mb-4" :contenu="contenu.contenu" :page="page" />
+                            <Espacement class="mb-4" :contenu="contenu" :page="page" />
                             <BackgroundColor :contenu="contenu" />
                         </div>
                     </div>

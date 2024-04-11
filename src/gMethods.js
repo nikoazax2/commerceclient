@@ -93,14 +93,14 @@ export const gMethods = {
             const response = await axios.get(`${this.config.domain}/contenu`,)
             //récupérer les images des contenus
             for await (let contenu of response.data) {
-                if (contenu.contenu?.image?.uuid) { 
+                if (contenu.contenu?.image?.uuid) {
                     contenu.contenu.image.blob = await this.setImagesContenu(contenu.contenu?.image)
                 }
             }
             this.contenu = response.data
             this.pages = response.data.find((item) => item.name == 'Pages').contenu.map((item) => { return item.name.toLowerCase() })
             this.pages.push('accueil')
- 
+
             this.loading = false
 
             return response.data
@@ -138,7 +138,7 @@ export const gMethods = {
             })
             .catch((error) => {
                 console.error("Error fetching contenus data:", error);
-            })  
+            })
         return img
     },
     deleteImgContenu(uuid) {
@@ -175,7 +175,15 @@ export const gMethods = {
     async insertBloc(bloc, index, page, leftOrRight) {
         bloc = { ...bloc, order: index, removable: true, valeur: '', contenu: null, page: page }
 
-        bloc.contenu = { texte: "", image: null, url: null, color: null, style: null }
+        bloc.contenu = {
+            texte: "",
+            image: null,
+            url: null,
+            color: null,
+            style: null,
+            height: null,
+            width: null
+        }
         bloc.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
 
         if (leftOrRight == 'left') bloc.orderHorizontal = 0

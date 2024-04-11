@@ -1,10 +1,14 @@
 <template>
     <div class="d-flex images">
-        <div class="image-c mr-4"  v-if="contenu.contenu.image">
+        <div class="image-c mr-4" v-if="contenu.contenu.image">
             <div class="image d-flex">
                 <img class="mr-4 mb-4" :src="contenu.contenu.image.blob" alt="Red dot" />
+
                 <div class="btns-actions">
-                    <v-btn elevation="0" color="grey" @click="$r.iframeImg = { show: true, url: contenu.contenu.image }">
+                    <v-btn
+                        elevation="0"
+                        color="grey"
+                        @click="$r.iframeImg = { show: true, url: contenu.contenu.image }">
                         Agrandir
                     </v-btn>
                     <v-btn
@@ -14,15 +18,44 @@
                         @click="deleteImage(contenu, indexi), openFilePicker()">
                         Remplacer
                     </v-btn>
-                    <v-btn v-if="!contenu.contenu.image.unique" elevation="0" color="#C62828" @click="deleteImage(contenu, indexi)">
+                    <v-btn
+                        v-if="!contenu.contenu.image.unique"
+                        elevation="0"
+                        color="#C62828"
+                        @click="deleteImage(contenu, indexi)">
                         Supprimer
                     </v-btn>
                 </div>
             </div>
-            <div class="details" v-if="!contenu.contenu.image.unique">
+            <div class="details" v-if="!contenu.contenu.image.unique"> 
+                <v-text-field
+                    v-if="contenu.contenu.image"
+                    v-model="contenu.contenu.width"
+                    label="Largeur de l'image (px)"
+                    style="max-width: 300px"
+                    type="number"
+                    density="compact"
+                    @input="save(contenu)" /> 
+                <v-text-field
+                    v-if="contenu.contenu.image"
+                    v-model="contenu.contenu.height"
+                    label="Hauteur de l'image (px)"
+                    style="max-width: 300px"
+                    type="number"
+                    density="compact"
+                    @input="save(contenu)" />
+
                 <div style="max-width: 300px">
-                    <v-checkbox density="compact" label="Parallax" v-if="contenu.contenu.image.parallax" v-model="contenu.contenu.image.parallax" />
-                    <v-text-field v-if="contenu.contenu.url" v-model="contenu.contenu.url" density="compact" label="Url au clic" />
+                    <v-checkbox
+                        density="compact"
+                        label="Parallax"
+                        v-if="contenu.contenu.image.parallax"
+                        v-model="contenu.contenu.image.parallax" />
+                    <v-text-field
+                        v-if="contenu.contenu.url"
+                        v-model="contenu.contenu.url"
+                        density="compact"
+                        label="Url au clic" />
 
                     <v-text-field
                         :rules="[
@@ -55,6 +88,14 @@
                         keyModel="texte" />
                 </div>
             </div>
+            <!-- v-text-field fort width of image in px -->
+            <v-text-field
+                v-if="contenu.contenu.image"
+                v-model="contenu.contenu.width"
+                label="Largeur de l'image (px)"
+                type="number"
+                dense
+                @input="save(contenu)" />
         </div>
         <v-btn
             v-if="!contenu.contenu.image"
@@ -90,7 +131,7 @@ export default {
             contenu.contenu.image = null
             this.$r.saveContenu(contenu)
         },
-        openFilePicker() { 
+        openFilePicker() {
             document.getElementById(`file-input-${this.index}`).click()
         }
     }
