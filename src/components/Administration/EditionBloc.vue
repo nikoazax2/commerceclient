@@ -1,5 +1,5 @@
 <template>
-    <div class="ml-6 mr-6">
+    <div class="ml-6 mr-6 container-edition">
         <input
             type="file"
             :id="`file-input-${index}`"
@@ -42,6 +42,26 @@
                         <v-btn @click="$r.saveContenu(contenu)" elevation="0" class="ml-4" size="small" color="blue">
                             Enregistrer
                         </v-btn>
+                    </div>
+                </div>
+                <div class="d-flex jcse">
+                    <div class="d-flex aic" @click=";(contenu.pc = !contenu.pc), $r.saveContenu(contenu)">
+                        <v-switch
+                            :model-value="contenu.pc"
+                            color="blue"
+                            inset
+                            style="transform: scale(0.7)"
+                            hide-details="true" />
+                        <div>Ordinateur</div>
+                    </div>
+                    <div class="d-flex aic" @click=";(contenu.phone = !contenu.phone), $r.saveContenu(contenu)">
+                        <v-switch
+                            :model-value="contenu.phone"
+                            color="blue"
+                            inset
+                            style="transform: scale(0.7)"
+                            hide-details="true" />
+                        <div>Téléphone</div>
                     </div>
                 </div>
                 <div class="body-line">
@@ -357,5 +377,12 @@ export default {
     .header {
         height: 70px;
     }
+}
+.container-edition {
+    position: fixed;
+    width: calc(500px - 20px);
+    height: calc(100vh - 100px);
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 </style>

@@ -138,6 +138,9 @@ export default {
 .r0 {
     right: 0;
 }
+.fdc {
+    flex-direction: column;
+}
 .link {
     color: #2196f3;
     cursor: pointer;

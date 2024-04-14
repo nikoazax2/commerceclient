@@ -3,37 +3,54 @@
         <div>
             <div>
                 <!-- Mode normal -->
-                <div class="d-flex" v-if="!$r.modeEdition" v-for="(bloc, index) in contenuWithoutOrderDuplicate(index)">
+                <div
+                    class="d-flex"
+                    :class="{ fdc: $r.modePhone }"
+                    v-if="!$r.modeEdition"
+                    v-for="(bloc, index) in contenuWithoutOrderDuplicate(index)">
                     <Bloc
                         v-if="!$r.modeEdition"
                         :blocs="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)" />
                 </div>
 
                 <!-- Mode edition -->
-                <div v-else class="mode-edition">
-                    <div class="gauche">
-                        <EditionBloc :index="index" :contenu="blocEdition" :page="$r.getPage()" />
-                    </div>
-                    <div class="droite">
-                        <NouveauBloc :index="0" :page="$r.getPage()" :setBlocEdition="setBlocEdition" />
-                        <div v-for="(bloc, index) in contenuWithoutOrderDuplicate(index)">
-                            <div class="d-flex aic">
-                                <NouveauBloc
-                                    :position="'left'"
-                                    :index="index"
-                                    :page="$r.getPage()"
-                                    :setBlocEdition="setBlocEdition" />
-                                <Bloc
-                                    :setBlocEdition="setBlocEdition"
-                                    :blocEdition="blocEdition"
-                                    :blocs="$r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)" />
-                                <NouveauBloc
-                                    :position="'right'"
-                                    :index="index"
-                                    :page="$r.getPage()"
-                                    :setBlocEdition="setBlocEdition" />
+                <div v-else>
+                    <div class="mode-edition" @click="blocEdition = null">
+                        <div class="gauche" @click.stop>
+                            <EditionBloc :index="index" :contenu="blocEdition" :page="$r.getPage()" />
+                        </div>
+
+                        <div class="droite-container">
+                            <div class="droite" :class="{ 'mode-phone': $r.modePhone }">
+                                <NouveauBloc :index="0" :page="$r.getPage()" :setBlocEdition="setBlocEdition" />
+                                <div v-for="(bloc, index) in contenuWithoutOrderDuplicate(index)"> 
+                                    <div :class="{ fdc: $r.modePhone }" class="d-flex aic">
+                                        <NouveauBloc
+                                            v-if="!$r.modePhone"
+                                            :position="'left'"
+                                            :index="index"
+                                            :page="$r.getPage()"
+                                            :setBlocEdition="setBlocEdition" />
+                                        <Bloc
+                                            :setBlocEdition="setBlocEdition"
+                                            :index="index"
+                                            :blocEdition="blocEdition"
+                                            :blocs="
+                                                $r.contenu.filter((c) => c.page == $r.getPage() && c.order == index)
+                                            " />
+                                        <NouveauBloc
+                                            v-if="!$r.modePhone"
+                                            :position="'right'"
+                                            :index="index"
+                                            :page="$r.getPage()"
+                                            :setBlocEdition="setBlocEdition" />
+                                    </div>
+                                    <NouveauBloc
+                                        :index="index + 1"
+                                        :page="$r.getPage()"
+                                        :setBlocEdition="setBlocEdition" />
+                                </div>
                             </div>
-                            <NouveauBloc :index="index + 1" :page="$r.getPage()" :setBlocEdition="setBlocEdition" />
                         </div>
                     </div>
                 </div>
@@ -65,10 +82,10 @@ export default {
         }
     },
     methods: {
-        contenuWithoutOrderDuplicate(index) {
+        contenuWithoutOrderDuplicate(index) { 
             return this.$r.contenu
-                .filter((contenu, index, self) => self.findIndex((t) => t.order === contenu.order) === index)
                 .filter((page) => page.page == this.$r.getPage())
+                .filter((contenu, index, self) => self.findIndex((t) => t.order === contenu.order) === index)
                 .sort((a, b) => a.order - b.order)
         },
         setBlocEdition(bloc) {
@@ -77,6 +94,7 @@ export default {
     },
     created() {
         if (this.$route.query.edition == 'true') this.$r.getProfile()
+        this.$r.modePhone = this.$r.isPhone
     }
 }
 </script> 
@@ -86,25 +104,38 @@ export default {
     justify-content: space-between;
     align-items: flex-start;
     .gauche {
-        width: 800px;
+        overflow-x: hidden;
+        position: sticky;
+        width: 500px;
         overflow-y: auto;
         border-right: 1px solid #ccc;
-        height: calc(100vh - 150px);
         padding-bottom: 50px;
     }
-    .droite {
-        border: 3px solid #ccc;
-        margin: 20px;
-        border-radius: 5px;
-        width: calc(100% - 800px);
-        overflow: hidden;
-        :deep(.bloc) {
-            &:hover {
-                border-radius: 5px;
-                border: 1px solid #2196f3 !important;
-            }
-            border: 1px solid #ccc;
+    .droite-container {
+        width: calc(100% - 500px);
+        background-image: url('../../src/assets/imsUtils/dotted.png');
+        background-repeat: repeat;
+        padding: 40px 20px;
+        display: flex;
+        justify-content: center;
+        .droite {
+            width: calc(100% - 40px);
+            background-color: #fff;
+            border: 3px solid #ccc;
+            padding: 20px;
             border-radius: 5px;
+            overflow: hidden;
+            &.mode-phone {
+                width: 414px;
+            }
+            :deep(.bloc) {
+                &:hover {
+                    border-radius: 5px;
+                    border: 1px solid #2196f3 !important;
+                }
+                border: 1px solid #ccc;
+                border-radius: 5px;
+            }
         }
     }
 }

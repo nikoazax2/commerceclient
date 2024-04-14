@@ -8,6 +8,15 @@
             <v-icon v-if="$r.modeEdition" class="mr-4">mdi-check</v-icon>
             Mode édition
         </div>
+        <div
+            class="switch-mode-phone d-flex"
+            @click="$r.modePhone = !$r.modePhone"
+            v-if="$r.modeEdition"
+            :style="$r.modePhone ? 'background-color: #4CAF50;' : 'background-color: #2196f3;'">
+            <v-icon v-if="$r.modeEdition" class="mr-4">mdi-check</v-icon>
+            <div v-if="$r.modePhone">Mode Téléphone</div>
+            <div v-else>Mode Ordinateur</div>
+        </div>
 
         <div
             :style="`background-color: ${
@@ -100,7 +109,7 @@
 
         <!-- Header Principal -->
         <div class="header-principal d-flex aic pt-4 pb-4" :style="heightH">
-            <div class="gauche aic"> 
+            <div class="gauche aic">
                 <img
                     @click="$r.goto('')"
                     :src="$r.contenu?.find((contenu) => contenu.valeur == 'logo-site')?.contenu?.image?.blob"
@@ -186,7 +195,7 @@
                 </v-btn>
                 <v-icon
                     @click="navDrawer = !navDrawer"
-                     color="primary"
+                    color="primary"
                     :class="`text-h5 ${$r.isPhone ? 'mr-4' : 'ml-4'}`"
                     class="text-h5 aic icon-account">
                     mdi-account-circle
@@ -250,6 +259,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.switch-mode-phone {
+    position: absolute;
+    top: 0;
+    left: calc(200px);
+    border-radius: 0 0 5px 5px;
+    z-index: 1000;
+    white-space: nowrap;
+    color: white;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 .isPC {
     .header-principal {
         padding: 0 80px;

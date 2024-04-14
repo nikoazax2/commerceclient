@@ -1,10 +1,12 @@
 <template>
     <div
-        class="bloc ml-4 mr-4"
-        v-for="(bloc, index) in blocs.sort((a, b) => a.orderHorizontal - b.orderHorizontal)"
-        @click="setBlocEdition?.(bloc)"
+        class="bloc"
+        v-for="(bloc, index) in blocs
+            .sort((a, b) => a.orderHorizontal - b.orderHorizontal)
+            .filter((bloc) => ($r.modePhone && bloc?.phone) || (!$r.modePhone && bloc?.pc))"
+        @click.stop="setBlocEdition?.(bloc)"
         :class="{ 'bloc-edition': blocEdition?.uuid == bloc.uuid, 'ml-4 mr-4': $r.modeEdition }"
-        :style="`width:${100 / blocs.length}%`">
+        :style="`width:${getWidth(blocs)}%;${styleBloc(bloc.contenu)}`">
         <div :style="setEspacement(bloc.contenu.espacement)">
             <!-- BLOC IMAGE -->
             <Images :bloc="bloc" v-if="bloc.type == 2" />
@@ -28,14 +30,14 @@
             </div> -->
 
             <!-- BLOC ARTICLES -->
-            <!-- <div v-if="bloc.type == 5" class="articles">
+            <div v-if="bloc.type == 5" class="articles">
                 <grilleArticles
                     :products="
                         $r.products
                             .filter((product) => bloc.contenu.categories?.includes(product.categorie.uuid))
                             .slice(0, bloc.contenu.nombre || 999)
                     " />
-            </div> -->
+            </div>
 
             <!-- BLOC CATEGORIES-->
             <!-- <div v-if="bloc.type == 6" class="articles">
@@ -57,6 +59,7 @@
 import encartTitreTexte from '@/components/ElementsContenu/encartTitreTexte.vue'
 import Images from '@/components/ElementsContenu/Images.vue'
 import grilleArticles from './grilleArticles.vue'
+import NouveauBloc from '../Administration/NouveauBloc.vue'
 
 export default {
     name: 'Bloc',
@@ -72,14 +75,34 @@ export default {
         setBlocEdition: {
             type: Function,
             required: true
+        },
+        index: {
+            type: Number
         }
     },
     components: {
         encartTitreTexte,
         Images,
-        grilleArticles
+        grilleArticles,
+        NouveauBloc
     },
     methods: {
+        getWidth(blocs) {
+            if (this.$r.modePhone) return 100
+            else
+                return (
+                    100 /
+                    blocs.filter((bloc) => (this.$r.modePhone && bloc?.phone) || (!this.$r.modePhone && bloc?.pc))
+                        .length
+                )
+        },
+        styleBloc(bloc) {
+            let style = ''
+            if (bloc?.backgroundColor) {
+                style += `background-color: ${bloc?.backgroundColor};`
+            }
+            return style
+        },
         getButton(bloc) {
             try {
                 return JSON.parse(bloc?.contenu)
@@ -88,8 +111,8 @@ export default {
             }
         },
         setEspacement(espacements) {
-            let style = '' 
-            if (espacements) {
+            let style = ''
+            if (espacements && !this.$r.modePhone) {
                 if (espacements.top) style += `margin-top:${espacements.top}px;`
                 if (espacements.bottom) style += `margin-bottom:${espacements.bottom}px;`
                 if (espacements.left) style += `margin-left:${espacements.left}%;`

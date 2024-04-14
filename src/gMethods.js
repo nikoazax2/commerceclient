@@ -12,6 +12,7 @@ export const gMethods = {
     loading: true,
     userConnected: null,
     isPhone: false,
+    modePhone: false,
     iframeImg: {
         show: false,
         url: null
@@ -182,7 +183,7 @@ export const gMethods = {
             color: null,
             style: null,
             height: null,
-            width: null
+            width: null, nombre: 1, categories: []
         }
         bloc.contenu.espacement = { top: 0, bottom: 0, left: 0, right: 0 }
 
