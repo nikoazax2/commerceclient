@@ -8,7 +8,7 @@
         :init="{
             paste_block_drop: false,
             menubar: false,
-            plugins: ['fontselect fontsizeselect textcolor autoresize link'],
+            plugins: ['preview powerpaste casechange importcss tinydrive searchreplace autolink autosave save directionality advcode visualblocks visualchars fullscreen image link media mediaembed codesample table charmap pagebreak nonbreaking anchor tableofcontents insertdatetime advlist lists checklist wordcount tinymcespellchecker a11ychecker help formatpainter pageembed charmap mentions quickbars linkchecker emoticons advtable footnotes mergetags autocorrect typography advtemplate'],
             toolbar:
                 'blocks fontfamily fontsize | bold italic underline forecolor backcolor | align spellcheckdialog lineheightselect',
             fontsize_formats: '8pt 10pt 12pt 14pt 18pt 24pt 36pt 48pt 56pt 72pt 96pt 120pt 144pt',

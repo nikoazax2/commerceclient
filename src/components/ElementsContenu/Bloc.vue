@@ -19,15 +19,11 @@
                 :bloc="bloc" />
 
             <!-- BLOC BOUTON -->
-            <!-- <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
-                <v-btn
-                    @click="$r.goto(bloc.contenu?.url)"
-                    :color="bloc.contenu?.color || 'primary'"
-                    class="mr-4"
-                    elevation="0">
+            <div v-if="bloc.type == 4" class="d-flex jcc tac mt-4 mb-4">
+                <v-btn :href="bloc.contenu?.url" :color="bloc.contenu?.color || 'primary'" class="mr-4" elevation="0">
                     {{ bloc.contenu?.titre }}
                 </v-btn>
-            </div> -->
+            </div>
 
             <!-- BLOC ARTICLES -->
             <div v-if="bloc.type == 5" class="articles">
