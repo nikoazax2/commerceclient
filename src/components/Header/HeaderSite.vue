@@ -159,16 +159,13 @@
                 style="width: 10000px; min-width: 200px; max-width: 700px"
                 class="pl-4 pr-4">
                 <div class="barre-de-recherche d-flex">
+                    <div class="btn-recherche" @click="$r.goto(`product/list?recherche=${$r.recherche}`)">
+                        <v-icon>mdi-magnify</v-icon>
+                    </div>
                     <input
                         v-model="$r.recherche"
                         placeholder="Rechercher..."
                         @keyup.enter="$r.goto(`product/list?recherche=${$r.recherche}`)" />
-                    <div
-                        :style="`background-color: ${$vuetify.theme.themes.myCustomLightTheme.colors.primary}`"
-                        class="btn-recherche"
-                        @click="$r.goto(`product/list?recherche=${$r.recherche}`)">
-                        <v-icon>mdi-magnify</v-icon>
-                    </div>
                 </div>
             </div>
             <div class="d-flex aic">
@@ -182,10 +179,9 @@
                     class="aic text-none"
                     @click="$r.menuCart = true">
                     <v-icon style="font-size: 30px">mdi-cart-outline</v-icon>
-                    <div v-if="!$r.isPhone" class="ml-4 font-weight-bold">Panier</div>
                     <v-chip
                         class="pastille"
-                        :style="$r.isPhone ? 'right: 4px;' : 'right: 72px;'"
+                        style="right: 4px"
                         color="primary"
                         variant="flat"
                         size="x-small"
@@ -259,6 +255,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.header-principal {
+    background-color: #f2f2f2;
+    button {
+        background-color: #f2f2f2;
+    }
+}
 .switch-mode-phone {
     position: absolute;
     top: 0;
@@ -337,21 +339,21 @@ export default {
     }
     .barre-de-recherche {
         border-radius: 20px;
-        background-color: rgba(0, 0, 0, 0.1);
+        background-color: white;
         height: 35px;
         input {
             width: calc(100% - 75px);
             padding-left: 15px;
         }
         .btn-recherche {
+            margin-left: 20px;
             cursor: pointer;
-            width: 75px;
+            width: 15px;
             border-top-right-radius: 20px;
             border-bottom-right-radius: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
         }
     }
 }

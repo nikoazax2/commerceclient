@@ -3,7 +3,7 @@
         <div class="contenu">
             <div
                 v-if="$r.contenu"
-                class="mt-4"
+                class="contenu-admin"
                 v-for="(contenu, index) in $r.contenu
                     .filter((c) => c.page == 'Général')
                     .sort((a, b) => a.order - b.order)">
@@ -69,6 +69,16 @@ export default {
                 opacity: 1;
             }
         }
+    }
+    .container-edition{
+        position: relative;
+        width: calc(100% - 20px);
+    }
+    .contenu-admin{
+        margin-bottom: 20px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
     }
 }
 </style>

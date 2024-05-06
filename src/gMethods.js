@@ -31,7 +31,7 @@ export const gMethods = {
     ],
     getPage() {
         let page = this.reroot.find((page) => page.url == document.location.pathname)?.page || document.location.pathname.replace('/', '')
-        return page == 'administration-site' ? 'Général' : page
+        return ['setup-init', 'administration-site'].includes(page) ? 'Général' : page
 
     },
     recherche: '',
@@ -47,7 +47,8 @@ export const gMethods = {
                 router.push('/' + url)
 
             }
-        }
+        } 
+        document.documentElement.scrollTop = 0
 
     },
     breadcrumbsUrl(item) {

@@ -43,8 +43,8 @@
                             Enregistrer
                         </v-btn>
                     </div>
-                </div>
-                <div class="d-flex jcse">
+                </div> 
+                <div class="d-flex jcse" v-if="$r.getPage() != 'Général'">
                     <div class="d-flex aic" @click=";(contenu.pc = !contenu.pc), $r.saveContenu(contenu)">
                         <v-switch
                             :model-value="contenu.pc"
@@ -88,7 +88,7 @@
                         </div>
 
                         <!-- Bloc Couleur -->
-                        <div v-else-if="contenu.type == 3">
+                        <div v-else-if="contenu.type == 3" class="d-flex jcc">
                             <v-color-picker
                                 hide-canvas
                                 elevation="0"
@@ -242,7 +242,7 @@
 
                         <div class="mt-4">
                             <Espacement class="mb-4" :contenu="contenu" :page="page" />
-                            <BackgroundColor :contenu="contenu" />
+                            <BackgroundColor :contenu="contenu" v-if="contenu.type != 3" />
                         </div>
                     </div>
                 </div>

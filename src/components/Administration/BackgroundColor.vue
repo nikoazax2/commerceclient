@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="color-picker">
         <div>Couleur de fond :</div>
         <v-color-picker
             hide-canvas
@@ -19,3 +19,8 @@ export default {
     }
 }
 </script>
+<style lang="scss" scoped>
+.color-picker {
+    text-align: left;
+}
+</style>

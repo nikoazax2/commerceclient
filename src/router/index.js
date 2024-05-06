@@ -8,6 +8,7 @@ import Gestion from "../views/Administration/AdministrationProduits.vue";
 import Panier from "../views/PanierVue.vue";
 import Payer from "../views/Paiement/Payer.vue";
 import AdministrationSite from "../views/Administration/AdministrationSite.vue";
+import SetupInit from "../views/Administration/SetupInit.vue";
 import PageSample from "../views/PageSample.vue";
 import ResetMDP from "../views/User/ResetMDP.vue";
 import VerifMail from "../views/User/VerifMail.vue";
@@ -101,6 +102,11 @@ const routes = [
         path: "/user/commandes",
         name: "Commandes",
         component: Commandes
+    },
+    {
+        path: "/setup-init",
+        name: "SetupInit",
+        component: SetupInit
     },
     ...pageSampleRoutes,
 
